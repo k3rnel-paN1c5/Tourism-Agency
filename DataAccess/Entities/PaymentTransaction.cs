@@ -34,9 +34,15 @@ namespace DataAccess.Entities
         public DateTime TransactionDate { get; set; }
 
         [Column("paymentId")]
-        public Payment? Payment { get; set; }
+        [ForeignKey("Payment")]
+        public int PaymentId { get; set; }
 
         [Column("paymentMethodId")]
+        [ForeignKey("PaymentMethod")]
+        public int PaymentMethodId { get; set; }
+
+        // Navigation Properties
+        public Payment? Payment { get; set; }
         public PaymentMethod? PaymentMethod { get; set; }
     }
 }

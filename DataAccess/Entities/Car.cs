@@ -31,7 +31,7 @@ namespace DataAccess.Entities
         public string? Image { get; set; }
 
         [Required]
-        [Column("pph",TypeName ="decimal(16,2)")]
+        [Column("pph", TypeName = "decimal(16,2)")]
         public decimal Pph { get; set; }
 
         [Required]
@@ -42,6 +42,11 @@ namespace DataAccess.Entities
         [Column("mbw", TypeName = "decimal(16,2)")]
         public decimal Mbw { get; set; }
 
+        [Column("categoryId")]
+        [ForeignKey("Category")]
+        public int CategoryId { get; set; }
+
+        // Navigation Properties
         public Category? Category { get; set; }
     }
 }

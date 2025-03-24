@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
-    public enum StatusEnum { 
+    public enum PaymentStatusEnum
+    {
         Pending,
         Complete,
         Refund
@@ -17,7 +18,7 @@ namespace DataAccess.Entities
     {
         public Payment()
         {
-            Payments = new HashSet<PaymentTransaction>();
+            Transactions = new HashSet<PaymentTransaction>();
         }
 
         [Key]
@@ -25,8 +26,9 @@ namespace DataAccess.Entities
         public int Id { get; set; }
 
         [Required]
-        [Column("status")][EnumDataType(typeof(StatusEnum))]
-        public StatusEnum Status { get; set; }
+        [Column("status")]
+        [EnumDataType(typeof(PaymentStatusEnum))]
+        public PaymentStatusEnum Status { get; set; }
 
         [Required]
         [Column("amountDue", TypeName = "decimal(16,2)")]
@@ -43,6 +45,7 @@ namespace DataAccess.Entities
         [Column("notes")]
         public string? Notes { get; set; }
 
-        public virtual ICollection<PaymentTransaction> Payments { get; set; }
+        // Navigation Properties
+        public virtual ICollection<PaymentTransaction> Transactions { get; set; }
     }
 }

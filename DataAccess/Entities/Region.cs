@@ -8,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
-    public partial class Category
+    public partial class Region
     {
+
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
         [Required]
-        [Column("title", TypeName = "nvarchar(50)")]
-        public string? Title { get; set; }
+        [Column("name", TypeName = "nvarchar(50)")]
+        public string? Name { get; set; }
+
     }
 }

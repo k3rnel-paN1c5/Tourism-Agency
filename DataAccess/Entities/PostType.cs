@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
-    public partial class Category
+    public partial class PostType
     {
         [Key]
         [Column("id")]
@@ -17,5 +17,10 @@ namespace DataAccess.Entities
         [Required]
         [Column("title", TypeName = "nvarchar(50)")]
         public string? Title { get; set; }
+
+        [Column("description", TypeName = "nvarchar(200)")]
+        public string? Description { get; set; }
+
+
     }
 }
