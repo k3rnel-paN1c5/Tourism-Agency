@@ -20,7 +20,7 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("metaTitle", TypeName = "nvarchar(50)")]
-        public string? MetaTile { get; set; }
+        public string? MetaTitle { get; set; }
 
         [Column("metaDescription", TypeName = "nvarchar(200)")]
         public string? MetaDescription { get; set; }

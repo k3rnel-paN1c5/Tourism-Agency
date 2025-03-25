@@ -10,6 +10,10 @@ namespace DataAccess.Entities
 {
     public partial class PostType
     {
+        public PostType()
+        {
+            Posts = new HashSet<Post>();
+        }
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -20,6 +24,10 @@ namespace DataAccess.Entities
 
         [Column("description", TypeName = "nvarchar(200)")]
         public string? Description { get; set; }
+
+        // Navigation Properties
+        public ICollection<Post> Posts { get; set; }
+
 
 
     }

@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
     public enum PostStatusEnum
     {
-        DraPublishedft,
+        //fixed name from DraPublishedft to Draft
+        Draft,
         Pending,
         Published,
         Scheduled,
@@ -23,6 +19,7 @@ namespace DataAccess.Entities
         public Post()
         {
             PostTags = new HashSet<PostTag>();
+            SEOMetadata = new HashSet<SEOMetadata>();
         }
 
         [Key]
@@ -53,6 +50,7 @@ namespace DataAccess.Entities
 
         [Column("summary", TypeName = "nvarchar(200)")]
         public string? Summary { get; set; }
+
         [Column("publishDate")]
         public DateTime PublishDate { get; set; }
 
@@ -64,7 +62,7 @@ namespace DataAccess.Entities
         public PostType? PostType { get; set; }
 
         public ICollection<PostTag> PostTags { get; set; }
-
+        public ICollection<SEOMetadata> SEOMetadata { get; set; }
 
     }
 }

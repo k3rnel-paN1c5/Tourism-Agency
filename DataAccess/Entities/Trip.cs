@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
     public partial class Trip
     {
+
+        public Trip()
+        {
+            Plans = new HashSet<TripPlan>();
+        }
 
         [Key]
         [Column("id")]
@@ -25,7 +25,7 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("isAvailable")]
-        public bool IsAvailabe { get; set; }
+        public bool IsAvailable { get; set; }
 
         [Column("description", TypeName = "nvarchar(200)")]
         public string? Description { get; set; }
@@ -33,6 +33,10 @@ namespace DataAccess.Entities
         [Required]
         [Column("isPrivate")]
         public bool IsPrivate { get; set; }
+
+
+        //Navigation Properties
+        public ICollection<TripPlan> Plans { get; set; }
 
 
     }
