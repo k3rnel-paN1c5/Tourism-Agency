@@ -10,6 +10,12 @@ namespace DataAccess.Entities
 {
     public partial class Car
     {
+        public Car()
+        {
+            TripPlanCars = new HashSet<TripPlanCar>();
+            CarBookings = new HashSet<CarBooking>();
+
+        }
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -48,5 +54,7 @@ namespace DataAccess.Entities
 
         // Navigation Properties
         public Category? Category { get; set; }
+        public ICollection<CarBooking> CarBookings { get; set; }
+        public ICollection<TripPlanCar> TripPlanCars { get; set; }
     }
 }

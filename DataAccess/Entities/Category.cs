@@ -10,6 +10,10 @@ namespace DataAccess.Entities
 {
     public partial class Category
     {
+        public Category()
+        {
+            Cars = new HashSet<Car>();
+        }
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -17,5 +21,8 @@ namespace DataAccess.Entities
         [Required]
         [Column("title", TypeName = "nvarchar(50)")]
         public string? Title { get; set; }
+
+        // Navigation Properties
+        public ICollection<Car> Cars { get; set; }
     }
 }
