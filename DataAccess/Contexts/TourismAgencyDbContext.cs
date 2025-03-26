@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-namespace DataAccess.Entities
+using DataAccess.Entities;
+namespace DataAccess.Contexts
 {
 
     public partial class TourismAgencyDbContext : DbContext
