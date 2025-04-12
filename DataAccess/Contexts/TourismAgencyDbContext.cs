@@ -141,7 +141,7 @@ namespace DataAccess.Contexts
                       .HasForeignKey(pt => pt.PostId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(p  => p.Employee)
+                entity.HasOne(p => p.Employee)
                       .WithMany(e => e.Posts)
                       .HasForeignKey(p => p.EmployeeId)
                       .OnDelete(DeleteBehavior.Restrict);

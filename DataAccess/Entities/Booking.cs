@@ -13,10 +13,10 @@ namespace DataAccess.Entities
         Cancelled
 
     }
-    
+
     public partial class Booking
     {
-     public Booking()
+        public Booking()
         {
             Payments = new HashSet<Payment>();
         }
@@ -29,7 +29,7 @@ namespace DataAccess.Entities
         public bool BookingType { get; set; }
 
 
-      
+
         [Required]
         [Column("startDate", TypeName = "datetime2(7)")]
         public DateTime StartDate { get; set; }
@@ -50,12 +50,12 @@ namespace DataAccess.Entities
         [Required]
         [Column("customerId")]
         [ForeignKey("Customer")]
-        public string? CustomerId { get; set; } 
-        
+        public string? CustomerId { get; set; }
+
         [Required]
         [Column("employeeId")]
         [ForeignKey("Employee")]
-        public string? EmployeeId { get; set; } 
+        public string? EmployeeId { get; set; }
 
         // Navigation Properties
         public Employee? Employee { get; set; }

@@ -10,13 +10,14 @@ namespace DataAccess.Entities
 {
     public partial class Employee
     {
-        public Employee(){
+        public Employee()
+        {
             Bookings = new HashSet<Booking>();
             Posts = new HashSet<Post>();
         }
         [Key, Column("id", TypeName = "nvarchar(450)")]
         [ForeignKey("User")]
-        public string? UserId { get; set; } 
+        public string? UserId { get; set; }
 
         [Required, Column("hireDate")]
         public DateTime HireDate { get; set; }

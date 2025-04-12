@@ -36,7 +36,7 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("dropOffLocation", TypeName = "nvarchar(50)")]
-        public string? DropOffLocation{ get; set; }
+        public string? DropOffLocation { get; set; }
 
 
         [Required]

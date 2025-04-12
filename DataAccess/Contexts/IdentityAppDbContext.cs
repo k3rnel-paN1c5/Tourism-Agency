@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Contexts
 {
-    public class IdentityAppDbContext: IdentityDbContext<User>
+    public class IdentityAppDbContext : IdentityDbContext<User>
     {
 
-        public IdentityAppDbContext(DbContextOptions<IdentityAppDbContext> options) 
-            :base(options)
+        public IdentityAppDbContext(DbContextOptions<IdentityAppDbContext> options)
+            : base(options)
         {
-           
+
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
