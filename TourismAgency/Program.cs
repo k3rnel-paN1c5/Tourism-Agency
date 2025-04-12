@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<TourismAgencyDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddDbContext<IdentityAppDbContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
 
 var app = builder.Build();
 

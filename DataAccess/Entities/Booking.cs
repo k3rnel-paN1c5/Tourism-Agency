@@ -47,7 +47,19 @@ namespace DataAccess.Entities
         [Column("numOfPassengers")]
         public int NumOfPassengers { get; set; }
 
+        [Required]
+        [Column("customerId")]
+        [ForeignKey("Customer")]
+        public string? CustomerId { get; set; } 
+        
+        [Required]
+        [Column("employeeId")]
+        [ForeignKey("Employee")]
+        public string? EmployeeId { get; set; } 
+
         // Navigation Properties
+        public Employee? Employee { get; set; }
+        public Customer? Customer { get; set; }
         public CarBooking? CarBooking { get; set; }
         public TripBooking? TripBooking { get; set; }
         public ICollection<Payment> Payments { get; set; }

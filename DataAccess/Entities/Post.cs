@@ -58,9 +58,14 @@ namespace DataAccess.Entities
         [ForeignKey("PostType")]
         public int PostTypeId { get; set; }
 
-        // Navigation Properties
-        public PostType? PostType { get; set; }
+        [Required]
+        [Column("employeeId")]
+        [ForeignKey("Employee")]
+        public string? EmployeeId { get; set; }
 
+        // Navigation Properties
+        public Employee? Employee { get; set; }
+        public PostType? PostType { get; set; }
         public ICollection<PostTag> PostTags { get; set; }
         public ICollection<SEOMetadata> SEOMetadata { get; set; }
 

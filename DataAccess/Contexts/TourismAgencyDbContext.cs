@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Entities;
+
 namespace DataAccess.Contexts
 {
 
@@ -31,6 +32,8 @@ namespace DataAccess.Contexts
         public DbSet<CarBooking> CarBookings { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<ImageShot> ImageShots { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Employee> Employees { get; set; }
 
 
 
@@ -56,6 +59,8 @@ namespace DataAccess.Contexts
             ConfigureTripBooking(modelBuilder);
             ConfigureTripPlan(modelBuilder);
             ConfigureTripPlanCar(modelBuilder);
+            ConfigureCustomer(modelBuilder);
+            ConfigureEmployee(modelBuilder);
 
         }
 
@@ -63,11 +68,10 @@ namespace DataAccess.Contexts
         {
             modelBuilder.Entity<Car>().ToTable("Cars")
                         .HasOne(c => c.Category)
-                        .WithMany()
+                        .WithMany(ct => ct.Cars)
                         .HasForeignKey(c => c.CategoryId)
                         .OnDelete(DeleteBehavior.Restrict);
         }
-
         private static void ConfigureCategory(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Category>().ToTable("Categories")
@@ -79,19 +83,18 @@ namespace DataAccess.Contexts
             {
                 entity.ToTable("Payments");
                 entity.HasMany(p => p.Transactions)
-                      .WithOne()
+                      .WithOne(t => t.Payment)
                       .HasForeignKey(pt => pt.PaymentId)
                       .OnDelete(DeleteBehavior.Cascade);
                 entity.Property(p => p.Status)
                       .HasConversion<string>();
             });
         }
-
         private static void ConfigurePaymentMethod(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PaymentMethod>().ToTable("PaymentMethods")
                         .HasMany(pm => pm.PaymentTransactions)
-                        .WithOne()
+                        .WithOne(pt => pt.PaymentMethod)
                         .HasForeignKey(pt => pt.PaymentMethodId)
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -124,17 +127,24 @@ namespace DataAccess.Contexts
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Posts");
+
                 entity.Property(e => e.Status)
                       .HasConversion<string>();
+
                 entity.HasOne(p => p.PostType)
-                     .WithMany()
-                     .HasForeignKey(p => p.PostTypeId)
-                     .OnDelete(DeleteBehavior.Restrict);
+                      .WithMany(pt => pt.Posts)
+                      .HasForeignKey(p => p.PostTypeId)
+                      .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasMany(p => p.PostTags)
-                     .WithOne(pt => pt.Post)
-                     .HasForeignKey(pt => pt.PostId)
-                     .OnDelete(DeleteBehavior.Cascade);
+                      .WithOne(pt => pt.Post)
+                      .HasForeignKey(pt => pt.PostId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(p  => p.Employee)
+                      .WithMany(e => e.Posts)
+                      .HasForeignKey(p => p.EmployeeId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
         }
         private static void ConfigurePostTag(ModelBuilder modelBuilder)
@@ -155,7 +165,6 @@ namespace DataAccess.Contexts
                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
-
         private static void ConfigurePostType(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PostType>().ToTable("PostTypes");
@@ -167,7 +176,6 @@ namespace DataAccess.Contexts
             modelBuilder.Entity<Region>().ToTable("Regions")
                         .HasIndex(r => r.Name).IsUnique(); ;
         }
-
         private static void ConfigureSEOMetadata(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SEOMetadata>(entity =>
@@ -175,7 +183,7 @@ namespace DataAccess.Contexts
                 entity.ToTable("SEOMetadata");
 
                 entity.HasOne(seo => seo.Post)
-                     .WithMany()
+                     .WithMany(p => p.SEOMetadata)
                      .HasForeignKey(seo => seo.PostId)
                      .OnDelete(DeleteBehavior.Cascade);
             });
@@ -194,7 +202,6 @@ namespace DataAccess.Contexts
                 entity.HasIndex(t => t.Name).IsUnique();
             });
         }
-
         private static void ConfigureTrip(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Trip>(entity =>
@@ -212,19 +219,19 @@ namespace DataAccess.Contexts
                 entity.ToTable("CarBookings");
                 entity.HasKey(cb => cb.BookingId);
                 entity.HasOne(cb => cb.Car)
-                .WithMany()
+                .WithMany(c => c.CarBookings)
                 .HasForeignKey(cb => cb.CarId)
                 .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(cb => cb.Booking)
-              .WithOne()
-              .HasForeignKey<CarBooking>(cb => cb.BookingId)
-              .OnDelete(DeleteBehavior.Restrict);
+                .WithOne(b => b.CarBooking)
+                .HasForeignKey<CarBooking>(cb => cb.BookingId)
+                .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasMany(cb => cb.ImageShots)
-             .WithOne()
-             .HasForeignKey(im => im.CarBookingId)
-             .OnDelete(DeleteBehavior.Cascade);
+                .WithOne(im => im.CarBooking)
+                .HasForeignKey(im => im.CarBookingId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             });
         }
@@ -250,9 +257,20 @@ namespace DataAccess.Contexts
 
 
                 entity.HasMany(b => b.Payments)
-                      .WithOne()
+                      .WithOne(p => p.Booking)
                       .HasForeignKey(p => p.BookingId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(b => b.Employee)
+                      .WithMany(p => p.Bookings)
+                      .HasForeignKey(p => p.EmployeeId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(b => b.Customer)
+                      .WithMany(p => p.Bookings)
+                      .HasForeignKey(p => p.CustomerId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
             });
         }
         private static void ConfigureImageShot(ModelBuilder modelBuilder)
@@ -264,7 +282,7 @@ namespace DataAccess.Contexts
                 entity.HasKey(i => i.Id);
 
                 entity.HasOne(i => i.CarBooking)
-                      .WithMany()
+                      .WithMany(cb => cb.ImageShots)
                       .HasForeignKey(i => i.CarBookingId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
@@ -278,12 +296,12 @@ namespace DataAccess.Contexts
 
 
                 entity.HasOne(t => t.Booking)
-                      .WithOne()
+                      .WithOne(b => b.TripBooking)
                       .HasForeignKey<TripBooking>(t => t.BookingId)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(t => t.TripPlan)
-                      .WithMany()
+                      .WithMany(tp => tp.Bookings)
                       .HasForeignKey(t => t.TripPlanId)
                       .OnDelete(DeleteBehavior.Restrict);
 
@@ -298,24 +316,24 @@ namespace DataAccess.Contexts
                 entity.HasKey(tp => tp.Id);
 
                 entity.HasOne(tp => tp.Region)
-                      .WithMany()
+                      .WithMany(r => r.Plans)
                       .HasForeignKey(tp => tp.RegionId)
                       .OnDelete(DeleteBehavior.Restrict);
 
 
                 entity.HasOne(tp => tp.Trip)
-                      .WithMany()
+                      .WithMany(t => t.Plans)
                       .HasForeignKey(tp => tp.TripId)
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasMany(tp => tp.Bookings)
-                      .WithOne()
+                      .WithOne(b => b.TripPlan)
                       .HasForeignKey(tb => tb.TripPlanId)
                       .OnDelete(DeleteBehavior.Cascade);
 
 
                 entity.HasMany(tp => tp.PlanCars)
-                      .WithOne()
+                      .WithOne(pc => pc.TripPlan)
                       .HasForeignKey(tpc => tpc.TripPlanId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
@@ -328,17 +346,39 @@ namespace DataAccess.Contexts
 
                 entity.HasKey(tpc => tpc.Id);
 
-                entity.HasOne(tpc => tpc.TripPlan) 
-                      .WithMany()
-                      .HasForeignKey(tpc => tpc.TripPlanId)  
-                      .OnDelete(DeleteBehavior.Cascade);  
+                entity.HasOne(tpc => tpc.TripPlan)
+                      .WithMany(tp => tp.PlanCars)
+                      .HasForeignKey(tpc => tpc.TripPlanId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
-                
-                entity.HasOne(tpc => tpc.Car)  
-                      .WithMany(c => c.TripPlanCars) 
-                      .HasForeignKey(tpc => tpc.CarId) 
+
+                entity.HasOne(tpc => tpc.Car)
+                      .WithMany(c => c.TripPlanCars)
+                      .HasForeignKey(tpc => tpc.CarId)
                       .OnDelete(DeleteBehavior.Restrict);
 
+            });
+        }
+        private void ConfigureEmployee(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Employee>(static entity =>
+            {
+                entity.ToTable("Employees");
+                entity.HasOne(c => c.User)
+                      .WithOne()
+                      .HasForeignKey<Employee>(c => c.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+        }
+        private void ConfigureCustomer(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Customer>(static entity =>
+            {
+                entity.ToTable("Customers");
+                entity.HasOne(c => c.User)
+                      .WithOne()
+                      .HasForeignKey<Customer>(c => c.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
