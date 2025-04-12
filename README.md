@@ -60,10 +60,10 @@ To use this repository, follow these steps:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/emadof85/miniProjSession.git
+   git clone https://github.com/k3rnel-paN1c5/Tourism-Agency.git
 2. **Navigate to the Project Directory**:
    ```bash
-   cd miniProjSession
+   cd Tourism-Agency
 3. **Set Up the Environment**:
    - Install the required development tools such as **Visual Studio** or any other compatible IDE.
    - Ensure **ASP.Net Core SDK** and **SQL Server** are installed on your machine.
@@ -72,6 +72,6 @@ To use this repository, follow these steps:
    - Apply migrations to set up the database schema:
      ```bash
      dotnet ef database update -c IdentityAppDbContext
-     dotnet ef database update -c TourAgencyDbContext
+     dotnet ef database update -c TourismAgencyDbContext
 5. **Build and run the project**.
     
