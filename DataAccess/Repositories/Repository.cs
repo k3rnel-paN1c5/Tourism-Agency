@@ -1,6 +1,6 @@
 using DataAccess.Contexts;
 using DataAccess.Entities;
-using DataAccess.IRepositories;
+using DataAccess.Repositories.IRepositories;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -32,10 +32,13 @@ namespace DataAccess.Repositories
             return await _dbSet.Where(predicate).ToListAsync();
         }
         public async Task<T?> GetByIdAsync(TKey id)
-        {   
+        {
             return await _dbSet.FindAsync(id);
         }
-
+        public async Task<T?> GetByPredicateAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
+        }
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
@@ -49,9 +52,14 @@ namespace DataAccess.Repositories
 
         public void Delete(T entity)
         {
-           _dbSet.Remove(entity);
+            _dbSet.Remove(entity);
         }
-
+        public async void DeleteByIdAsync(TKey id)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+                Delete(entity);
+        }
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

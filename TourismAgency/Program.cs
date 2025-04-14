@@ -1,5 +1,5 @@
 using DataAccess.Entities;
-using DataAccess.IRepositories;
+using DataAccess.Repositories.IRepositories;
 using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Contexts;
@@ -17,6 +17,8 @@ builder.Services.AddDbContext<IdentityAppDbContext>(
     
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+builder.Services.AddScoped<ICarRepository, CarRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 var app = builder.Build();
 
