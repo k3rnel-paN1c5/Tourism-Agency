@@ -1,5 +1,6 @@
 using DataAccess.Entities;
-
+using DataAccess.IRepositories;
+using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Contexts;
 
@@ -14,6 +15,9 @@ builder.Services.AddDbContext<TourismAgencyDbContext>(
 builder.Services.AddDbContext<IdentityAppDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
     
+// Repositories 
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
