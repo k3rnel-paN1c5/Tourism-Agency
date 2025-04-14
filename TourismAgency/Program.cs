@@ -1,18 +1,19 @@
 using DataAccess.Entities;
+
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Controllers and Views
 builder.Services.AddControllersWithViews();
+// Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddDbContext<IdentityAppDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
     
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
