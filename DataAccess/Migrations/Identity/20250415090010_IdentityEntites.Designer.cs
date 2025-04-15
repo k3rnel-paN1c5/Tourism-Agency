@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations.Identity
 {
     [DbContext(typeof(IdentityAppDbContext))]
-    [Migration("20250412105938_IdentityEntites")]
+    [Migration("20250415090010_IdentityEntites")]
     partial class IdentityEntites
     {
         /// <inheritdoc />
