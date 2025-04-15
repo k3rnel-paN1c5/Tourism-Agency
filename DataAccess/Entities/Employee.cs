@@ -16,13 +16,10 @@ namespace DataAccess.Entities
             Posts = new HashSet<Post>();
         }
         [Key, Column("id", TypeName = "nvarchar(450)")]
-        [ForeignKey("User")]
         public string? UserId { get; set; }
 
         [Required, Column("hireDate")]
         public DateTime HireDate { get; set; }
-
-        public User? User { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<Post> Posts { get; set; }

@@ -364,10 +364,6 @@ namespace DataAccess.Contexts
             modelBuilder.Entity<Employee>(static entity =>
             {
                 entity.ToTable("Employees");
-                entity.HasOne(c => c.User)
-                      .WithOne()
-                      .HasForeignKey<Employee>(c => c.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
         private void ConfigureCustomer(ModelBuilder modelBuilder)
@@ -375,10 +371,6 @@ namespace DataAccess.Contexts
             modelBuilder.Entity<Customer>(static entity =>
             {
                 entity.ToTable("Customers");
-                entity.HasOne(c => c.User)
-                      .WithOne()
-                      .HasForeignKey<Customer>(c => c.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

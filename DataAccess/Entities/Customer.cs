@@ -15,7 +15,6 @@ namespace DataAccess.Entities
             Bookings = new HashSet<Booking>();
         }
         [Key, Column("id", TypeName = "nvarchar(450)")]
-        [ForeignKey("User")]
         public string? UserId { get; set; }
 
         [Required]
@@ -33,8 +32,6 @@ namespace DataAccess.Entities
 
         [Column("Country")]
         public string? Country { get; set; }
-
-        public User? User { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }
     }
