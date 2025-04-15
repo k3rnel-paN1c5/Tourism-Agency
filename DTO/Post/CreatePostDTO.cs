@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using DTO.PostTag;
 using DTO.SEOMetadata;
 using System;
@@ -13,17 +13,17 @@ namespace DTO.Post
     public class CreatePostDTO
     {
         [Required(ErrorMessage = "Title is required")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Body content is required")]
-        public string Body { get; set; }
+        public string Body { get; set; } = string.Empty;
         public string? Image { get; set; }
 
         [Required(ErrorMessage = "Slug is required")]
-        public string Slug { get; set; }
+        public string Slug { get; set; } = string.Empty;
 
-        [EnumDataType(typeof(PostStatusEnum))]
-        public PostStatusEnum Status { get; set; }
+        [EnumDataType(typeof(PostStatus))]
+        public PostStatus Status { get; set; }
 
         public string? Summary { get; set; }
 
@@ -33,9 +33,9 @@ namespace DTO.Post
         public int PostTypeId { get; set; }
 
         [Required(ErrorMessage = "Author ID is required")]
-        public string EmployeeId { get; set; }
+        public string EmployeeId { get; set; } = string.Empty;
 
-        public List<CreatePostTagDTO> PostTags { get; set; } = new();
-        public List<CreateSEOMetadataDTO> SEOMetadata { get; set; } = new();
+        public List<CreatePostTagDTO> PostTags { get; set; } = [];
+        public List<CreateSEOMetadataDTO> SEOMetadata { get; set; } = [];
     }
 }

@@ -9,7 +9,7 @@ namespace DTO.PaymentMethod
    public class ReturnPaymentMethodDTO
     {
         public int Id { get; set; }
-        public string Method { get; set; }
-        public string? Icon { get; set; }
+        public string Method { get; set; } = string.Empty;
+        public string Icon { get; set; } = string.Empty;
     }
 }

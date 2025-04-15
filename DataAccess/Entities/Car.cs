@@ -22,7 +22,7 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("model", TypeName = "nvarchar(50)")]
-        public string? Model { get; set; }
+        public string Model { get; set; } = string.Empty;
 
         [Required]
         [Column("seats")]
@@ -30,11 +30,11 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("color", TypeName = "nvarchar(50)")]
-        public string? Color { get; set; }
+        public string Color { get; set; } = string.Empty;
 
         [Required]
         [Column("image", TypeName = "nvarchar(50)")]
-        public string? Image { get; set; }
+        public string Image { get; set; } = string.Empty;
 
         [Required]
         [Column("pph", TypeName = "decimal(16,2)")]

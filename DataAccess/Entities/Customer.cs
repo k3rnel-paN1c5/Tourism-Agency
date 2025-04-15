@@ -19,19 +19,19 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("firstName")]
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         [Required, Column("lastName")]
-        public string? LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
 
         [Required, Column("phoneNumber", TypeName = "char(12)")]
-        public string? PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
 
         [Column("whatsapp", TypeName = "char(14)")]
-        public string? Whatsapp { get; set; }
+        public string Whatsapp { get; set; } = string.Empty;
 
         [Column("Country")]
-        public string? Country { get; set; }
+        public string Country { get; set; } = string.Empty;
 
         public ICollection<Booking> Bookings { get; set; }
     }

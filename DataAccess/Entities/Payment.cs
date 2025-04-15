@@ -6,15 +6,11 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Entities.Enums;
 
 namespace DataAccess.Entities
 {
-    public enum PaymentStatusEnum
-    {
-        Pending,
-        Complete,
-        Refund
-    }
+
     public partial class Payment
     {
         public Payment()
@@ -33,8 +29,8 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("status")]
-        [EnumDataType(typeof(PaymentStatusEnum))]
-        public PaymentStatusEnum Status { get; set; }
+        [EnumDataType(typeof(PaymentStatus))]
+        public PaymentStatus Status { get; set; }
 
         [Required]
         [Column("amountDue", TypeName = "decimal(16,2)")]
@@ -49,7 +45,7 @@ namespace DataAccess.Entities
         public DateTime PaymentDate { get; set; }
 
         [Column("notes", TypeName = "nvarchar(200)")]
-        public string? Notes { get; set; }
+        public string Notes { get; set; } = string.Empty;
 
         // Navigation Properties
         public virtual ICollection<PaymentTransaction> Transactions { get; set; }

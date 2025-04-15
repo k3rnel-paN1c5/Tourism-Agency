@@ -12,6 +12,6 @@ namespace DTO.Tag
         [Required(ErrorMessage = "Tag ID is required")]
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

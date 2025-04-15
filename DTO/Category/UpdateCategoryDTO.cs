@@ -14,6 +14,6 @@ namespace DTO.Category
 
         [Required(ErrorMessage = "Title is required")]
         
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
     }
 }

@@ -12,7 +12,7 @@ namespace DTO.Car
     {
 
         [Required(ErrorMessage = "Model is required")]
-        public string Model { get; set; }
+        public string Model { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Seat count is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Must be a positive integer")]
@@ -20,10 +20,10 @@ namespace DTO.Car
 
  
         [Required(ErrorMessage = "Color is required")]
-            public string Color { get; set; }
+            public string Color { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Image is required")]
-        public string Image { get; set; }
+        public string Image { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Price per hour is required")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Invalid price per hour")]

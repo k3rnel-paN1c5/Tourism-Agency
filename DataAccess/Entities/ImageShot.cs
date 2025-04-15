@@ -11,7 +11,7 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("path", TypeName = "nvarchar(50)")]
-        public string? Path { get; set; }
+        public string Path { get; set; } = string.Empty;
 
         [Required]
         [Column("type")]

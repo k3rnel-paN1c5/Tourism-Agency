@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,8 +15,8 @@ namespace DTO.Payment
 
         public int? BookingId { get; set; }
 
-        [EnumDataType(typeof(PaymentStatusEnum))]
-        public PaymentStatusEnum? Status { get; set; }
+        [EnumDataType(typeof(PaymentStatus))]
+        public PaymentStatus? Status { get; set; }
 
         [Range(0.01, double.MaxValue)]
         public decimal? AmountDue { get; set; }

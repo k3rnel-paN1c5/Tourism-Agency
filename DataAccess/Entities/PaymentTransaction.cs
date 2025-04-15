@@ -5,15 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Entities.Enums;
 
 namespace DataAccess.Entities
 {
-    public enum TransactionTypeEnum
-    {
-        Deposit,
-        Final,
-        Refund
-    }
     public partial class PaymentTransaction
     {
         [Key]
@@ -22,8 +17,8 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("type")]
-        [EnumDataType(typeof(TransactionTypeEnum))]
-        public TransactionTypeEnum TransactionType { get; set; }
+        [EnumDataType(typeof(TransactionType))]
+        public TransactionType TransactionType { get; set; }
 
         [Required]
         [Column("amount", TypeName = "decimal(16,2)")]

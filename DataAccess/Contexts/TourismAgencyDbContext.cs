@@ -87,7 +87,8 @@ namespace DataAccess.Contexts
                       .HasForeignKey(pt => pt.PaymentId)
                       .OnDelete(DeleteBehavior.Cascade);
                 entity.Property(p => p.Status)
-                      .HasConversion<string>();
+                      .HasConversion<string>()
+                      .HasColumnType("nvarchar(30)");
             });
         }
         private static void ConfigurePaymentMethod(ModelBuilder modelBuilder)
@@ -107,7 +108,7 @@ namespace DataAccess.Contexts
                 entity.ToTable("PaymentTransaction");
                 entity.Property(e => e.TransactionType)
                       .HasConversion<string>()
-                      .HasColumnType("nvarchar(10)");
+                      .HasColumnType("nvarchar(30)");
 
                 entity.HasOne(pt => pt.Payment)
                      .WithMany(p => p.Transactions)
@@ -129,7 +130,8 @@ namespace DataAccess.Contexts
                 entity.ToTable("Posts");
 
                 entity.Property(e => e.Status)
-                      .HasConversion<string>();
+                      .HasConversion<string>()
+                      .HasColumnType("nvarchar(30)");
 
                 entity.HasOne(p => p.PostType)
                       .WithMany(pt => pt.Posts)
@@ -233,6 +235,10 @@ namespace DataAccess.Contexts
                 .HasForeignKey(im => im.CarBookingId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+                // entity.Property(cb => cb.Status)
+                //       .HasConversion<string>()
+                //       .HasColumnType("nvarchar(30)");
+
             });
         }
         private static void ConfigureBooking(ModelBuilder modelBuilder)
@@ -240,6 +246,9 @@ namespace DataAccess.Contexts
             modelBuilder.Entity<Booking>(entity =>
             {
                 entity.ToTable("Bookings");
+                entity.Property(b => b.Status)
+                      .HasConversion<string>()
+                      .HasColumnType("nvarchar(30)");
 
 
                 entity.HasKey(b => b.Id);

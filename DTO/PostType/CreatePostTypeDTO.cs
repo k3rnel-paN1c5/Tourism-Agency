@@ -10,7 +10,7 @@ namespace DTO.PostType
    public class CreatePostTypeDTO
     {
         [Required(ErrorMessage = "Title is required")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
     }
 }

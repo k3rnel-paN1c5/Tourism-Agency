@@ -12,8 +12,8 @@ namespace DTO.PostTag
     {
         public int PostId { get; set; }
         public int TagId { get; set; }
-        public ReturnPostDTO Post { get; set; }
-        public ReturnTagDTO Tag { get; set; }
+        public ReturnPostDTO? Post { get; set; }
+        public ReturnTagDTO? Tag { get; set; }
 
     }
 }

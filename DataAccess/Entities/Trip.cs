@@ -17,18 +17,18 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("name", TypeName = "nvarchar(50)")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [Column("slug", TypeName = "nvarchar(100)")]
-        public string? Slug { get; set; }
+        public string Slug { get; set; } = string.Empty;
 
         [Required]
         [Column("isAvailable")]
         public bool IsAvailable { get; set; }
 
         [Column("description", TypeName = "nvarchar(200)")]
-        public string? Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         [Column("isPrivate")]

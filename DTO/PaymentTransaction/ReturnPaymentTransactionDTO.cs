@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using DTO.Payment;
 using DTO.PaymentMethod;
 using System;
@@ -12,12 +12,12 @@ namespace DTO.PaymentTransaction
     public class ReturnPaymentTransactionDTO
     {
         public int Id { get; set; }
-        public TransactionTypeEnum TransactionType { get; set; }
+        public TransactionType TransactionType { get; set; }
         public decimal Amount { get; set; }
         public DateTime TransactionDate { get; set; }
 
         // Nested DTOs (avoid circular references)
-        public ReturnPaymentDTO Payment { get; set; }
-        public ReturnPaymentMethodDTO PaymentMethod { get; set; }
+        public ReturnPaymentDTO? Payment { get; set; }
+        public ReturnPaymentMethodDTO? PaymentMethod { get; set; }
     }
 }

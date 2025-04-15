@@ -16,17 +16,17 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("urlSlug", TypeName = "nvarchar(100)")]
-        public string? UrlSlug { get; set; }
+        public string UrlSlug { get; set; } = string.Empty;
 
         [Required]
         [Column("metaTitle", TypeName = "nvarchar(50)")]
-        public string? MetaTitle { get; set; }
+        public string MetaTitle { get; set; } = string.Empty;
 
         [Column("metaDescription", TypeName = "nvarchar(200)")]
-        public string? MetaDescription { get; set; }
+        public string MetaDescription { get; set; } = string.Empty;
 
         [Column("metaKeywords", TypeName = "nvarchar(50)")]
-        public string? MetaKeywords { get; set; }
+        public string MetaKeywords { get; set; } = string.Empty;
 
         [Column("postId")]
         [ForeignKey("Post")]

@@ -16,7 +16,7 @@ namespace DataAccess.Entities
             Posts = new HashSet<Post>();
         }
         [Key, Column("id", TypeName = "nvarchar(450)")]
-        public string? UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [Required, Column("hireDate")]
         public DateTime HireDate { get; set; }

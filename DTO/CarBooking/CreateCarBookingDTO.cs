@@ -18,15 +18,15 @@ namespace DTO.CarBooking
         public int CarId { get; set; }
 
         [Required(ErrorMessage = "Pickup location is required")]
-        public string? PickUpLocation { get; set; }
+        public string PickUpLocation { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Dropoff location is required")]
-        public string? DropOffLocation { get; set; }
+        public string DropOffLocation { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Driver option is required")]
         public bool WithDriver { get; set; }
 
-        public List<CreateImageShotDTO> ImageShots { get; set; } = new();
+        public List<CreateImageShotDTO> ImageShots { get; set; } = [];
     }
 
 

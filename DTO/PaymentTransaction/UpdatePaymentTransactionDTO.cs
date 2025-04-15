@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,8 +13,8 @@ namespace DTO.PaymentTransaction
         [Required(ErrorMessage = "Transaction ID is required")]
         public int Id { get; set; }
 
-        [EnumDataType(typeof(TransactionTypeEnum))]
-        public TransactionTypeEnum? TransactionType { get; set; }
+        [EnumDataType(typeof(TransactionType))]
+        public TransactionType? TransactionType { get; set; }
 
         [Range(0.01, double.MaxValue)]
         public decimal? Amount { get; set; }

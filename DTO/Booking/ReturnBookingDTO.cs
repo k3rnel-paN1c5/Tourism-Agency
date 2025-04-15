@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using DTO.CarBooking;
 using DTO.Payment;
 using System;
@@ -15,12 +15,12 @@ namespace DTO.Booking
         public bool BookingType { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public BookingStatusEnum Status { get; set; }
+        public BookingStatus Status { get; set; }
         public int NumOfPassengers { get; set; }
         // public ReturnCustomerDTO Customer { get; set; }
         // public ReturnEmployeeDTO Employee { get; set; }
        
-        public List<ReturnPaymentDTO>? Payments { get; set; }
+        public List<ReturnPaymentDTO> Payments { get; set; } = [];
     }
 }
 
