@@ -14,9 +14,7 @@ namespace DataAccess.Repositories
             return await _dbSet
                 .Where(b => b.Status == status)
                 .Include(b => b.Customer)
-                .ThenInclude(c => c!.User)
                 .Include(b => b.Employee)
-                .ThenInclude(e => e!.User)
                 .ToListAsync();
         }
 
