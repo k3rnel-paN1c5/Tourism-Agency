@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,8 +11,8 @@ namespace DTO.PaymentTransaction
     public class CreatePaymentTransactionDTO
     {
         [Required(ErrorMessage = "Transaction type is required")]
-        [EnumDataType(typeof(TransactionTypeEnum), ErrorMessage = "Invalid transaction type")]
-        public TransactionTypeEnum TransactionType { get; set; }
+        [EnumDataType(typeof(TransactionType), ErrorMessage = "Invalid transaction type")]
+        public TransactionType TransactionType { get; set; }
 
         [Required(ErrorMessage = "Amount is required")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be positive")]

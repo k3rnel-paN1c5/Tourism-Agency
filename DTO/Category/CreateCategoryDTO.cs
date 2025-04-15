@@ -10,6 +10,6 @@ namespace DTO.Category
    public class CreateCategoryDTO
     {
         [Required(ErrorMessage = "Category title is required")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
     }
 }

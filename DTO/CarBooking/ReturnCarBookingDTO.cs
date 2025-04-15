@@ -16,7 +16,7 @@ namespace DTO.CarBooking
         public string? DropOffLocation { get; set; }
         public ReturnCarDTO? Car { get; set; }
         public ReturnBookingDTO? Booking { get; set; }
-        public List<ReturnImageShotDTO> ImageShots { get; set; }
+        public List<ReturnImageShotDTO> ImageShots { get; set; } = [];
     }
 }
 

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DataAccess.Entities;
+using DataAccess.Entities.Enums;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,19 +21,19 @@ namespace DTO.Booking
         public DateTime EndDate { get; set; }
 
         [Required(ErrorMessage = "Status is required")]
-        [EnumDataType(typeof(BookingStatusEnum))]
-        public BookingStatusEnum Status { get; set; }
+        [EnumDataType(typeof(BookingStatus))]
+        public BookingStatus Status { get; set; }
 
         [Required(ErrorMessage = "Passenger count is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Passenger count must be positive")]
         public int NumOfPassengers { get; set; }
 
         [Required(ErrorMessage = "Customer ID is required")]
-        public string? CustomerId { get; set; }
+        public string CustomerId { get; set; } = string.Empty;
         [Required(ErrorMessage = "Employee ID is required")]
-        public string? EmployeeId { get; set; }
+        public string EmployeeId { get; set; } = string.Empty;
 
-        public CreateCarBookingDTO? CarBooking { get; set; }
+        public CreateCarBookingDTO? CarBooking { get; set; } 
         // public CreateTripBookingDTO? TripBooking { get; set; }
     }
 }

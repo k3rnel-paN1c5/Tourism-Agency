@@ -2,6 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Contexts;
 using DataAccess.Entities;
+using DataAccess.Entities.Enums;
 using DataAccess.Repositories.IRepositories;
 namespace DataAccess.Repositories
 {
@@ -14,8 +15,8 @@ namespace DataAccess.Repositories
             var unavailableCarIds = await _dbSet
                 .Where(c => c.CarBookings.Any(cb =>
                     (cb!.Booking!.StartDate < end && cb!.Booking!.EndDate > start) &&
-                    (cb.Status == CarBookingStatusEnum.NotStartedYet ||
-                     cb.Status == CarBookingStatusEnum.InProgress)))
+                    (cb.Booking.Status == BookingStatus.NotStartedYet ||
+                     cb.Booking.Status == BookingStatus.InProgress)))
                 .Select(c => c.Id)
                 .ToListAsync();
 

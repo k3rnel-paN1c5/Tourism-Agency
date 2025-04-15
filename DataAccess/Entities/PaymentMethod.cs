@@ -24,7 +24,7 @@ namespace DataAccess.Entities
         public string? Method { get; set; }
 
         [Column("icon", TypeName = "nvarchar(50)")]
-        public string? Icon { get; set; }
+        public string Icon { get; set; } = string.Empty;
 
         // Navigation Properties
         public virtual ICollection<PaymentTransaction> PaymentTransactions { get; set; }

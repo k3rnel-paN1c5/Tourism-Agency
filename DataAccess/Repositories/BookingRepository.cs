@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess.Contexts;
 using DataAccess.Repositories.IRepositories;
 using DataAccess.Entities;
+using DataAccess.Entities.Enums;
 namespace DataAccess.Repositories
 {
     public class BookingRepository : Repository<Booking, int>, IBookingRepository
     {
         public BookingRepository(TourismAgencyDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<Booking>> GetBookingsByStatusAsync(BookingStatusEnum status)
+        public async Task<IEnumerable<Booking>> GetBookingsByStatusAsync(BookingStatus status)
         {
             return await _dbSet
                 .Where(b => b.Status == status)
@@ -55,8 +56,8 @@ namespace DataAccess.Repositories
                 .Include(b => b.Customer)
                 .Include(b => b.CarBooking)
                 .Include(b => b.TripBooking)
-                .Where(b => b.Status == BookingStatusEnum.NotStartedYet || 
-                           b.Status == BookingStatusEnum.Pending)
+                .Where(b => b.Status == BookingStatus.NotStartedYet || 
+                           b.Status == BookingStatus.Pending)
                 .OrderBy(b => b.StartDate)
                 .ToListAsync();
         }

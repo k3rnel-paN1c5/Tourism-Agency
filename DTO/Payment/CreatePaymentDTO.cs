@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using DTO.PaymentTransaction;
 using System;
 using System.Collections.Generic;
@@ -15,8 +15,8 @@ namespace DTO.Payment
         public int BookingId { get; set; }
 
         [Required]
-        [EnumDataType(typeof(PaymentStatusEnum))]
-        public PaymentStatusEnum Status { get; set; }
+        [EnumDataType(typeof(PaymentStatus))]
+        public PaymentStatus Status { get; set; }
 
         [Required]
         [Range(0.01, double.MaxValue)]
@@ -32,7 +32,7 @@ namespace DTO.Payment
         [StringLength(200)]
         public string? Notes { get; set; }
 
-        public List<CreatePaymentTransactionDTO> Transactions { get; set; } = new();
+        public List<CreatePaymentTransactionDTO> Transactions { get; set; } = [];
     }
 
     

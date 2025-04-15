@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using DTO.ImageShot;
 using System;
 using System.Collections.Generic;
@@ -20,10 +20,10 @@ namespace DTO.CarBooking
         public string? DropOffLocation { get; set; }
 
         [Required(ErrorMessage = "Driver option is required")]
-        [EnumDataType(typeof(CarBookingStatusEnum))]
-        public CarBookingStatusEnum? Status { get; set; }
+        [EnumDataType(typeof(CarBookingStatus))]
+        public CarBookingStatus? Status { get; set; }
 
         public bool? WithDriver { get; set; }
-        public List<UpdateImageShotDTO> ImageShots { get; set; } = new();
+        public List<UpdateImageShotDTO>? ImageShots { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace DTO.ImageShot
         [Required(ErrorMessage = "Image shot ID is required")]
         public int Id { get; set; }
 
-        public string?Image { get; set; }
+        public string? Image { get; set; }
 
         public bool? IsPickupPhoto { get; set; }
     }

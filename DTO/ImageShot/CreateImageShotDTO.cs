@@ -10,7 +10,7 @@ namespace DTO.ImageShot
     public class CreateImageShotDTO
     {
         [Required(ErrorMessage = "Image path is required")]
-        public string Image { get; set; }
+        public string Image { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Image type is required")]
         public bool Type { get; set; } 

@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Entities.Enums;
 using DTO.PostTag;
 using DTO.SEOMetadata;
 using System;
@@ -22,8 +22,8 @@ namespace DTO.Post
 
         public string? Slug { get; set; }
 
-        [EnumDataType(typeof(PostStatusEnum))]
-        public PostStatusEnum? Status { get; set; }
+        [EnumDataType(typeof(PostStatus))]
+        public PostStatus? Status { get; set; }
         public string? Summary { get; set; }
 
         public DateTime? PublishDate { get; set; }

@@ -35,20 +35,20 @@ namespace DataAccess.Entities
         // TimeSpan is a structure in C# that represents a time interval.
         // Can be stored as nvaechar in the database
         [Column("duration", TypeName = "nvarchar(50)")]
-        public TimeSpan? Duration { get; set; }
+        public TimeSpan Duration { get; set; } = TimeSpan.FromHours(1);
 
 
         [Column("includedServices", TypeName = "nvarchar(200)")]
-        public string? IncludedServices { get; set; }
+        public string IncludedServices { get; set; } = string.Empty;
 
         [Column("stops", TypeName = "nvarchar(200)")]
-        public string? Stops { get; set; }
+        public string Stops { get; set; } = string.Empty;
 
         [Column("mealsPlan", TypeName = "nvarchar(200)")]
-        public string? MealsPlan { get; set; }
+        public string MealsPlan { get; set; } = string.Empty;
 
         [Column("hotelStays", TypeName = "nvarchar(200)")]
-        public string? HotelStays { get; set; }
+        public string HotelStays { get; set; } = string.Empty;
 
         // Navigation Properties
 

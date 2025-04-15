@@ -10,11 +10,11 @@ namespace DTO.SEOMetadata
     public class ReturnSEOMetadataDTO
     {
         public int Id { get; set; }
-        public string UrlSlug { get; set; }
-        public string MetaTitle { get; set; }
+        public string UrlSlug { get; set; } = string.Empty;
+        public string MetaTitle { get; set; } = string.Empty;
         public string? MetaDescription { get; set; }
         public string? MetaKeywords { get; set; }
 
-        public ReturnPostDTO Post { get; set; }
+        public ReturnPostDTO? Post { get; set; }
     }
 }

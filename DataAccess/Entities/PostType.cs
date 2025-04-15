@@ -20,10 +20,10 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("title", TypeName = "nvarchar(50)")]
-        public string? Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Column("description", TypeName = "nvarchar(200)")]
-        public string? Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         // Navigation Properties
         public ICollection<Post> Posts { get; set; }

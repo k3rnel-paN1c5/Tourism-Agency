@@ -20,7 +20,7 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("title", TypeName = "nvarchar(50)")]
-        public string? Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         // Navigation Properties
         public ICollection<Car> Cars { get; set; }

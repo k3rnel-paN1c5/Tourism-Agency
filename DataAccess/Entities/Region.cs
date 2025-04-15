@@ -22,7 +22,7 @@ namespace DataAccess.Entities
 
         [Required]
         [Column("name", TypeName = "nvarchar(50)")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         //Navigation Properties
         public ICollection<TripPlan> Plans { get; set; }
