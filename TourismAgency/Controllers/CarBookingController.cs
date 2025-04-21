@@ -33,11 +33,24 @@ namespace TourismAgency.Controllers
             if (!ModelState.IsValid)
                 return View(createCarBookingDTO);
 
-            // Save the CarBooking object to the database
-            await _carBookingService.CreateBookingAsync(createCarBookingDTO);
-
-            return RedirectToAction("Success");
-            
+            // Handle any exceptions that occur during the save operation
+            try{
+                // Save the CarBooking object to the database
+                await _carBookingService.CreateBookingAsync(createCarBookingDTO);
+                return RedirectToAction("Success");
+                
+            }
+            catch (InvalidOperationException ex)
+            {
+                 // Add the error to ModelState to display in the view
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Handle other unexpected errors
+                ModelState.AddModelError(string.Empty, "An error occurred. Please try again." + ex.Message);
+            }
+            return View(createCarBookingDTO);
 
         }
 

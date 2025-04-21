@@ -378,6 +378,7 @@ namespace DataAccess.Contexts
             modelBuilder.Entity<Employee>(static entity =>
             {
                 entity.ToTable("Employees");
+                entity.HasData(SeedData.SeedData.GetEmployees());
             });
         }
         private void ConfigureCustomer(ModelBuilder modelBuilder)
@@ -385,6 +386,7 @@ namespace DataAccess.Contexts
             modelBuilder.Entity<Customer>(static entity =>
             {
                 entity.ToTable("Customers");
+                entity.HasData(SeedData.SeedData.GetCustomers());
             });
         }
     }

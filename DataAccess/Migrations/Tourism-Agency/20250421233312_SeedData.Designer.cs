@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations.TourismAgency
 {
     [DbContext(typeof(TourismAgencyDbContext))]
-    [Migration("20250421211059_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250421233312_SeedData")]
+    partial class SeedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,6 +123,44 @@ namespace DataAccess.Migrations.TourismAgency
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Cars", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Color = "Silver",
+                            Image = "toyota-camry.jpg",
+                            Mbw = 1.00m,
+                            Model = "Toyota Camry",
+                            Ppd = 80.00m,
+                            Pph = 15.00m,
+                            Seats = 5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Color = "White",
+                            Image = "honda-cr-v.jpg",
+                            Mbw = 2.00m,
+                            Model = "Honda CR-V",
+                            Ppd = 100.00m,
+                            Pph = 20.00m,
+                            Seats = 7
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 3,
+                            Color = "Red",
+                            Image = "ford-mustang.jpg",
+                            Mbw = 3.00m,
+                            Model = "Ford Mustang",
+                            Ppd = 150.00m,
+                            Pph = 30.00m,
+                            Seats = 4
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.CarBooking", b =>
@@ -176,6 +214,23 @@ namespace DataAccess.Migrations.TourismAgency
                         .IsUnique();
 
                     b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "Sedan"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Title = "SUV"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Title = "Sports"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Customer", b =>
@@ -212,6 +267,35 @@ namespace DataAccess.Migrations.TourismAgency
                     b.HasKey("UserId");
 
                     b.ToTable("Customers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "user1",
+                            Country = "USA",
+                            FirstName = "John",
+                            LastName = "Doe",
+                            PhoneNumber = "+1234567890",
+                            Whatsapp = "+1234567890"
+                        },
+                        new
+                        {
+                            UserId = "user2",
+                            Country = "Canada",
+                            FirstName = "Jane",
+                            LastName = "Smith",
+                            PhoneNumber = "+0987654321",
+                            Whatsapp = "+0987654321"
+                        },
+                        new
+                        {
+                            UserId = "user3",
+                            Country = "UK",
+                            FirstName = "Alice",
+                            LastName = "Johnson",
+                            PhoneNumber = "+1122334455",
+                            Whatsapp = "+1122334455"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Employee", b =>
@@ -227,6 +311,23 @@ namespace DataAccess.Migrations.TourismAgency
                     b.HasKey("UserId");
 
                     b.ToTable("Employees", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "emp1",
+                            HireDate = new DateTime(2020, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            UserId = "emp2",
+                            HireDate = new DateTime(2018, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            UserId = "emp3",
+                            HireDate = new DateTime(2022, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.ImageShot", b =>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations.TourismAgency
 {
     [DbContext(typeof(TourismAgencyDbContext))]
-    [Migration("20250421212852_AddedSeedData")]
-    partial class AddedSeedData
+    [Migration("20250421232547_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -267,6 +267,35 @@ namespace DataAccess.Migrations.TourismAgency
                     b.HasKey("UserId");
 
                     b.ToTable("Customers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "user1",
+                            Country = "USA",
+                            FirstName = "John",
+                            LastName = "Doe",
+                            PhoneNumber = "+1234567890",
+                            Whatsapp = "+1234567890"
+                        },
+                        new
+                        {
+                            UserId = "user2",
+                            Country = "Canada",
+                            FirstName = "Jane",
+                            LastName = "Smith",
+                            PhoneNumber = "+0987654321",
+                            Whatsapp = "+0987654321"
+                        },
+                        new
+                        {
+                            UserId = "user3",
+                            Country = "UK",
+                            FirstName = "Alice",
+                            LastName = "Johnson",
+                            PhoneNumber = "+1122334455",
+                            Whatsapp = "+1122334455"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Employee", b =>

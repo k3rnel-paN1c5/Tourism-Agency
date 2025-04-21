@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DataAccess.Migrations.TourismAgency
 {
     /// <inheritdoc />
@@ -445,6 +447,36 @@ namespace DataAccess.Migrations.TourismAgency
                         principalTable: "Payments",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "id", "title" },
+                values: new object[,]
+                {
+                    { 1, "Sedan" },
+                    { 2, "SUV" },
+                    { 3, "Sports" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Customers",
+                columns: new[] { "id", "Country", "firstName", "lastName", "phoneNumber", "whatsapp" },
+                values: new object[,]
+                {
+                    { "user1", "USA", "John", "Doe", "+1234567890", "+1234567890" },
+                    { "user2", "Canada", "Jane", "Smith", "+0987654321", "+0987654321" },
+                    { "user3", "UK", "Alice", "Johnson", "+1122334455", "+1122334455" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Cars",
+                columns: new[] { "id", "categoryId", "color", "image", "mbw", "model", "ppd", "pph", "seats" },
+                values: new object[,]
+                {
+                    { 1, 1, "Silver", "toyota-camry.jpg", 1.00m, "Toyota Camry", 80.00m, 15.00m, 5 },
+                    { 2, 2, "White", "honda-cr-v.jpg", 2.00m, "Honda CR-V", 100.00m, 20.00m, 7 },
+                    { 3, 3, "Red", "ford-mustang.jpg", 3.00m, "Ford Mustang", 150.00m, 30.00m, 4 }
                 });
 
             migrationBuilder.CreateIndex(

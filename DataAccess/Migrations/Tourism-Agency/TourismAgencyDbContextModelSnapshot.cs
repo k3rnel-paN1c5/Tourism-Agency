@@ -264,6 +264,35 @@ namespace DataAccess.Migrations.TourismAgency
                     b.HasKey("UserId");
 
                     b.ToTable("Customers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "user1",
+                            Country = "USA",
+                            FirstName = "John",
+                            LastName = "Doe",
+                            PhoneNumber = "+1234567890",
+                            Whatsapp = "+1234567890"
+                        },
+                        new
+                        {
+                            UserId = "user2",
+                            Country = "Canada",
+                            FirstName = "Jane",
+                            LastName = "Smith",
+                            PhoneNumber = "+0987654321",
+                            Whatsapp = "+0987654321"
+                        },
+                        new
+                        {
+                            UserId = "user3",
+                            Country = "UK",
+                            FirstName = "Alice",
+                            LastName = "Johnson",
+                            PhoneNumber = "+1122334455",
+                            Whatsapp = "+1122334455"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Employee", b =>
@@ -279,6 +308,23 @@ namespace DataAccess.Migrations.TourismAgency
                     b.HasKey("UserId");
 
                     b.ToTable("Employees", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "emp1",
+                            HireDate = new DateTime(2020, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            UserId = "emp2",
+                            HireDate = new DateTime(2018, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            UserId = "emp3",
+                            HireDate = new DateTime(2022, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.ImageShot", b =>

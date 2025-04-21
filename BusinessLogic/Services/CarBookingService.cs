@@ -53,15 +53,19 @@ public class CarBookingService : ICarBookingService
             EndDate = carBookingDto.EndDate,    
             Status = BookingStatus.Pending,
             NumOfPassengers = carBookingDto.NumOfPassengers,
-            CustomerId = "1",
+            CustomerId = "user1", //todo: change later
+            EmployeeId = "emp1" //todo: change later
         };
-        await _bookingRepository.AddAsync(booking);
+        try{
+            await _bookingRepository.AddAsync(booking);
+        }
+        catch(Exception ex){
+            throw new InvalidOperationException("Error while creating booking " + ex.Message);
+        }
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
         // the car is not null
         CarBooking carBooking = new CarBooking{
-            // Booking.BookingType = BookingStatus.Pending,
-            // Booking.StartDaate = carBookingDto.
             BookingId = booking.Id,
             CarId = car.Id,
             PickUpLocation = carBookingDto.PickUpLocation,
@@ -71,8 +75,14 @@ public class CarBookingService : ICarBookingService
             Car = car
         };
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-
-        await _carbookingRepository.AddAsync(carBooking);
+        try{
+            await _carbookingRepository.AddAsync(carBooking);
+            await _bookingRepository.SaveAsync();
+            await _carbookingRepository.SaveAsync();
+        }
+        catch(Exception ex){
+            throw new InvalidOperationException("Error while creating carbooking " + ex.Message);
+        }
         ReturnCarBookingDTO carBookingDTO = _mapper.Map<ReturnCarBookingDTO>(carBooking);
         // = new ReturnCarBookingDTO{
         //     CarId = carBooking.CarId,

@@ -43,7 +43,6 @@ namespace DataAccess.Entities
         [ForeignKey("Customer")]
         public string CustomerId { get; set; } = string.Empty;
 
-        [Required]
         [Column("employeeId")]
         [ForeignKey("Employee")]
         public string EmployeeId { get; set; } = string.Empty;
