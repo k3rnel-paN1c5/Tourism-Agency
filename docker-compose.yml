@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5050:80"
+      - "5001:80"
     volumes:
       - ./TourismAgency:/src/TourismAgency
       - ~/.nuget:/root/.nuget
