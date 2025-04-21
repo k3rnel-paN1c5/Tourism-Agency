@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations.TourismAgency
 {
     [DbContext(typeof(TourismAgencyDbContext))]
-    [Migration("20250415090045_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250421212852_AddedSeedData")]
+    partial class AddedSeedData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,8 +60,9 @@ namespace DataAccess.Migrations.TourismAgency
                         .HasColumnType("datetime2(7)")
                         .HasColumnName("startDate");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
                         .HasColumnName("status");
 
                     b.HasKey("Id");
@@ -122,6 +123,44 @@ namespace DataAccess.Migrations.TourismAgency
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Cars", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Color = "Silver",
+                            Image = "toyota-camry.jpg",
+                            Mbw = 1.00m,
+                            Model = "Toyota Camry",
+                            Ppd = 80.00m,
+                            Pph = 15.00m,
+                            Seats = 5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Color = "White",
+                            Image = "honda-cr-v.jpg",
+                            Mbw = 2.00m,
+                            Model = "Honda CR-V",
+                            Ppd = 100.00m,
+                            Pph = 20.00m,
+                            Seats = 7
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 3,
+                            Color = "Red",
+                            Image = "ford-mustang.jpg",
+                            Mbw = 3.00m,
+                            Model = "Ford Mustang",
+                            Ppd = 150.00m,
+                            Pph = 30.00m,
+                            Seats = 4
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.CarBooking", b =>
@@ -143,10 +182,6 @@ namespace DataAccess.Migrations.TourismAgency
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("pickUpLocation");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int")
-                        .HasColumnName("status");
 
                     b.Property<bool>("WithDriver")
                         .HasColumnType("bit")
@@ -179,6 +214,23 @@ namespace DataAccess.Migrations.TourismAgency
                         .IsUnique();
 
                     b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "Sedan"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Title = "SUV"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Title = "Sports"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Customer", b =>
@@ -188,6 +240,7 @@ namespace DataAccess.Migrations.TourismAgency
                         .HasColumnName("id");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Country");
 
@@ -207,6 +260,7 @@ namespace DataAccess.Migrations.TourismAgency
                         .HasColumnName("phoneNumber");
 
                     b.Property<string>("Whatsapp")
+                        .IsRequired()
                         .HasColumnType("char(14)")
                         .HasColumnName("whatsapp");
 
@@ -281,6 +335,7 @@ namespace DataAccess.Migrations.TourismAgency
                         .HasColumnName("bookingId");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("notes");
 
@@ -290,7 +345,7 @@ namespace DataAccess.Migrations.TourismAgency
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("nvarchar(30)")
                         .HasColumnName("status");
 
                     b.HasKey("Id");
@@ -310,6 +365,7 @@ namespace DataAccess.Migrations.TourismAgency
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Icon")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("icon");
 
@@ -353,7 +409,7 @@ namespace DataAccess.Migrations.TourismAgency
 
                     b.Property<string>("TransactionType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)")
+                        .HasColumnType("nvarchar(30)")
                         .HasColumnName("type");
 
                     b.HasKey("Id");
@@ -386,6 +442,7 @@ namespace DataAccess.Migrations.TourismAgency
                         .HasColumnName("employeeId");
 
                     b.Property<string>("Image")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("image");
 
@@ -404,10 +461,11 @@ namespace DataAccess.Migrations.TourismAgency
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("nvarchar(30)")
                         .HasColumnName("status");
 
                     b.Property<string>("Summary")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("summary");
 
@@ -454,6 +512,7 @@ namespace DataAccess.Migrations.TourismAgency
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("description");
 
@@ -502,10 +561,12 @@ namespace DataAccess.Migrations.TourismAgency
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("MetaDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("metaDescription");
 
                     b.Property<string>("MetaKeywords")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("metaKeywords");
 
@@ -562,6 +623,7 @@ namespace DataAccess.Migrations.TourismAgency
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("description");
 
@@ -625,6 +687,7 @@ namespace DataAccess.Migrations.TourismAgency
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Duration")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("duration");
 
@@ -633,14 +696,17 @@ namespace DataAccess.Migrations.TourismAgency
                         .HasColumnName("endDate");
 
                     b.Property<string>("HotelStays")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("hotelStays");
 
                     b.Property<string>("IncludedServices")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("includedServices");
 
                     b.Property<string>("MealsPlan")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("mealsPlan");
 
@@ -653,6 +719,7 @@ namespace DataAccess.Migrations.TourismAgency
                         .HasColumnName("startDate");
 
                     b.Property<string>("Stops")
+                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("stops");
 

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DataAccess.Entities;
-
+using DTO.CarBooking;
 using DataAccess.Contexts;
+using BusinessLogic.IServices;
 
 
 
@@ -9,40 +10,35 @@ namespace TourismAgency.Controllers
 {
     public class CarBookingController : Controller
     {
-        private readonly TourismAgencyDbContext _context;
+        private readonly ICarBookingService _carBookingService;
 
-        public CarBookingController(TourismAgencyDbContext context)
+        public CarBookingController(ICarBookingService carBookingService)
         {
-            _context = context; // Inject the database context
+            _carBookingService = carBookingService; // Inject the  service
         }
         // GET: CarBooking/Create
         public IActionResult Create()
         {
             // Initialize a new CarBooking object with an empty Booking
-            var carBooking = new CarBooking
-            {
-                Booking = new Booking() // Initialize the Booking navigation property
-            };
-            return View(carBooking);
+            var createCarBookingDTO = new CreateCarBookingDTO();
+            return View(createCarBookingDTO);
         }
 
         // POST: CarBooking/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CarBooking carBooking)
+        public async Task<IActionResult> Create(CreateCarBookingDTO createCarBookingDTO)
         {
-            if (ModelState.IsValid)
-            {
-                // Save the CarBooking object to the database
-                _context.CarBookings.Add(carBooking);
-                _context.SaveChanges();
-
-                // Redirect to the success page
-                return RedirectToAction("Success");
-            }
-
             // If the model state is invalid, return the view with validation errors
-            return View(carBooking);
+            if (!ModelState.IsValid)
+                return View(createCarBookingDTO);
+
+            // Save the CarBooking object to the database
+            await _carBookingService.CreateBookingAsync(createCarBookingDTO);
+
+            return RedirectToAction("Success");
+            
+
         }
 
         // GET: CarBooking/Success

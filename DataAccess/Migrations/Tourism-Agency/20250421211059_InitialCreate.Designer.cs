@@ -4,6 +4,7 @@ using DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations.TourismAgency
 {
     [DbContext(typeof(TourismAgencyDbContext))]
-    partial class TourismAgencyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250421211059_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,44 +123,6 @@ namespace DataAccess.Migrations.TourismAgency
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Cars", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            Color = "Silver",
-                            Image = "toyota-camry.jpg",
-                            Mbw = 1.00m,
-                            Model = "Toyota Camry",
-                            Ppd = 80.00m,
-                            Pph = 15.00m,
-                            Seats = 5
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 2,
-                            Color = "White",
-                            Image = "honda-cr-v.jpg",
-                            Mbw = 2.00m,
-                            Model = "Honda CR-V",
-                            Ppd = 100.00m,
-                            Pph = 20.00m,
-                            Seats = 7
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryId = 3,
-                            Color = "Red",
-                            Image = "ford-mustang.jpg",
-                            Mbw = 3.00m,
-                            Model = "Ford Mustang",
-                            Ppd = 150.00m,
-                            Pph = 30.00m,
-                            Seats = 4
-                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.CarBooking", b =>
@@ -211,23 +176,6 @@ namespace DataAccess.Migrations.TourismAgency
                         .IsUnique();
 
                     b.ToTable("Categories", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Title = "Sedan"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Title = "SUV"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Title = "Sports"
-                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Customer", b =>

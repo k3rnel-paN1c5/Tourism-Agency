@@ -10,7 +10,7 @@ namespace DataAccess.Repositories
     {
         // private readonly TourismAgencyDbContext _appContext;
         public CarRepository(TourismAgencyDbContext context) : base(context) { }
-        public async Task<IEnumerable<Car>> GetAvailableCarsAsync(DateTime start, DateTime end)
+        public async Task<IEnumerable<int>> GetAvailableCarsAsync(DateTime start, DateTime end)
         {
             var unavailableCarIds = await _dbSet
                 .Where(c => c.CarBookings.Any(cb =>
@@ -24,6 +24,7 @@ namespace DataAccess.Repositories
             return await _dbSet
                 .Where(c => !unavailableCarIds.Contains(c.Id))
                 .Include(c => c.Category)
+                .Select(c => c.Id)
                 .ToListAsync();
         }
     }

@@ -14,9 +14,9 @@ namespace DTO.CarBooking
         public int CarId { get; set; }
         public string? PickUpLocation { get; set; }
         public string? DropOffLocation { get; set; }
-        public ReturnCarDTO? Car { get; set; }
-        public ReturnBookingDTO? Booking { get; set; }
-        public List<ReturnImageShotDTO> ImageShots { get; set; } = [];
+        // public ReturnCarDTO? Car { get; set; }
+        // public ReturnBookingDTO? Booking { get; set; }
+        // public List<ReturnImageShotDTO> ImageShots { get; set; } = [];
     }
 }
 

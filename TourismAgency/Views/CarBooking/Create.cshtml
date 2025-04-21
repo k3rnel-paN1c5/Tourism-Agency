@@ -1,4 +1,4 @@
-﻿@model DataAccess.Entities.CarBooking
+﻿@model DTO.CarBooking.CreateCarBookingDTO
 
 @{
     ViewData["Title"] = "Create Car Booking";
@@ -31,23 +31,23 @@
 
             <!-- Start Date and Time -->
             <div class="col-12">
-                <label asp-for="Booking.StartDate" class="form-label">Start Date and Time</label>
-                <input asp-for="Booking.StartDate" type="datetime-local" class="form-control" required />
-                <span asp-validation-for="Booking.StartDate" class="text-danger"></span>
+                <label asp-for="StartDate" class="form-label">Start Date and Time</label>
+                <input asp-for="StartDate" type="datetime-local" class="form-control" required />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
 
             <!-- End Date and Time -->
             <div class="col-12">
-                <label asp-for="Booking.EndDate" class="form-label">End Date and Time</label>
-                <input asp-for="Booking.EndDate" type="datetime-local" class="form-control" required />
-                <span asp-validation-for="Booking.EndDate" class="text-danger"></span>
+                <label asp-for="EndDate" class="form-label">End Date and Time</label>
+                <input asp-for="EndDate" type="datetime-local" class="form-control" required />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
             <!-- Number of Passengers -->
             <div class="col-12">
-                <label asp-for="Booking.NumOfPassengers" class="form-label">Number of Passengers</label>
-                <input asp-for="Booking.NumOfPassengers" type="number" class="form-control" min="1" max="20" required />
-                <span asp-validation-for="Booking.NumOfPassengers" class="text-danger"></span>
+                <label asp-for="NumOfPassengers" class="form-label">Number of Passengers</label>
+                <input asp-for="NumOfPassengers" type="number" class="form-control" min="1" max="20" required />
+                <span asp-validation-for="NumOfPassengers" class="text-danger"></span>
             </div>
 
             <!-- With Driver -->

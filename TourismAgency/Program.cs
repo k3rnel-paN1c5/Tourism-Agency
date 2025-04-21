@@ -3,6 +3,9 @@ using DataAccess.Repositories.IRepositories;
 using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Contexts;
+using BusinessLogic.IServices;
+using BusinessLogic.Services;
+using BusinessLogic.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +17,24 @@ builder.Services.AddDbContext<TourismAgencyDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddDbContext<IdentityAppDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
-    
+
+// Register TourismAgencyDbContext as the default DbContext
+builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyDbContext>());
+
+builder.Services.AddAuthorization();
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
+// Services
+builder.Services.AddScoped<ICarBookingService, CarBookingService>();
+// Automapper
+builder.Services.AddAutoMapper(
+    typeof(CarBookingProfile)
+);
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

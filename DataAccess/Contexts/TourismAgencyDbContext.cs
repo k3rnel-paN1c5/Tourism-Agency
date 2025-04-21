@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Entities;
+using DataAccess.SeedData;
 
 namespace DataAccess.Contexts
 {
@@ -71,11 +72,15 @@ namespace DataAccess.Contexts
                         .WithMany(ct => ct.Cars)
                         .HasForeignKey(c => c.CategoryId)
                         .OnDelete(DeleteBehavior.Restrict);
+            // Seed cars
+            modelBuilder.Entity<Car>().HasData(SeedData.SeedData.GetCars());
         }
         private static void ConfigureCategory(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Category>().ToTable("Categories")
                         .HasIndex(c => c.Title).IsUnique();
+            // Seed categories
+            modelBuilder.Entity<Category>().HasData(SeedData.SeedData.GetCategories());
         }
         private static void ConfigurePayment(ModelBuilder modelBuilder)
         {

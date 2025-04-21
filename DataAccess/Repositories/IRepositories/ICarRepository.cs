@@ -4,6 +4,6 @@ namespace DataAccess.Repositories.IRepositories
 {
     public interface ICarRepository : IRepository<Car, int>
     {
-        Task<IEnumerable<Car>> GetAvailableCarsAsync(DateTime start, DateTime end);
+        Task<IEnumerable<int>> GetAvailableCarsAsync(DateTime start, DateTime end);
     }
 }

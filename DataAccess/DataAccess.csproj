@@ -20,4 +20,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities/SeedData/" />
+  </ItemGroup>
+
 </Project>

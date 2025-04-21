@@ -32,8 +32,8 @@ namespace DataAccess.Migrations.TourismAgency
                     firstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     lastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     phoneNumber = table.Column<string>(type: "char(12)", nullable: false),
-                    whatsapp = table.Column<string>(type: "char(14)", nullable: true),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    whatsapp = table.Column<string>(type: "char(14)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,7 +59,7 @@ namespace DataAccess.Migrations.TourismAgency
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     method = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    icon = table.Column<string>(type: "nvarchar(50)", nullable: true)
+                    icon = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,7 +73,7 @@ namespace DataAccess.Migrations.TourismAgency
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     title = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(200)", nullable: true)
+                    description = table.Column<string>(type: "nvarchar(200)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -115,7 +115,7 @@ namespace DataAccess.Migrations.TourismAgency
                     name = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     slug = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     isAvailable = table.Column<bool>(type: "bit", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    description = table.Column<string>(type: "nvarchar(200)", nullable: false),
                     isPrivate = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -158,7 +158,7 @@ namespace DataAccess.Migrations.TourismAgency
                     bookingType = table.Column<bool>(type: "bit", nullable: false),
                     startDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     endDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
-                    status = table.Column<int>(type: "int", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(30)", nullable: false),
                     numOfPassengers = table.Column<int>(type: "int", nullable: false),
                     customerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     employeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -188,11 +188,11 @@ namespace DataAccess.Migrations.TourismAgency
                         .Annotation("SqlServer:Identity", "1, 1"),
                     title = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     body = table.Column<string>(type: "nvarchar(500)", nullable: false),
-                    image = table.Column<string>(type: "nvarchar(100)", nullable: true),
+                    image = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     slug = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     views = table.Column<int>(type: "int", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    summary = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    status = table.Column<string>(type: "nvarchar(30)", nullable: false),
+                    summary = table.Column<string>(type: "nvarchar(200)", nullable: false),
                     publishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     postTypeId = table.Column<int>(type: "int", nullable: false),
                     employeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -224,11 +224,11 @@ namespace DataAccess.Migrations.TourismAgency
                     regionId = table.Column<int>(type: "int", nullable: false),
                     startDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     endDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
-                    duration = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    includedServices = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    stops = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    mealsPlan = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    hotelStays = table.Column<string>(type: "nvarchar(200)", nullable: true)
+                    duration = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    includedServices = table.Column<string>(type: "nvarchar(200)", nullable: false),
+                    stops = table.Column<string>(type: "nvarchar(200)", nullable: false),
+                    mealsPlan = table.Column<string>(type: "nvarchar(200)", nullable: false),
+                    hotelStays = table.Column<string>(type: "nvarchar(200)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -255,7 +255,6 @@ namespace DataAccess.Migrations.TourismAgency
                     carId = table.Column<int>(type: "int", nullable: false),
                     pickUpLocation = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     dropOffLocation = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    status = table.Column<int>(type: "int", nullable: false),
                     withDriver = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -282,11 +281,11 @@ namespace DataAccess.Migrations.TourismAgency
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     bookingId = table.Column<int>(type: "int", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(30)", nullable: false),
                     amountDue = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
                     amountPaid = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
                     paymentDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
-                    notes = table.Column<string>(type: "nvarchar(200)", nullable: true)
+                    notes = table.Column<string>(type: "nvarchar(200)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -331,8 +330,8 @@ namespace DataAccess.Migrations.TourismAgency
                         .Annotation("SqlServer:Identity", "1, 1"),
                     urlSlug = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     metaTitle = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    metaDescription = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    metaKeywords = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    metaDescription = table.Column<string>(type: "nvarchar(200)", nullable: false),
+                    metaKeywords = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     postId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -425,7 +424,7 @@ namespace DataAccess.Migrations.TourismAgency
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    type = table.Column<string>(type: "nvarchar(10)", nullable: false),
+                    type = table.Column<string>(type: "nvarchar(30)", nullable: false),
                     amount = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
                     transactionDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     paymentId = table.Column<int>(type: "int", nullable: false),
