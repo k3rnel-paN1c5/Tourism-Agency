@@ -25,7 +25,7 @@ namespace BusinessLogic.Services
             _signInManager = signInManager;
             _Repository = Repository;
         }
-        public async Task<SignInResult> LoginAsync(EmployeeLoginDTO dto)
+        public async Task<SignInResult> LoginAsync(LoginDTO dto)
         { 
             return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, dto.RememberMe, lockoutOnFailure: false);
         }
@@ -35,6 +35,9 @@ namespace BusinessLogic.Services
             await _signInManager.SignOutAsync();
         }
 
-      
+        public Task<IdentityResult> RegisterAsync(EmployeeRegisterDTO dto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
