@@ -17,6 +17,9 @@ builder.Services.AddDbContext<TourismAgencyDbContext>(
 builder.Services.AddDbContext<IdentityAppDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
     
+// Register TourismAgencyDbContext as the default DbContext
+builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyDbContext>());
+
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
