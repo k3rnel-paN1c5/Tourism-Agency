@@ -14,10 +14,10 @@ namespace DataAccess.Repositories
 {
     public class Repository<T, TKey> : IRepository<T, TKey> where T : class
     {
-        protected readonly DbContext _context;
+        protected readonly TourismAgencyDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(DbContext context)
+        public Repository(TourismAgencyDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();

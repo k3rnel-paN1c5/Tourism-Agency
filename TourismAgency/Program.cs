@@ -3,6 +3,8 @@ using DataAccess.Repositories.IRepositories;
 using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Contexts;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +19,23 @@ builder.Services.AddDbContext<IdentityAppDbContext>(
     
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<BusinessLogic.IServices.IEmployeeAuthService, BusinessLogic.Services.EmployeeAuthService>();
+builder.Services.AddIdentity<User, IdentityRole>(
+    options =>
+    {
+        options.Password.RequiredUniqueChars = 0;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<TourismAgencyDbContext>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>();
+
+
 
 var app = builder.Build();
 
