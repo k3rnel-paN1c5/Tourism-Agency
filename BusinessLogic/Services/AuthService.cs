@@ -13,43 +13,39 @@ namespace BusinessLogic.Services
         private readonly SignInManager<User> _signInManager;
         private readonly IRepository<Customer, string> _customerRepository;
 
-        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IStudentRepository studentRepository)
+        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IRepository<Customer, string> customerRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _studentRepository = studentRepository;
+            _customerRepository = customerRepository;
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterDto dto)
         {
-            ApplicationUser user;
-                        
-            if (dto.Role == "Student")
+            User user;
+
+            if (dto.Role == "Customer")
             {
-                
-                user = new Student
+                user = new Customer
                 {
-                    UserName = dto.Email,
-                    Email = dto.Email,
-                    Name = $"{dto.FirstName} {dto.LastName}",
-                    Address = dto.Address,
                     FirstName = dto.FirstName,
                     LastName = dto.LastName,
-                    Age = dto.Age,
-                    IsActive = true
+                    PhoneNumber = $"{dto.FirstName} {dto.LastName}",
+                    Whatsapp = dto.Address,
+                    Country = dto.FirstName;
                 };
             }
             else
             {
-                user = new ApplicationUser
+                user = new User
                 {
                     UserName = dto.Email,
                     Email = dto.Email,
                     Name = $"{dto.FirstName} {dto.LastName}",
                     Address = dto.Address
                 };
-                
             }
+
             var result = await _userManager.CreateAsync(user, dto.Password);
             if (result.Succeeded)
             {
@@ -68,5 +64,4 @@ namespace BusinessLogic.Services
             await _signInManager.SignOutAsync();
         }
     }
-
 }
