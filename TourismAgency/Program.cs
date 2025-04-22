@@ -29,7 +29,7 @@ builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-builder.Services.AddScoped<BusinessLogic.IServices.IEmployeeAuthService, BusinessLogic.Services.EmployeeAuthService>();
+
 builder.Services.AddIdentity<User, IdentityRole>(
     options =>
     {
@@ -46,6 +46,7 @@ builder.Services.AddIdentity<User, IdentityRole>(
 
 // Services
 builder.Services.AddScoped<ICarBookingService, CarBookingService>();
+builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 // Automapper
 builder.Services.AddAutoMapper(
     typeof(CarBookingProfile)
