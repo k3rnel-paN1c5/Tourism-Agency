@@ -16,7 +16,7 @@ builder.Services.AddDbContext<TourismAgencyDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddDbContext<IdentityAppDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
-    
+
 // Register TourismAgencyDbContext as the default DbContext
 builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyDbContext>());
 
@@ -34,7 +34,7 @@ builder.Services.AddIdentity<User, IdentityRole>(
         options.Password.RequiredLength = 6;
         options.Password.RequireNonAlphanumeric = false;
     })
-    .AddEntityFrameworkStores<TourismAgencyDbContext>()
+    .AddEntityFrameworkStores<IdentityAppDbContext>()
     .AddDefaultTokenProviders()
     .AddRoles<IdentityRole>();
 
