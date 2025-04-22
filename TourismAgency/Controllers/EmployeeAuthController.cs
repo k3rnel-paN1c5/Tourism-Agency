@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BusinessLogic.IServices;
 using DTO.Employee;
+using DTO.User;
 
 
 namespace TourismAgency.Controllers
@@ -22,7 +23,7 @@ namespace TourismAgency.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(EmployeeLoginDTO dto, string? returnUrl = null)
+        public async Task<IActionResult> Login(LoginDTO dto, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(dto);
