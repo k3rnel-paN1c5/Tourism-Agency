@@ -20,7 +20,7 @@ namespace BusinessLogic.Services
             _customerRepository = customerRepository;
         }
 
-        public async Task<IdentityResult> RegisterAsync(RegisterDto dto)
+        public async Task<IdentityResult> RegisterAsync(RegisterUserDto dto)
         {
             User user;
 
@@ -30,22 +30,12 @@ namespace BusinessLogic.Services
                 {
                     FirstName = dto.FirstName,
                     LastName = dto.LastName,
-                    PhoneNumber = $"{dto.FirstName} {dto.LastName}",
-                    Whatsapp = dto.Address,
-                    Country = dto.FirstName;
+                    PhoneNumber = dto.PhoneNumber,
+                    Whatsapp = dto.Whatsapp,
+                    Country = dto.Country;
                 };
             }
-            else
-            {
-                user = new User
-                {
-                    UserName = dto.Email,
-                    Email = dto.Email,
-                    Name = $"{dto.FirstName} {dto.LastName}",
-                    Address = dto.Address
-                };
-            }
-
+            
             var result = await _userManager.CreateAsync(user, dto.Password);
             if (result.Succeeded)
             {
