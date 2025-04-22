@@ -3,16 +3,11 @@ using DataAccess.Repositories.IRepositories;
 using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Contexts;
-<<<<<<< HEAD
 using BusinessLogic.IServices;
 using BusinessLogic.Services;
 using Microsoft.AspNetCore.Identity;
 using System;
 using BusinessLogic.MappingProfiles;
-=======
-using Microsoft.AspNetCore.Identity;
-using System;
->>>>>>> add-auth-service/employee
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +23,7 @@ builder.Services.AddDbContext<IdentityAppDbContext>(
 // Register TourismAgencyDbContext as the default DbContext
 builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyDbContext>());
 
-<<<<<<< HEAD
 builder.Services.AddAuthorization();
-=======
->>>>>>> add-auth-service/employee
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
