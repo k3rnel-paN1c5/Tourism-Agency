@@ -8,6 +8,7 @@ using Application.Services.Auth;
 using Application.Services.UseCases;
 using Application.MappingProfiles;
 using Infrastructure.Contexts;
+using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
 
 using System;
@@ -69,6 +70,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// using (var scope = app.Services.CreateScope())
+// {
+//     var services = scope.ServiceProvider;
+//     var userManager = services.GetRequiredService<UserManager<User>>();
+//     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+//     await IdentitySeed.SeedRolesAndAdmin(userManager, roleManager);
+// }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

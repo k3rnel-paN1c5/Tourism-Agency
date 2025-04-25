@@ -31,7 +31,6 @@ namespace TourismAgency.Controllers
                     PhoneNumber = dto.PhoneNumber,
                     Whatsapp = dto.Whatsapp,
                     Country = dto.Country,
-                    // Role = "Customer" // Default role for customers
                 });
 
                 if (result.Succeeded)
@@ -89,7 +88,7 @@ namespace TourismAgency.Controllers
         public async Task<IActionResult> Logout()
         {
             await _authService.LogoutAsync();
-            return RedirectToAction("Login");
+            return RedirectToAction("Index", "Home");
         }
 
     }

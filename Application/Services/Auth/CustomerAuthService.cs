@@ -5,19 +5,20 @@ using Application.DTOs.Customer;
 using Application.DTOs.User;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Services.Auth{
+namespace Application.Services.Auth
+{
     public class CustomerAuthService : ICustomerAuthService
     {
         private readonly UserManager<User> _userManager;
-            private readonly SignInManager<User> _signInManager;
-            private readonly IRepository<Customer, string> _Repository;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IRepository<Customer, string> _Repository;
 
-            public CustomerAuthService(UserManager<User> userManager, SignInManager<User> signInManager, IRepository<Customer,string> Repository)
-            {
-                _userManager = userManager;
-                _signInManager = signInManager;
-                _Repository = Repository;
-            }
+        public CustomerAuthService(UserManager<User> userManager, SignInManager<User> signInManager, IRepository<Customer, string> Repository)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _Repository = Repository;
+        }
         public async Task<SignInResult> LoginAsync(LoginDTO dto)
         {
             return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, dto.RememberMe, lockoutOnFailure: false);
@@ -32,7 +33,7 @@ namespace Application.Services.Auth{
 
             // Create with password in one call
             var result = await _userManager.CreateAsync(user, dto.Password!);
-        
+
             if (!result.Succeeded)
                 return result;
             // Now create the Customer profile
@@ -49,13 +50,13 @@ namespace Application.Services.Auth{
             await _Repository.AddAsync(newCustomer);
             await _Repository.SaveAsync();
 
-            // await _userManager.AddToRoleAsync(user, "Customer");
-            
+            await _userManager.AddToRoleAsync(user, "Customer");
+
             return result;
         }
-        public Task LogoutAsync()
+        public async Task LogoutAsync()
         {
-            throw new NotImplementedException();
+            await _signInManager.SignOutAsync();
         }
     }
 

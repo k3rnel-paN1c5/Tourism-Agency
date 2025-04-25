@@ -1,9 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Employee;
-
 public class EmployeeRegisterDTO
 {
+    public enum TRoles {
+        BookingSupervisor,
+        TripSupervisor,
+        Manager
+    }
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid email format")]
     public string? Email { get; set; } 
@@ -17,8 +21,7 @@ public class EmployeeRegisterDTO
     [DataType(DataType.Password)]
     [Compare("Password", ErrorMessage = "Passwords don't match")]
     public string? ConfirmPassword { get; set; }
-
-
-    
+    [Required(ErrorMessage = "Role is required")]
+    public TRoles EmpRole { get; set; }
 
 }

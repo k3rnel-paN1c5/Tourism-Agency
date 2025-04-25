@@ -23,15 +23,38 @@ namespace Application.Services.Auth
         { 
             return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, dto.RememberMe, lockoutOnFailure: false);
         }
+        public async Task<IdentityResult> RegisterAsync(EmployeeRegisterDTO dto)
+        {
+            var user = new User
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+            };
+
+            // Create with password in one call
+            var result = await _userManager.CreateAsync(user, dto.Password!);
+
+            if (!result.Succeeded)
+                return result;
+            // Now create the Employee profile
+            Employee newEmp = new Employee
+            {
+                UserId = user.Id, // Use the generated ID
+                HireDate = DateTime.Now
+            };
+
+            await _Repository.AddAsync(newEmp);
+            await _Repository.SaveAsync();
+
+            await _userManager.AddToRoleAsync(user, dto.EmpRole.ToString());
+
+            return result;
+        }
 
         public async  Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
         }
 
-        public Task<IdentityResult> RegisterAsync(EmployeeRegisterDTO dto)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
