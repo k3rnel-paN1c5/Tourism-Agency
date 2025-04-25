@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using BusinessLogic.IServices;
-using DTO.Customer;
-using DTO.User;
+using Application.IServices.Auth;
+using Application.DTOs.Customer;
+using Application.DTOs.User;
 namespace TourismAgency.Controllers
 {
     public class CustomerAuthController : Controller

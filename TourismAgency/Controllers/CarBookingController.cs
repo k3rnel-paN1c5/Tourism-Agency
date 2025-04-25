@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DataAccess.Entities;
-using DTO.CarBooking;
-using DataAccess.Contexts;
-using BusinessLogic.IServices;
+using Application.IServices.UseCases;
+using Application.DTOs.CarBooking;
 
 
 

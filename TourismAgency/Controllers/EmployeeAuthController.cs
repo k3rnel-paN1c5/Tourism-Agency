@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BusinessLogic.IServices;
-using DTO.Employee;
-using DTO.User;
+using Application.IServices.Auth;
+using Application.DTOs.Employee;
+using Application.DTOs.User;
 
 
 namespace TourismAgency.Controllers

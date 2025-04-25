@@ -1,19 +1,24 @@
-using DataAccess.Entities;
-using DataAccess.Repositories.IRepositories;
-using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
-using DataAccess.Contexts;
-using BusinessLogic.IServices;
-using BusinessLogic.Services;
 using Microsoft.AspNetCore.Identity;
+using Domain.IRepositories;
+using Domain.Entities;
+using Application.IServices.Auth;
+using Application.IServices.UseCases;
+using Application.Services.Auth;
+using Application.Services.UseCases;
+using Application.MappingProfiles;
+using Infrastructure.Contexts;
+using Infrastructure.Repositories;
+
 using System;
-using BusinessLogic.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 // Controllers and Views
 builder.Services.AddControllersWithViews();
+
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));

@@ -1,19 +1,19 @@
 # Dockerfile (for development)
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+COPY Domain/Domain.csproj ./Domain/
+COPY Application/Application.csproj ./Application/
+COPY Infrastructure/Infrastructure.csproj ./Infrastructure/
 COPY TourismAgency/TourismAgency.csproj ./TourismAgency/
-COPY DataAccess/DataAccess.csproj ./DataAccess/
-COPY BusinessLogic/BusinessLogic.csproj ./BusinessLogic/
-COPY DTO/DTO.csproj ./DTO/
+RUN dotnet restore ./Domain/Domain.csproj
+RUN dotnet restore ./Application/Application.csproj
+RUN dotnet restore ./Infrastructure/Infrastructure.csproj
 RUN dotnet restore ./TourismAgency/TourismAgency.csproj
-RUN dotnet restore ./DataAccess/DataAccess.csproj
-RUN dotnet restore ./BusinessLogic/BusinessLogic.csproj
-RUN dotnet restore ./DTO/DTO.csproj
 
+COPY Domain/ ./Domain/
+COPY Application/ ./Application/
+COPY Infrastructure/ ./Infrastructure/
 COPY TourismAgency/ ./TourismAgency/
-COPY DataAccess/ ./DataAccess/
-COPY BusinessLogic/ ./BusinessLogic/
-COPY DTO/ ./DTO/
 
 # Development specific setup
 ENV ASPNETCORE_ENVIRONMENT=Development
