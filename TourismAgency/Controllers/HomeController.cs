@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Session_6.Models;
+using TourismAgency.Models;
 using System.Diagnostics;
 
-namespace Session_6.Controllers
+namespace TourismAgency.Controllers
 {
     public class HomeController : Controller
     {
