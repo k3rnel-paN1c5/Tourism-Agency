@@ -401,3 +401,6 @@ FodyWeavers.xsd
 
 # To help manage the sql server connection string
 appsettings.Development.json
+
+# MacOS Finder files
+**/.DS_Store
