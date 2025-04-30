@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="DTOs/" />
     <Folder Include="MappingProfiles/" />
-    <Folder Include="Services/UseCases/" />
   </ItemGroup>
 
   <ItemGroup>
