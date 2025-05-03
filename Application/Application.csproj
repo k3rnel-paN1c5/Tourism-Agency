@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs/" />
-    <Folder Include="MappingProfiles/" />
+    <Folder Include="IServices/UseCases/Trip/" />
+    <Folder Include="IServices/UseCases/TripBooking/" />
+    <Folder Include="Services/UseCases/Trip/" />
+    <Folder Include="Services/UseCases/TripBooking/" />
   </ItemGroup>
 
   <ItemGroup>
