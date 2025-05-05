@@ -37,7 +37,6 @@ builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-builder.Services.AddScoped<IRegionRepository, RegionRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(
     options =>
@@ -58,10 +57,12 @@ builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<ITripService, TripService>();
 // Automapper
 builder.Services.AddAutoMapper(
     typeof(CarBookingProfile),
-    typeof(RegionProfile)
+    typeof(RegionProfile),
+    typeof(TripProfile)
 );
 
 builder.Services.AddHttpContextAccessor();

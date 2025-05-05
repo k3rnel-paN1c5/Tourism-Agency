@@ -12,15 +12,15 @@ namespace Application.Services.UseCases;
 
 public class RegionService : IRegionService
 {
-    private readonly IRegionRepository _regionRepo;
+    private readonly IRepository<Region, int> _regionRepo;
     private readonly IMapper _mapper;
-    public RegionService(IRegionRepository regionRepo, IMapper mapper){
+    public RegionService(IRepository<Region, int> regionRepo, IMapper mapper){
         _regionRepo = regionRepo;
         _mapper = mapper;
     }
     public async Task<GetRegionDTO> CreateRegionAsync(CreateRegionDTO dto)
     {
-        if (await _regionRepo.ExistsByNameAsync(dto.Name!))
+        if (await _regionRepo.GetByPredicateAsync(r => dto.Name!.Equals(r.Name)) is not null)
             throw new ValidationException("Region with this name already exists.");
 
         Region region = _mapper.Map<Region>(dto);
@@ -33,7 +33,7 @@ public class RegionService : IRegionService
         var region = await _regionRepo.GetByIdAsync(dto.Id) 
             ?? throw new Exception($"Region {dto.Id} not found.");
 
-        if (await _regionRepo.ExistsByNameAsync(dto.Name!))
+        if (await _regionRepo.GetByPredicateAsync(r => dto.Name!.Equals(r.Name)) is not null)
             throw new ValidationException("Region with this name already exists.");
 
         _regionRepo.Update(_mapper.Map<Region>(dto));
