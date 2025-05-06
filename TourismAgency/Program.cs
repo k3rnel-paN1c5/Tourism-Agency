@@ -60,7 +60,6 @@ builder.Services.AddIdentity<User, IdentityRole>(
 
 
 // Services
-builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
