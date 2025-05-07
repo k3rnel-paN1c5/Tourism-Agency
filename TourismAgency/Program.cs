@@ -10,6 +10,10 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
+using Application.IServices.UseCases.Post;
+using Application.Services.UseCases.Post;
+
+
 
 using System;
 
@@ -54,12 +58,15 @@ builder.Services.AddIdentity<User, IdentityRole>(
 builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
+builder.Services.AddScoped<IPostService, PostService>();
+
 // Automapper
 builder.Services.AddAutoMapper(
     typeof(CarBookingProfile)
 );
 
 builder.Services.AddHttpContextAccessor();
+
 
 var app = builder.Build();
 
@@ -79,7 +86,8 @@ if (!app.Environment.IsDevelopment())
 //     await IdentitySeed.SeedRolesAndAdmin(userManager, roleManager);
 // }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
