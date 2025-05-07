@@ -5,17 +5,17 @@ namespace Application.DTOs.Trip;
 
 public class CreateTripDTO
 {
-    [Required]
+    [Required(ErrorMessage = "Trip name cannot be empty")]
     [StringLength(50)]
     public string? Name { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Slug cannot be empty")]
     [StringLength(100)]
     public string? Slug { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Availabilty status cannot be empty")]
     public bool IsAvailable { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Description cannot be empty")]
     public string? Description { get; set; }
 
     [Required]
