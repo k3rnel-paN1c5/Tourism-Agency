@@ -24,6 +24,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers and Views
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddControllers();
+
+
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
@@ -86,13 +89,15 @@ if (!app.Environment.IsDevelopment())
 //     await IdentitySeed.SeedRolesAndAdmin(userManager, roleManager);
 // }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",

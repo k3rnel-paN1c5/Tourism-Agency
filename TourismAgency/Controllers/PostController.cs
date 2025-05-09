@@ -15,14 +15,22 @@ namespace TourismAgency.Controllers
             _postService = postService;
         }
 
-        [HttpPost("CreatePost")] // postman
+        [HttpPost("CreatePost")] // Postman endpoint for creating a post
         public async Task<IActionResult> CreatePost([FromBody] CreatePostDTO dto)
         {
+            // Validate the input DTO
             if (dto == null)
-                return BadRequest("البيانات غير صحيحة!");
+                return BadRequest(new { message = "Invalid data provided!" });
 
+            // Call the service method to create the post
             var result = await _postService.CreatePostAsync(dto);
-            return CreatedAtAction(nameof(CreatePost), new { id = result.Id }, result);
+
+            // Return a confirmation message along with the created post details
+            return CreatedAtAction(nameof(CreatePost), new 
+            { 
+                id = result.Id, 
+                message = "Post has been successfully created!" 
+            }, result);
         }
     }
 }
