@@ -65,7 +65,8 @@ builder.Services.AddScoped<IPostService, PostService>();
 
 // Automapper
 builder.Services.AddAutoMapper(
-    typeof(CarBookingProfile)
+    typeof(CarBookingProfile),
+    typeof(PostProfile) // ✅ Add PostProfile file
 );
 
 builder.Services.AddHttpContextAccessor();

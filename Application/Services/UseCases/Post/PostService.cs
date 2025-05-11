@@ -19,17 +19,13 @@ public class PostService: IPostService
 
         public async Task<GetPostDTO> CreatePostAsync(CreatePostDTO dto)
         {
-            var slug = GenerateSlug(dto.Title);
-            var post = new Domain.Entities.Post
-            {
-                Title = dto.Title,
-                Body = dto.Body,
-                Slug = slug,
-                Summary = dto.Summary,
-                PublishDate = DateTime.UtcNow,
-                PostTypeId = dto.PostTypeId,
-                EmployeeId = dto.EmployeeId
-            };
+            // Convert CreatePostDTO to Post using Mapper
+            var post = _mapper.Map<Domain.Entities.Post>(dto);
+
+            // Modify values that need processing
+            post.Slug = GenerateSlug(dto.Title); // ✅ Manually generate Slug
+            post.PublishDate = DateTime.UtcNow;  // ✅ Automatically set publish date
+            
                 Console.WriteLine($"Post Created: {post.Title} - {post.Body}"); // ✅ Debug log
 
             await _postRepository.AddAsync(post);
