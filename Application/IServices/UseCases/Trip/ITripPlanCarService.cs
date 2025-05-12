@@ -1,6 +1,6 @@
 using System;
 using Application.DTOs.TripPlanCar;
-namespace Application.IServices.UseCase;
+namespace Application.IServices.UseCases;
 
 public interface ITripPlanCarService
 {
@@ -9,4 +9,5 @@ public interface ITripPlanCarService
     Task DeleteTripPlanAsync(int id);
     Task<IEnumerable<GetTripPlanCarDTO>> GetAllTripsAsync();
     Task<GetTripPlanCarDTO> GetTripByIdAsync(int id);
+
 }

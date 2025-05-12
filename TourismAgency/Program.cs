@@ -58,11 +58,17 @@ builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
 builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<ITripPlanService, TripPlanService>();
+builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
+builder.Services.AddScoped<ITripBookingService, TripBookingService>();
 // Automapper
 builder.Services.AddAutoMapper(
     typeof(CarBookingProfile),
     typeof(RegionProfile),
-    typeof(TripProfile)
+    typeof(TripProfile),
+    typeof(TripPlanProfile),
+    typeof(TripPlanCarProfile),
+    typeof(TripBookingProfile)
 );
 
 builder.Services.AddHttpContextAccessor();

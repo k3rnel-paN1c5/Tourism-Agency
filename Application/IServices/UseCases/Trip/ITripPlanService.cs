@@ -1,6 +1,7 @@
 using System;
 
 using Application.DTOs.TripPlan;
+using Application.DTOs.TripPlanCar;
 
 namespace Application.IServices.UseCases;
 
@@ -9,7 +10,8 @@ public interface ITripPlanService
     Task<GetTripPlanDTO> CreateTripPlanAsync(CreateTripPlanDTO dto);
     Task UpdateTripPlanAsync(UpdateTripPlanDTO dto);
     Task DeleteTripPlanAsync(int id);
-    Task<IEnumerable<GetTripPlanDTO>> GetAllTripsAsync();
-    Task<GetTripPlanDTO> GetTripByIdAsync(int id);
+    Task<IEnumerable<GetTripPlanDTO>> GetAllTripPlansAsync();
+    Task<GetTripPlanDTO> GetTripPlanByIdAsync(int id);
+    Task<GetTripPlanCarDTO> AddCarToTripPlanAsync(CreateTripPlanCarDTO dto);
 
 }

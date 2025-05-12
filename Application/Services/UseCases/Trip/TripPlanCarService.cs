@@ -1,32 +1,62 @@
 using System;
-using Application.IServices.UseCase;
 using Application.DTOs.TripPlanCar;
+using Domain.IRepositories;
+using Domain.Entities;
+using Application.IServices.UseCases;
+using AutoMapper;
 namespace Application.Services.UseCases;
 
 public class TripPlanCarService : ITripPlanCarService
 {
-    public Task<GetTripPlanCarDTO> CreateTripPlanCarAsync(CreateTripPlanCarDTO dto)
+    IRepository<TripPlanCar, int> _repo;
+    // ICarService _carService;
+    IMapper _mapper;
+
+    public TripPlanCarService(IRepository<TripPlanCar, int> repository, IMapper mapper)
     {
-        throw new NotImplementedException();
+        _repo = repository;
+        _mapper = mapper;
+    }
+    public async Task<GetTripPlanCarDTO> CreateTripPlanCarAsync(CreateTripPlanCarDTO dto)
+    {
+        // if(await _carService.GetCarByIdAsync(dto.TripPlanId) is null){
+        //     throw new Exception("Car Not Found");
+        // }
+        TripPlanCar tripPlanCar = _mapper.Map<TripPlanCar>(dto);
+        await _repo.AddAsync(tripPlanCar);
+        await _repo.SaveAsync();
+        return _mapper.Map<GetTripPlanCarDTO>(tripPlanCar);
     }
 
-    public Task DeleteTripPlanAsync(int id)
+    public async Task DeleteTripPlanAsync(int id)
     {
-        throw new NotImplementedException();
+        if(await _repo.GetByIdAsync(id) is null){
+            throw new Exception("Trip Plan Car Not Found");
+        }
+        _repo.DeleteByIdAsync(id);
+        await _repo.SaveAsync();
     }
 
-    public Task<IEnumerable<GetTripPlanCarDTO>> GetAllTripsAsync()
+    public async Task<IEnumerable<GetTripPlanCarDTO>> GetAllTripsAsync()
     {
-        throw new NotImplementedException();
+        var tripPlanCars = await _repo.GetAllAsync();
+        return _mapper.Map<IEnumerable<GetTripPlanCarDTO>>(tripPlanCars);
     }
 
-    public Task<GetTripPlanCarDTO> GetTripByIdAsync(int id)
+    public async Task<GetTripPlanCarDTO> GetTripByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var tripPlanCar = await _repo.GetByIdAsync(id)
+            ?? throw new Exception($"Trip Plan Car {id} was not found");
+        return _mapper.Map<GetTripPlanCarDTO>(tripPlanCar);
     }
 
-    public Task UpdateTripPlanAsync(UpdateTripPlanCarDTO dto)
+    public async Task UpdateTripPlanAsync(UpdateTripPlanCarDTO dto)
     {
-        throw new NotImplementedException();
+        // if(await _carService.GetCarByIdAsync(dto.TripPlanId) is null){
+        //     throw new Exception("Car Not Found");
+        // }
+        TripPlanCar tripPlanCar = _mapper.Map<TripPlanCar>(dto);
+        _repo.Update(tripPlanCar);
+        await _repo.SaveAsync();
     }
 }

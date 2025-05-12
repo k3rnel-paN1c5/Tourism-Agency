@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Application.DTOs.TripPlanCar;
 
 namespace Application.DTOs.TripPlan;
 
@@ -22,6 +23,6 @@ public class CreateTripPlanDTO
     public string? MealsPlan { get; set; }
     public string? HotelStays { get; set; } 
     
-    //todo Icollection of TripPlanCar
+    public ICollection<CreateTripPlanCarDTO>? TripPlanCars {get;set;}
 
 }

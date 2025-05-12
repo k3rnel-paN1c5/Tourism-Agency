@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="IServices/UseCases/TripBooking/" />
-    <Folder Include="Services/UseCases/TripBooking/" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="../Domain/Domain.csproj" />
   </ItemGroup>
 
