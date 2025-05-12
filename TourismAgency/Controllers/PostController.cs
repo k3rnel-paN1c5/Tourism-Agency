@@ -39,9 +39,6 @@ namespace TourismAgency.Controllers
             if (dto == null || dto.Id != id)
                 return BadRequest(new { message = "Invalid data provided!" });
 
-        //  Print the order information in the terminal to ensure it is received correctly.
-        Console.WriteLine($"Received Update Request: ID={dto.Id}, Title={dto.Title}, Body={dto.Body}, Summary={dto.Summary}, PostTypeId={dto.PostTypeId}");
-
             var result = await _postService.UpdatePostAsync(dto);
 
             return Ok(new 
@@ -49,19 +46,6 @@ namespace TourismAgency.Controllers
                 id = result.Id, 
                 message = "Post has been successfully updated!" 
             });
-        }
-        [HttpDelete("DeletePost/{id}")]
-        public async Task<IActionResult> DeletePost(int id)
-        {
-          Console.WriteLine($"Received Delete Request: ID={id}");
-
-          var result = await _postService.DeletePostAsync(id);
-          if (!result)
-          {
-           return NotFound(new { message = "Post not found!" });
-          }
-
-          return Ok(new { message = "Post has been successfully deleted!" });
         }
     }
 }

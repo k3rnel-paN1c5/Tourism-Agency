@@ -20,35 +20,41 @@ namespace Infrastructure.Repositories
             return await _dbSet.ToListAsync();
         }
 
+
         public async Task<IEnumerable<T>> GetAllByPredicateAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
+
 
         public async Task<T?> GetByIdAsync(TKey id)
         {
             return await _dbSet.FindAsync(id);
         }
 
+
         public async Task<T?> GetByPredicateAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.FirstOrDefaultAsync(predicate);
         }
+
 
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
-            _dbSet.Update(entity);
+            _dbSet.Update(entity); // Update the entity
+            await _context.SaveChangesAsync(); // Commit changes to database
         }
 
         public void Delete(T entity)
         {
             _dbSet.Remove(entity);
         }
+
 
         public async void DeleteByIdAsync(TKey id)
         {
@@ -58,14 +64,10 @@ namespace Infrastructure.Repositories
               await SaveAsync();
         }
 
+
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
-        }
-
-        Task IRepository<T, TKey>.DeleteByIdAsync(TKey id)
-        {
-            throw new NotImplementedException();
         }
     }
 }
