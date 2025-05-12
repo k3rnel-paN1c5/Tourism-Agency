@@ -4,7 +4,8 @@ namespace Application.IServices.UseCases.Post
 {
     public interface IPostService
     {
- Task<GetPostDTO> CreatePostAsync(CreatePostDTO dto);
+        Task<GetPostDTO> CreatePostAsync(CreatePostDTO dto);//  Create Post
+        Task<GetPostDTO> UpdatePostAsync(UpdatePostDTO dto); //  Update Post
     }
 }
 

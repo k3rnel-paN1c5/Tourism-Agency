@@ -32,5 +32,22 @@ namespace TourismAgency.Controllers
                 message = "Post has been successfully created!" 
             }, result);
         }
+
+        [HttpPut("UpdatePost/{id}")] // Endpoint to update a post
+        public async Task<IActionResult> UpdatePost(int id, [FromBody] UpdatePostDTO dto)
+        {
+            if (dto == null || dto.Id != id)
+                return BadRequest(new { message = "Invalid data provided!" });
+
+            var result = await _postService.UpdatePostAsync(dto);
+
+            return Ok(new 
+            { 
+                id = result.Id, 
+                message = "Post has been successfully updated!" 
+            });
+        }
     }
 }
+    
+

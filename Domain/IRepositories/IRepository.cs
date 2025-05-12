@@ -9,7 +9,7 @@ namespace Domain.IRepositories
         public Task<T?> GetByIdAsync(TKey id);
         public Task<T?> GetByPredicateAsync(Expression<Func<T, bool>> predicate);
         public Task AddAsync(T entity);
-        public void Update(T entity);
+        public Task UpdateAsync(T entity);
         public void Delete(T entity);
         public void DeleteByIdAsync(TKey id);
         public Task SaveAsync();
