@@ -10,6 +10,10 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
+using Application.IServices.UseCases.Post;
+using Application.Services.UseCases.Post;
+
+
 
 using System;
 using Microsoft.OpenApi.Models;
@@ -21,6 +25,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers and Views
 // builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
+
+builder.Services.AddControllers();
+
 
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
@@ -57,6 +64,7 @@ builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<ITripPlanService, TripPlanService>();
 builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
@@ -68,7 +76,8 @@ builder.Services.AddAutoMapper(
     typeof(TripProfile),
     typeof(TripPlanProfile),
     typeof(TripPlanCarProfile),
-    typeof(TripBookingProfile)
+    typeof(TripBookingProfile),
+    typeof(PostProfile)
 );
 
 builder.Services.AddHttpContextAccessor();
@@ -76,6 +85,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tourism Agency API", Version = "v1" });
 });
+
 
 var app = builder.Build();
 
@@ -96,6 +106,7 @@ if (!app.Environment.IsDevelopment())
 // }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseSwagger();
@@ -104,6 +115,8 @@ app.UseSwaggerUI();
 app.UseRouting();
 
 app.UseAuthorization();
+
+
 
 
 app.UseEndpoints(endpoints =>
