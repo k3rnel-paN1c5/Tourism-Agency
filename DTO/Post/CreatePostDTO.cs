@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DTO.Post
+namespace Domain.DTO.Post
 {
     public class CreatePostDTO
     {
@@ -39,3 +39,5 @@ namespace DTO.Post
         public List<CreateSEOMetadataDTO> SEOMetadata { get; set; } = [];
     }
 }
+
+

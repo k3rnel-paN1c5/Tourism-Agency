@@ -10,6 +10,10 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
+using Application.IServices.UseCases.Post;
+using Application.Services.UseCases.Post;
+
+
 
 using System;
 
@@ -19,6 +23,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Controllers and Views
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllers();
+
 
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
@@ -54,12 +61,16 @@ builder.Services.AddIdentity<User, IdentityRole>(
 builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
+builder.Services.AddScoped<IPostService, PostService>();
+
 // Automapper
 builder.Services.AddAutoMapper(
-    typeof(CarBookingProfile)
+    typeof(CarBookingProfile),
+    typeof(PostProfile) // ✅ Add PostProfile file
 );
 
 builder.Services.AddHttpContextAccessor();
+
 
 var app = builder.Build();
 
@@ -80,11 +91,14 @@ if (!app.Environment.IsDevelopment())
 // }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
