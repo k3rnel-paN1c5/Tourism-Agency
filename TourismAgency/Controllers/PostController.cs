@@ -39,6 +39,9 @@ namespace TourismAgency.Controllers
             if (dto == null || dto.Id != id)
                 return BadRequest(new { message = "Invalid data provided!" });
 
+        //  Print the order information in the terminal to ensure it is received correctly.
+        Console.WriteLine($"Received Update Request: ID={dto.Id}, Title={dto.Title}, Body={dto.Body}, Summary={dto.Summary}, PostTypeId={dto.PostTypeId}");
+
             var result = await _postService.UpdatePostAsync(dto);
 
             return Ok(new 
