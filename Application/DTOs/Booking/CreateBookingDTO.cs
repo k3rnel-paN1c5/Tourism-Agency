@@ -2,10 +2,12 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Domain.Enums;
 
-namespace Application.DTOs.TripBooking;
+namespace Application.DTOs.Booking;
 
-public class CreateTripBookingDTO
+public class CreateBookingDTO
 {
+    [Required]
+    public bool BookingType { get; set; }
     [Required]
     public DateTime StartDate { get; set; }
     [Required]
@@ -16,10 +18,4 @@ public class CreateTripBookingDTO
     [Required]
     public string? CustomerId { get; set; }
     public string? EmployeeId { get; set; } 
-    [Required]
-    public int TripPlanId { get; set; }
-
-    [Required]
-    public bool WithGuide { get; set; }
-
 }
