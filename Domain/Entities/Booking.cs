@@ -7,10 +7,7 @@ namespace Domain.Entities
 
     public partial class Booking
     {
-        public Booking()
-        {
-            Payments = new HashSet<Payment>();
-        }
+
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -41,18 +38,18 @@ namespace Domain.Entities
         [Required]
         [Column("customerId")]
         [ForeignKey("Customer")]
-        public string CustomerId { get; set; } = string.Empty;
+        public string? CustomerId { get; set; }
 
         [Column("employeeId")]
         [ForeignKey("Employee")]
-        public string EmployeeId { get; set; } = string.Empty;
+        public string? EmployeeId { get; set; } 
 
         // Navigation Properties
         public Employee? Employee { get; set; }
         public Customer? Customer { get; set; }
         public CarBooking? CarBooking { get; set; }
         public TripBooking? TripBooking { get; set; }
-        public ICollection<Payment> Payments { get; set; }
+        public ICollection<Payment>? Payments { get; set; }
 
 
 
