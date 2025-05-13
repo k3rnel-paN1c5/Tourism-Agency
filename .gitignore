@@ -404,3 +404,4 @@ appsettings.Development.json
 
 # MacOS Finder files
 **/.DS_Store
+.DS_Store
