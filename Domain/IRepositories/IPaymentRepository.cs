@@ -10,4 +10,3 @@ namespace Domain.IRepositories
         Task<IEnumerable<Payment>> GetPaymentsWithTransactionsAsync();
     }
 }
-
