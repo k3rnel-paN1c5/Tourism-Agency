@@ -1,10 +1,13 @@
 using Domain.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Domain.Enums;
 
-public interface IPaymentRepository : IRepository<Payment, int>
+namespace Domain.IRepositories
 {
-    Task<Payment?> GetByBookingIdAsync(int bookingId);
-    Task<IEnumerable<Payment>> GetByStatusAsync(PaymentStatus status);
-    Task<IEnumerable<Payment>> GetPaymentsWithTransactionsAsync();
+    public interface IPaymentRepository : IRepository<Payment, int>
+    {
+        Task<Payment?> GetByBookingIdAsync(int bookingId);
+        Task<IEnumerable<Payment>> GetByStatusAsync(PaymentStatus status);
+        Task<IEnumerable<Payment>> GetPaymentsWithTransactionsAsync();
+    }
 }
+
