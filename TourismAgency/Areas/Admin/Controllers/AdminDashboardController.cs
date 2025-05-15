@@ -7,10 +7,10 @@ namespace TourismAgency.Areas.Admin.Controllers
     [Area("Admin")]
     [ApiController]
     [Route("api/[area]/[controller]")]
-    public class DashboardController : ControllerBase
+    public class AdminDashboardController : ControllerBase
     {
         private readonly IEmployeeAuthService _empAuthService;
-        public DashboardController(IEmployeeAuthService empAuthService){
+        public AdminDashboardController(IEmployeeAuthService empAuthService){
             _empAuthService  = empAuthService;
         }
         [HttpGet] // No route parameter
