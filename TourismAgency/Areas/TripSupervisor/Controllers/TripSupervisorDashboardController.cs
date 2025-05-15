@@ -11,11 +11,11 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
     [ApiController]
     // [Authorize(Roles = "TripSupervisor")]
     [Route("api/[area]/[controller]")]
-    public class DashboardController : ControllerBase
+    public class TripSupervisorDashboardController : ControllerBase
     {
         private readonly IRegionService _regionServ;
         private readonly ITripService _tripServ;
-        public DashboardController(IRegionService regionService, ITripService tripService){
+        public TripSupervisorDashboardController(IRegionService regionService, ITripService tripService){
             _regionServ = regionService;
             _tripServ = tripService;
         }
