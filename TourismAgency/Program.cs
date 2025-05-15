@@ -17,16 +17,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Controllers and Views
-// builder.Services.AddControllersWithViews();
-builder.Services.AddControllers();
-
-builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
+// builder.Services.AddControllers();
 
 
 // Database Contexts
@@ -135,18 +134,30 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
+    // Only include API controllers (those with [ApiController])
+    c.DocInclusionPredicate((docName, description) =>
+    {
+        if (description.ActionDescriptor is Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor controllerActionDescriptor)
+        {
+            return controllerActionDescriptor.ControllerTypeInfo.GetCustomAttributes(true)
+                .Any(attr => attr is ApiControllerAttribute);
+        }
+        return false;
+    });
 });
-
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TourismAgency API V1");
+        c.RoutePrefix = "swagger"; // Makes it available at /swagger
+    });
 }
 
 // using (var scope = app.Services.CreateScope())
@@ -156,6 +167,7 @@ if (!app.Environment.IsDevelopment())
 //     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 //     await IdentitySeed.SeedRolesAndAdmin(userManager, roleManager);
 // }
+
 
 app.UseHttpsRedirection();
 
@@ -176,8 +188,8 @@ app.UseEndpoints(endpoints =>
     _ = endpoints.MapControllers();
 });
 
-// app.MapControllerRoute(
-//     name: "default",
-//     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

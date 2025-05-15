@@ -30,8 +30,6 @@
   <ItemGroup>
     <Folder Include="Areas/CarSupervisor/" />
     <Folder Include="Areas/CarSupervisor/Controllers/" />
-    <Folder Include="Areas/Customer/" />
-    <Folder Include="Areas/Customer/Controllers/" />
   </ItemGroup>
 
 

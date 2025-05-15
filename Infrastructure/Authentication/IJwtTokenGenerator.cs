@@ -4,5 +4,5 @@ namespace Infrastructure.Authentication;
 
 public interface IJwtTokenGenerator
 {
-    public string GenerateToken();
+    public string GenerateToken(string userId, string email, string role);
 }
