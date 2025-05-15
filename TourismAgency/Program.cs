@@ -12,11 +12,11 @@ using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
 using Application.IServices.UseCases.Post;
 using Application.Services.UseCases.Post;
-
-
-
-using System;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Infrastructure.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,12 +38,9 @@ builder.Services.AddDbContext<IdentityAppDbContext>(
 // Register TourismAgencyDbContext as the default DbContext
 builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyDbContext>());
 
-builder.Services.AddAuthorization();
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
-builder.Services.AddScoped<ICarRepository, CarRepository>();
-builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(
     options =>
@@ -57,10 +54,9 @@ builder.Services.AddIdentity<User, IdentityRole>(
     .AddDefaultTokenProviders()
     .AddRoles<IdentityRole>();
 
-
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 // Services
-builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
@@ -81,12 +77,67 @@ builder.Services.AddAutoMapper(
     typeof(PostProfile)
 );
 
+var configuration = builder.Configuration;
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidAudience = configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)
+            )
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsync("{\"message\": \"Unauthorized. Token is missing or invalid.\"}");
+            }
+        };
+    });
+builder.Services.AddAuthorization();
+
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tourism Agency API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter your token: Bearer {your token}"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
