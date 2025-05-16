@@ -1,14 +1,13 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Region;
 
 public class UpdateRegionDTO
 {
-    [Required(ErrorMessage = "Specify which region to edit")]
+    [Required(ErrorMessage = "Specify Which Region To Edit")]
     public int Id { get; set; } 
 
-    [Required(ErrorMessage = "New region name cannot be empty")]
+    [Required(ErrorMessage = "New Region Name Cannot Be Empty")]
     [StringLength(100)]
     public string? Name { get; set; }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace Application.DTOs.Region;
 
 public class GetRegionDTO

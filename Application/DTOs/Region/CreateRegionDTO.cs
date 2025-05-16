@@ -1,11 +1,10 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Region;
 
 public class CreateRegionDTO
 {
-    [Required(ErrorMessage = "Name cannot be empty")]
+    [Required(ErrorMessage = "Region Name Cannot Be Empty")]
     [StringLength(100)]
     public string? Name { get; set; }
 }
