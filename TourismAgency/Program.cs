@@ -73,6 +73,7 @@ builder.Services.AddAutoMapper(
     typeof(TripPlanProfile),
     typeof(TripPlanCarProfile),
     typeof(TripBookingProfile),
+    typeof(BookingProfile),
     typeof(PostProfile)
 );
 

@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using Application.DTOs.Booking;
 using Application.IServices.UseCases;
 using AutoMapper;
@@ -28,13 +29,24 @@ public class BookingService : IBookingService
         ArgumentNullException.ThrowIfNull(dto);
         try
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext?.User == null || !httpContext.User.Identity!.IsAuthenticated)
+            var httpContext = _httpContextAccessor.HttpContext
+                ?? throw new InvalidOperationException("HTTP context is unavailable.");
+
+            if (!httpContext.User.Identity!.IsAuthenticated)
                 throw new UnauthorizedAccessException("User is not authenticated.");
 
-            var userIdClaim = httpContext.User.FindFirst("UserId")?.Value;
+            var userIdClaim = httpContext.User.Claims
+                .FirstOrDefault(c => c.Type == "UserId" ||
+                                     c.Type == "sub" ||
+                                     c.Type == ClaimTypes.NameIdentifier)?.Value;
+
             if (string.IsNullOrEmpty(userIdClaim))
+            {
+                var claimsList = httpContext.User.Claims.Select(c => new { c.Type, c.Value });
+                _logger.LogWarning("Missing UserId claim. Available claims: {@Claims}", claimsList);
                 throw new UnauthorizedAccessException("User ID claim not found.");
+            }
+
 
             // Validate dates and passengers
             if (dto.StartDate < DateTime.UtcNow.Date)
@@ -48,6 +60,7 @@ public class BookingService : IBookingService
 
             var bookingEntity = _mapper.Map<Booking>(dto);
             bookingEntity.CustomerId = userIdClaim;
+            bookingEntity.EmployeeId = "09544eaa-7671-42a2-bfe3-ddfff5690d88"; //! this should change once an employee  accept 
             await _repo.AddAsync(bookingEntity).ConfigureAwait(false);
             await _repo.SaveAsync().ConfigureAwait(false);
             _logger.LogInformation("Booking '{Id}' created successfully.", bookingEntity.Id);
@@ -81,7 +94,7 @@ public class BookingService : IBookingService
 
     public async Task<IEnumerable<GetBookingDTO>> GetAllBookingsAsync()
     {
-         try
+        try
         {
             var bookings = await _repo.GetAllAsync().ConfigureAwait(false);
             _logger.LogDebug("{Count} bookings retrieved.", bookings?.Count() ?? 0);
@@ -113,7 +126,7 @@ public class BookingService : IBookingService
 
     public async Task UpdateBookingAsync(UpdateBookingDTO dto)
     {
-       if (dto == null) throw new ArgumentNullException(nameof(dto));
+        if (dto == null) throw new ArgumentNullException(nameof(dto));
 
         try
         {

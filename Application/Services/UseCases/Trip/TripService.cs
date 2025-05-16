@@ -61,9 +61,9 @@ public class TripService : ITripService
 
     public async Task UpdateTripAsync(UpdateTripDTO dto)
     {
-        if (dto == null) throw new ArgumentNullException(nameof(dto));
+        ArgumentNullException.ThrowIfNull(dto);
 
-    try
+        try
     {
         var existingTrip = await _repo.GetByIdAsync(dto.Id).ConfigureAwait(false)
             ?? throw new ArgumentException($"Trip with ID {dto.Id} was not found.");

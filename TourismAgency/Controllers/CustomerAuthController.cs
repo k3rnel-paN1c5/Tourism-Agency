@@ -28,16 +28,7 @@ namespace TourismAgency.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _authService.RegisterAsync(new CustomerRegisterDTO
-            {
-                Email = dto.Email,
-                Password = dto.Password,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                PhoneNumber = dto.PhoneNumber,
-                Whatsapp = dto.Whatsapp,
-                Country = dto.Country
-            });
+            var result = await _authService.RegisterAsync(dto);
 
             if (result.Succeeded)
             {

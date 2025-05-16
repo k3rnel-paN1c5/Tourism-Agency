@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using Application.DTOs.Booking;
 using Application.DTOs.TripBooking;
 using Application.IServices.UseCases;
@@ -104,6 +105,10 @@ public class TripBookingService : ITripBookingService
         {
             var tripBookings = await _repo.GetAllAsync().ConfigureAwait(false);
             _logger.LogDebug("{Count} trip bookings retrieved.", tripBookings?.Count() ?? 0);
+            if(tripBookings is not null)
+                foreach(var tb in tripBookings){
+                    tb.Booking = _mapper.Map<Booking>(await _bookingService.GetBookingByIdAsync(tb.BookingId));
+                }
             return _mapper.Map<IEnumerable<GetTripBookingDTO>>(tripBookings);
         }
         catch (Exception ex)

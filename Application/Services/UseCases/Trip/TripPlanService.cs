@@ -56,9 +56,10 @@ public class TripPlanService : ITripPlanService
 
             var tripPlanEntity = _mapper.Map<TripPlan>(dto);
 
-            // Map related entities
-            tripPlanEntity.Trip = _mapper.Map<Trip>(trip);
-            tripPlanEntity.Region = _mapper.Map<Region>(region);
+            //! Don't do that, it caueses a problem 
+            // // Map related entities
+            // tripPlanEntity.Trip = _mapper.Map<Trip>(trip);
+            // tripPlanEntity.Region = _mapper.Map<Region>(region);
             
             if (dto.TripPlanCars != null && dto.TripPlanCars.Count > 0)
             {
@@ -110,8 +111,6 @@ public class TripPlanService : ITripPlanService
 
             _mapper.Map(dto, existingTripPlan);
 
-            existingTripPlan.Trip = _mapper.Map<Trip>(trip);
-            existingTripPlan.Region = _mapper.Map<Region>(region);
 
             _repo.Update(existingTripPlan);
             await _repo.SaveAsync().ConfigureAwait(false);
@@ -184,8 +183,7 @@ public class TripPlanService : ITripPlanService
                 ?? throw new ArgumentException($"Trip plan with ID {dto.TripPlanId} was not found.");
 
             var car = await _carService.CreateTripPlanCarAsync(dto).ConfigureAwait(false);
-            if(tripPlan.PlanCars is null)
-                tripPlan.PlanCars = new HashSet<TripPlanCar>();
+            tripPlan.PlanCars ??= new HashSet<TripPlanCar>();
             tripPlan.PlanCars.Add(_mapper.Map<TripPlanCar>(car));
             _logger.LogInformation("Car added to trip plan '{TripPlanId}'.", dto.TripPlanId);
             return car;
@@ -196,21 +194,21 @@ public class TripPlanService : ITripPlanService
             throw;
         }
     }
-    public async Task RemoveCarFromTripPlanAsync(CreateTripPlanCarDTO dto)
+    public async Task RemoveCarFromTripPlanAsync(int id)
     {
         try
         {
-            var tripPlan = await _repo.GetByIdAsync(dto.TripPlanId).ConfigureAwait(false)
-                ?? throw new ArgumentException($"Trip plan with ID {dto.TripPlanId} was not found.");
-            var car = await _carService.CreateTripPlanCarAsync(dto).ConfigureAwait(false);
-            if(tripPlan.PlanCars is null)
+            var tripPlanCar = await _carService.GetTripPlanCarByIdAsync(id).ConfigureAwait(false);
+            var tripPlan = await _repo.GetByIdAsync(tripPlanCar.TripPlanId) ?? throw new InvalidOperationException("Trip Plan Car doesn't belong to a valid trip plan");
+            if (tripPlan.PlanCars is null)
                 throw new InvalidOperationException("Deleting a Car from a Trip Plan That does not have cars");
-            tripPlan.PlanCars.Remove(_mapper.Map<TripPlanCar>(car));
-            _logger.LogInformation("Car removed from trip plan '{TripPlanId}'.", dto.TripPlanId);
+            tripPlan.PlanCars.Remove(_mapper.Map<TripPlanCar>(tripPlanCar));
+            await _carService.DeleteTripPlanCarAsync(id).ConfigureAwait(false);
+            _logger.LogInformation("Car removed from trip plan '{TripPlanId}'.", tripPlan.Id);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while removing car from trip plan '{TripPlanId}'.", dto.TripPlanId);
+            _logger.LogError(ex, "Error occurred while removing trip plan car with id {id}", id);
             throw;
         }
     }

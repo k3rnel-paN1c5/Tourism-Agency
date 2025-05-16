@@ -46,7 +46,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
     }
 
-    public async Task DeleteTripPlanAsync(int id)
+    public async Task DeleteTripPlanCarAsync(int id)
     {
         try
         {
@@ -65,7 +65,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
     }
 
-    public async Task<IEnumerable<GetTripPlanCarDTO>> GetAllTripsAsync()
+    public async Task<IEnumerable<GetTripPlanCarDTO>> GetAllTripPlanCarsAsync()
     {
          try
         {
@@ -80,7 +80,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
     }
 
-    public async Task<GetTripPlanCarDTO> GetTripByIdAsync(int id)
+    public async Task<GetTripPlanCarDTO> GetTripPlanCarByIdAsync(int id)
     {
         try
         {
@@ -97,7 +97,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
     }
 
-    public async Task UpdateTripPlanAsync(UpdateTripPlanCarDTO dto)
+    public async Task UpdateTripPlanCarAsync(UpdateTripPlanCarDTO dto)
     {
         if (dto == null) throw new ArgumentNullException(nameof(dto));
 
