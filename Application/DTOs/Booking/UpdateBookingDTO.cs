@@ -7,19 +7,25 @@ namespace Application.DTOs.Booking;
 public class UpdateBookingDTO
 {
 
-    [Required]
+    [Required(ErrorMessage = "{0} is required")]
+    [Display(Name = "ID")]
     public int Id { get; set; } 
 
-    [Required]
-    public bool BookingType { get; set; }
-    [Required]
+    [Required(ErrorMessage = "{0} is required")]
+    [Display(Name = "Sarting Date")]
     public DateTime StartDate { get; set; }
-    [Required]
+    
+    [Required(ErrorMessage = "{0} is required")]
+    [Display(Name = "Ending Date")]
     public DateTime EndDate { get; set; }
+    [Required(ErrorMessage = "{0} is required")]
+    [Display(Name = "Status")]
     public BookingStatus Status { get; set; }
-    [Required]
+    [Required(ErrorMessage = "{0} is required")]
+    [Display(Name = "Number Of Passengers")]
     public int NumOfPassengers { get; set; }
-    [Required]
-    public string? CustomerId { get; set; }
+
+    [Required(ErrorMessage = "{0} is required")]
+    [Display(Name = "Employee ID")]
     public string? EmployeeId { get; set; } 
 }

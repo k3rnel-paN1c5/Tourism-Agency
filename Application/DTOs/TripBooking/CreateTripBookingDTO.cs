@@ -1,25 +1,29 @@
-using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Domain.Enums;
 
 namespace Application.DTOs.TripBooking;
 
 public class CreateTripBookingDTO
 {
-    [Required]
+    [Required(ErrorMessage = "{0} Is required")]
+    [Display(Name = "Starting Date")]
     public DateTime StartDate { get; set; }
-    [Required]
+    
+    [Required(ErrorMessage = "{0} Is required")]
+    [Display(Name = "Ending Date")]
     public DateTime EndDate { get; set; }
-    public BookingStatus Status { get; set; } = BookingStatus.Pending;
-    [Required]
+
+    [Required(ErrorMessage = "{0} Is required")]
+    [Range(1, int.MaxValue, ErrorMessage = "{0} Must Be At Least 1")]
+    [Display(Name = "Number of Passengers")]
     public int NumOfPassengers { get; set; }
+
     [Required]
-    public string? CustomerId { get; set; }
-    public string? EmployeeId { get; set; } 
-    [Required]
+    [Display(Name = "Trip Plan")]
     public int TripPlanId { get; set; }
 
     [Required]
+    [DefaultValue(value:false)]
+    [Display(Name = "Includes a Guide")]
     public bool WithGuide { get; set; }
-
 }
