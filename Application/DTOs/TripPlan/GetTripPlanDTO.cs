@@ -1,17 +1,40 @@
-using System;
+using System.ComponentModel.DataAnnotations;
+using Application.DTOs.Region;
+using Application.DTOs.Trip;
+using Application.DTOs.TripPlanCar;
 
 namespace Application.DTOs.TripPlan;
 
 public class GetTripPlanDTO
 {
+    [Display(Name = "Trip Plan ID")]
     public int Id {get; set;}
+    [Display(Name = "Trip")]
     public int TripId {get; set;}
+    [Display(Name = "Region")]
     public int RegionId {get; set;}
+    [Display(Name = "Starting Date")]
     public DateTime StartDate { get; set; }
+    [Display(Name = "Ending Date")]
     public DateTime EndtDate { get; set; }
+    [Display(Name = "Duration")]
     public TimeSpan Duration { get; set; } 
+    [Display(Name = "Included Services")]
     public string? IncludedServices { get; set; }
+    [Display(Name = "Stops")]
     public string? Stops { get; set; } 
+    [Display(Name = "Meals Plan")]
     public string? MealsPlan { get; set; }
+    [Display(Name = "Hotel Stays")]
     public string? HotelStays { get; set; } 
+
+    // Navigation Properties
+    [Display(Name = "Trip")]
+    public GetTripDTO? Trip {get; set;}
+
+    [Display(Name = "Region")]
+    public GetRegionDTO? Region {get; set;}
+    
+    [Display(Name = "Cars")]
+    public ICollection<CreateTripPlanCarDTO>? TripPlanCars {get;set;}
 }

@@ -1,5 +1,7 @@
 using Application.DTOs.Region;
 using Application.DTOs.Trip;
+using Application.DTOs.TripPlan;
+using Application.DTOs.TripPlanCar;
 using Application.IServices.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,15 +17,29 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
     {
         private readonly IRegionService _regionServ;
         private readonly ITripService _tripServ;
-        public TripSupervisorDashboardController(IRegionService regionService, ITripService tripService){
+        private readonly ITripPlanService _tripPlanServ;
+        private readonly ITripPlanCarService _carServ;
+        public TripSupervisorDashboardController(
+            IRegionService regionService, 
+            ITripService tripService, 
+            ITripPlanService tripPlanServ,
+            ITripPlanCarService carServ
+            )
+        {
             _regionServ = regionService;
             _tripServ = tripService;
+            _tripPlanServ =  tripPlanServ;
+            _carServ = carServ;
         }
+
         [HttpGet] // No route parameter
         public IActionResult GetDefault()
         {
             return Ok(new { Message = "Welcome to the Dashboard" });
         }
+
+        //* Regions *//
+
         [HttpGet("Regions")]
         public async Task<IActionResult> GetRegions(){
             var result = await _regionServ.GetAllRegionsAsync();
@@ -43,6 +59,9 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             var newRegion = await _regionServ.CreateRegionAsync(dto);
             return CreatedAtAction(nameof(GetRegionById), new { id = newRegion.Id }, newRegion);
         }
+
+        //* Trips *//
+
         [HttpGet("Trips")]
         public async Task<IActionResult> GetTrip(){
             var result = await _tripServ.GetAllTripsAsync();
@@ -62,6 +81,118 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             var newTrip = await _tripServ.CreateTripAsync(dto);
             return CreatedAtAction(nameof(GetTripById), new { id = newTrip.Id }, newTrip);
         }
+        [HttpPut("Trip/{id}")]
+        public async Task<IActionResult> UpdateTrip(string id, [FromBody] UpdateTripDTO dto){
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); 
+            try{
+                await _tripServ.UpdateTripAsync(dto);
+                return Ok(dto);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+
+        //* Trip Plan *//
+
+        [HttpGet("TripPlans")]
+        public async Task<IActionResult> GetTripPlans(){
+            try{
+                var result = await _tripPlanServ.GetAllTripPlansAsync();
+                return Ok(result);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+        [HttpGet("TripPlan/{id}")]
+        public async Task<IActionResult> GetTripPlanById(int id)
+        {   
+            try{
+                var tripPlan = await _tripPlanServ.GetTripPlanByIdAsync(id);
+                if (tripPlan == null) return NotFound();
+                return Ok(tripPlan);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+        [HttpPost("TripPlan")]
+        public async Task<IActionResult> CreateTripPlan([FromBody] CreateTripPlanDTO dto){
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); 
+            try{
+                var newTripPlan = await _tripPlanServ.CreateTripPlanAsync(dto);
+                return CreatedAtAction(nameof(GetTripPlanById), new { id = newTripPlan.Id }, newTripPlan);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+        [HttpPut("TripPlan/{id}")]
+        public async Task<IActionResult> UpdateTripPlan(string id, [FromBody] UpdateTripPlanDTO dto){
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); 
+            try{
+                await _tripPlanServ.UpdateTripPlanAsync(dto);
+                return Ok(dto);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+
+        //* Trip Plan Car *//
+
+        [HttpGet("TripPlanCars")]
+        public async Task<IActionResult> GetTripPlanCars(){
+            try{
+                var result = await _carServ.GetAllTripPlanCarsAsync();
+                return Ok(result);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+        [HttpGet("TripPlanCar/{id}")]
+        public async Task<IActionResult> GetTripPlanCarById(int id)
+        {   
+            try{
+                var tripPlanCar = await _carServ.GetTripPlanCarByIdAsync(id);
+                if (tripPlanCar == null) return NotFound();
+                return Ok(tripPlanCar);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+        [HttpPost("TripPlanCar")]
+        public async Task<IActionResult> CreateTripPlanCar([FromBody] CreateTripPlanCarDTO dto){
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); 
+            try{
+                var newTripPlanCar = await _carServ.CreateTripPlanCarAsync(dto);
+                return CreatedAtAction(nameof(GetTripPlanCarById), new { id = newTripPlanCar.Id }, newTripPlanCar);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+        [HttpPut("TripPlanCar/{id}")]
+        public async Task<IActionResult> UpdateTripPlanCar(string id, [FromBody] UpdateTripPlanCarDTO dto){
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); 
+            try{
+                await _carServ.UpdateTripPlanCarAsync(dto);
+                return Ok(dto);
+            }
+            catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+
+
 
     }
 }
