@@ -1,12 +1,5 @@
-﻿using DataAccess.Entities.Enums;
-using DTO.PaymentTransaction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DTO.Payment
+﻿
+namespace Application.DTOs.Payment
 {
     public class ReturnPaymentDTO
     {

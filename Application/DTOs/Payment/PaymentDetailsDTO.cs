@@ -1,4 +1,5 @@
-public class PaymentDetailsDTO
+namespace Application.DTOs.Payment{
+    public class PaymentDetailsDTO
 {
     public int Id { get; set; }
     public int BookingId { get; set; }
@@ -6,4 +7,5 @@ public class PaymentDetailsDTO
     public decimal AmountPaid { get; set; }
     public PaymentStatus Status { get; set; }
     public DateTime? PaymentDate { get; set; }
+}
 }

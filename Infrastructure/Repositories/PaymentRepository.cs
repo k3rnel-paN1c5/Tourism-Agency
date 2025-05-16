@@ -5,8 +5,9 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-public class PaymentRepository : Repository<Payment, int>, IPaymentRepository
+namespace Infrastructure.Repositories
+{
+    public class PaymentRepository : Repository<Payment, int>, IPaymentRepository
 {
     private readonly TourismAgencyDbContext _context;
 
@@ -37,4 +38,5 @@ public class PaymentRepository : Repository<Payment, int>, IPaymentRepository
             .Include(p => p.Transactions)
             .ToListAsync();
     }
+}    
 }

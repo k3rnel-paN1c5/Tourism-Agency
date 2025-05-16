@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Domain.Entities;
-using Domain.Enums;
-using Domain.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Application.DTOs.Payments;
+using Application.IServices.UseCases;
+
+using Application.DTOs.Payment;
+using Application.DTOs.User;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace TourismAgency.Controllers
 {
