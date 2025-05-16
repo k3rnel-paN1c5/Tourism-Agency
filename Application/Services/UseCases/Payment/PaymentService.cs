@@ -1,7 +1,13 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.IRepositories;
-using Domain.Services;
+using Application.IServices.UseCases;
+using Application.DTOs.Payment;
+
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
+using AutoMapper;
+
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

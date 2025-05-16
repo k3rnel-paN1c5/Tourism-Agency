@@ -1,4 +1,5 @@
-﻿
+﻿using Domain.Enums;
+
 namespace Application.DTOs.Payment
 {
     public class ReturnPaymentDTO
@@ -12,7 +13,7 @@ namespace Application.DTOs.Payment
         public string? Notes { get; set; }
 
         // Nested DTOs
-        public List<ReturnPaymentTransactionDTO> Transactions { get; set; } = [];
+        //public List<ReturnPaymentTransactionDTO> Transactions { get; set; } = [];
         
     }
 }

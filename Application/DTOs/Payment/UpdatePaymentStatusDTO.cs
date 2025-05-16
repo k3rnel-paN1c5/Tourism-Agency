@@ -1,4 +1,5 @@
-﻿namespace Application.DTOs.Payment{
+﻿using Domain.Enums;
+namespace Application.DTOs.Payment{
     public class UpdatePaymentStatusDTO
 {
     public int PaymentId { get; set; }
