@@ -4,7 +4,8 @@ namespace Application.DTOs.Region;
 
 public class CreateRegionDTO
 {
-    [Required(ErrorMessage = "Region Name is required")]
+    [Required(ErrorMessage = "{0} is required")]
     [StringLength(100)]
+    [Display(Name = "Name")]
     public string? Name { get; set; }
 }

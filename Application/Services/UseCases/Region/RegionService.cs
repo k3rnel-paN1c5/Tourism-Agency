@@ -107,7 +107,7 @@ public class RegionService : IRegionService
 
     public async Task<IEnumerable<GetRegionDTO>> GetAllRegionsAsync()
     {
-         try
+        try
         {
             var regions = await _repo.GetAllAsync().ConfigureAwait(false);
             _logger.LogDebug("Retrieved {Count} regions.", regions?.Count() ?? 0);

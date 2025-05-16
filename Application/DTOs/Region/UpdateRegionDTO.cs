@@ -4,10 +4,12 @@ namespace Application.DTOs.Region;
 
 public class UpdateRegionDTO
 {
-    [Required(ErrorMessage = "Specify Which Region To Edit")]
+    [Required(ErrorMessage = "{0} is required")]
+    [Display(Name = "Region ID")]
     public int Id { get; set; } 
 
-    [Required(ErrorMessage = "New Region Name is required")]
+    [Required(ErrorMessage = "{0} is required")]
     [StringLength(100)]
+    [Display(Name = "Name")]
     public string? Name { get; set; }
 }
