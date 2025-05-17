@@ -50,66 +50,66 @@ public class PaymentService : IPaymentService
         return payment;
     }
 
-    public async Task<Payment> GetPaymentByIdAsync(int paymentId)
-    {
-        var payment = await _paymentRepository.GetByIdAsync(paymentId);
-        if (payment == null)
-            throw new KeyNotFoundException($"Payment {paymentId} not found.");
-        return payment;
-    }
+     public async Task<Payment> GetPaymentByIdAsync(int paymentId)
+     {
+         var payment = await _paymentRepository.GetByIdAsync(paymentId);
+         if (payment == null)
+             throw new KeyNotFoundException($"Payment {paymentId} not found.");
+         return payment;
+     }
 
-    public async Task<Payment> GetPaymentByBookingIdAsync(int bookingId)
-    {
-        var payment = await _paymentRepository.GetByBookingIdAsync(bookingId);
-        if (payment == null)
-            throw new KeyNotFoundException($"No payment found for booking {bookingId}.");
-        return payment;
-    }
+     public async Task<Payment> GetPaymentByBookingIdAsync(int bookingId)
+     {
+         var payment = await _paymentRepository.GetByBookingIdAsync(bookingId);
+         if (payment == null)
+             throw new KeyNotFoundException($"No payment found for booking {bookingId}.");
+         return payment;
+     }
 
-    public async Task<Payment> UpdatePaymentStatusAsync(int paymentId, PaymentStatus status)
-    {
-        var payment = await GetPaymentByIdAsync(paymentId);
+     public async Task<Payment> UpdatePaymentStatusAsync(int paymentId, PaymentStatus status)
+     {
+         var payment = await GetPaymentByIdAsync(paymentId);
 
-        if (payment.Status == PaymentStatus.Refunded)
-            throw new InvalidOperationException("Refunded payments cannot be modified.");
+         if (payment.Status == PaymentStatus.Refunded)
+             throw new InvalidOperationException("Refunded payments cannot be modified.");
 
-        payment.Status = status;
+         payment.Status = status;
 
-        if (status == PaymentStatus.Paid)
-            payment.PaymentDate = DateTime.UtcNow;
+         if (status == PaymentStatus.Paid)
+             payment.PaymentDate = DateTime.UtcNow;
 
-        _paymentRepository.Update(payment);
-        await _paymentRepository.SaveAsync();
-        _logger.LogInformation($"Updated payment {paymentId} status to {status}.");
-        return payment;
-    }
+         _paymentRepository.Update(payment);
+         await _paymentRepository.SaveAsync();
+         _logger.LogInformation($"Updated payment {paymentId} status to {status}.");
+         return payment;
+     }
 
-    public async Task<Payment> ProcessRefundAsync(int paymentId, decimal refundAmount, string reason)
-    {
-        var payment = await GetPaymentByIdAsync(paymentId);
+     public async Task<Payment> ProcessRefundAsync(int paymentId, decimal refundAmount, string reason)
+     {
+         var payment = await GetPaymentByIdAsync(paymentId);
 
-        if (payment.Status != PaymentStatus.Paid)
-            throw new InvalidOperationException("Only paid payments can be refunded.");
+         if (payment.Status != PaymentStatus.Paid)
+             throw new InvalidOperationException("Only paid payments can be refunded.");
 
-        if (refundAmount <= 0 || refundAmount > payment.AmountPaid)
-            throw new ArgumentException($"Invalid refund amount: {refundAmount}");
+         if (refundAmount <= 0 || refundAmount > payment.AmountPaid)
+             throw new ArgumentException($"Invalid refund amount: {refundAmount}");
 
-        payment.AmountPaid -= refundAmount;
-        payment.Notes = $"REFUND: {reason}";
+         payment.AmountPaid -= refundAmount;
+         payment.Notes = $"REFUND: {reason}";
 
-        if (payment.AmountPaid == 0)
-            payment.Status = PaymentStatus.Refunded;
-        else
-            payment.Status = PaymentStatus.PartiallyRefunded;
+         if (payment.AmountPaid == 0)
+             payment.Status = PaymentStatus.Refunded;
+         else
+             payment.Status = PaymentStatus.PartiallyRefunded;
 
-        _paymentRepository.Update(payment);
-        await _paymentRepository.SaveAsync();
-        _logger.LogInformation($"Processed refund of {refundAmount} for payment {paymentId}.");
-        return payment;
-    }
+         _paymentRepository.Update(payment);
+         await _paymentRepository.SaveAsync();
+         _logger.LogInformation($"Processed refund of {refundAmount} for payment {paymentId}.");
+         return payment;
+     }
 
-    public async Task<IEnumerable<Payment>> GetPaymentsByStatusAsync(PaymentStatus status)
-    {
-        return await _paymentRepository.GetByStatusAsync(status);
-    }
+     public async Task<IEnumerable<Payment>> GetPaymentsByStatusAsync(PaymentStatus status)
+     {
+         return await _paymentRepository.GetByStatusAsync(status);
+     }
 }
