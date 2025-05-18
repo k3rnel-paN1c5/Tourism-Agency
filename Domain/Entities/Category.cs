@@ -5,12 +5,9 @@ namespace Domain.Entities
 {
     public partial class Category
     {
-        public Category()
-        {
-            Cars = new HashSet<Car>();
-        }
         [Key]
         [Column("id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -18,6 +15,6 @@ namespace Domain.Entities
         public string Title { get; set; } = string.Empty;
 
         // Navigation Properties
-        public ICollection<Car> Cars { get; set; }
+        public ICollection<Car>? Cars { get; set; }
     }
 }

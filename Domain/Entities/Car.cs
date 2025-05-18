@@ -5,19 +5,14 @@ namespace Domain.Entities
 {
     public partial class Car
     {
-        public Car()
-        {
-            TripPlanCars = new HashSet<TripPlanCar>();
-            CarBookings = new HashSet<CarBooking>();
-
-        }
+     
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
         [Required]
         [Column("model", TypeName = "nvarchar(50)")]
-        public string Model { get; set; } = string.Empty;
+        public string? Model { get; set; } 
 
         [Required]
         [Column("seats")]
@@ -25,11 +20,11 @@ namespace Domain.Entities
 
         [Required]
         [Column("color", TypeName = "nvarchar(50)")]
-        public string Color { get; set; } = string.Empty;
+        public string? Color { get; set; }
 
         [Required]
         [Column("image", TypeName = "nvarchar(50)")]
-        public string Image { get; set; } = string.Empty;
+        public string? Image { get; set; }
 
         [Required]
         [Column("pph", TypeName = "decimal(16,2)")]
@@ -49,7 +44,7 @@ namespace Domain.Entities
 
         // Navigation Properties
         public Category? Category { get; set; }
-        public ICollection<CarBooking> CarBookings { get; set; }
-        public ICollection<TripPlanCar> TripPlanCars { get; set; }
+        public ICollection<CarBooking>? CarBookings { get; set; }
+        public ICollection<TripPlanCar>? TripPlanCars { get; set; }
     }
 }

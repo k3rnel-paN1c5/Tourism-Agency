@@ -13,20 +13,26 @@ using Infrastructure.Repositories;
 using Application.IServices.UseCases.Post;
 using Application.Services.UseCases.Post;
 using Microsoft.OpenApi.Models;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases.CarBooking;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Controllers and Views
+
 builder.Services.AddControllersWithViews();
 // builder.Services.AddControllers();
-
 
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
@@ -65,16 +71,24 @@ builder.Services.AddScoped<ITripPlanService, TripPlanService>();
 builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
 builder.Services.AddScoped<ITripBookingService, TripBookingService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICarBookingService, CarBookingService>();
+
+
+
 // Automapper
 builder.Services.AddAutoMapper(
-    typeof(CarBookingProfile),
+    //typeof(CarBookingProfile),
     typeof(RegionProfile),
     typeof(TripProfile),
     typeof(TripPlanProfile),
     typeof(TripPlanCarProfile),
     typeof(TripBookingProfile),
     typeof(BookingProfile),
-    typeof(PostProfile)
+    typeof(PostProfile),
+    typeof(CarProfile),
+    typeof(CategoryProfile)
 );
 
 var configuration = builder.Configuration;
