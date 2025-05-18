@@ -13,20 +13,26 @@ using Infrastructure.Repositories;
 using Application.IServices.UseCases.Post;
 using Application.Services.UseCases.Post;
 using Microsoft.OpenApi.Models;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases.CarBooking;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Controllers and Views
+
 builder.Services.AddControllersWithViews();
 // builder.Services.AddControllers();
-
 
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
@@ -40,9 +46,7 @@ builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyD
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
-builder.Services.AddScoped<ICarRepository, CarRepository>();
-builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+// builder.Services.AddScoped(IRepository<Payment, int>, Repository<Payment, int>);
 
 builder.Services.AddIdentity<User, IdentityRole>(
     options =>
@@ -61,17 +65,31 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 // Services
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
+builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<ITripPlanService, TripPlanService>();
+builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
+builder.Services.AddScoped<ITripBookingService, TripBookingService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+
+
 // Automapper
 builder.Services.AddAutoMapper(
-    typeof(CarBookingProfile),
+    //typeof(CarBookingProfile),
     typeof(RegionProfile),
     typeof(TripProfile),
     typeof(TripPlanProfile),
     typeof(TripPlanCarProfile),
     typeof(TripBookingProfile),
     typeof(BookingProfile),
-    typeof(PostProfile)
+    typeof(PostProfile),
+    typeof(CarProfile),
+    typeof(CategoryProfile)
 );
 
 var configuration = builder.Configuration;

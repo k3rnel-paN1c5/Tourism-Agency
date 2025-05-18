@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 
 public class PaymentService : IPaymentService
 {
-    private readonly IPaymentRepository _paymentRepository;
-    private readonly IBookingRepository _bookingRepository;
+    private readonly IRepository<Payment, int> _paymentRepository;
+    private readonly IRepository<Booking, int> _bookingRepository;
     private readonly ILogger<PaymentService> _logger;
 
     public PaymentService(
-        IPaymentRepository paymentRepository,
-        IBookingRepository bookingRepository,
+        IRepository<Payment, int> paymentRepository,
+        IRepository<Booking, int> bookingRepository,
         ILogger<PaymentService> logger)
     {
         _paymentRepository = paymentRepository;
@@ -60,7 +60,7 @@ public class PaymentService : IPaymentService
 
      public async Task<Payment> GetPaymentByBookingIdAsync(int bookingId)
      {
-         var payment = await _paymentRepository.GetByBookingIdAsync(bookingId);
+         var payment = await _paymentRepository.GetByIdAsync(bookingId);
          if (payment == null)
              throw new KeyNotFoundException($"No payment found for booking {bookingId}.");
          return payment;
@@ -110,6 +110,6 @@ public class PaymentService : IPaymentService
 
      public async Task<IEnumerable<Payment>> GetPaymentsByStatusAsync(PaymentStatus status)
      {
-         return await _paymentRepository.GetByStatusAsync(status);
+         return await _paymentRepository.GetAllByPredicateAsync(payment => payment.Status == status);
      }
 }
