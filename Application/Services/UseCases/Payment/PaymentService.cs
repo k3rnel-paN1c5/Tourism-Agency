@@ -45,7 +45,8 @@ public class PaymentService : IPaymentService
         };
 
         await _paymentRepository.AddAsync(payment);
-        await _paymentRepository.SaveAsync(); // Explicit save to ensure data consistency
+        await _paymentRepository.SaveAsync(); 
+
         _logger.LogInformation($"Created payment {payment.Id} for booking {bookingId}.");
         return payment;
     }
@@ -60,7 +61,7 @@ public class PaymentService : IPaymentService
 
      public async Task<Payment> GetPaymentByBookingIdAsync(int bookingId)
      {
-         var payment = await _paymentRepository.GetByIdAsync(bookingId);
+         var payment = await _paymentRepository.GetByPredicateAsync(payment => payment.BookingId == bookingId);
          if (payment == null)
              throw new KeyNotFoundException($"No payment found for booking {bookingId}.");
          return payment;

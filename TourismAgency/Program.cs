@@ -96,7 +96,7 @@ builder.Services.AddAutoMapper(
     typeof(BookingProfile),
     typeof(PostProfile),
     typeof(CarProfile),
-    typeof(CategoryProfile)
+    typeof(CategoryProfile),
     typeof(PostProfile),
     typeof(CarProfile),
     typeof(CategoryProfile)
