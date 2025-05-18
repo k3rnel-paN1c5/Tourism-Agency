@@ -11,7 +11,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
 {
     [Area("TripSupervisor")]
     [ApiController]
-    // [Authorize(Roles = "TripSupervisor")]
+    [Authorize(Roles = "TripSupervisor,Admin")]
     [Route("api/[area]/[controller]")]
     public class TripSupervisorDashboardController : ControllerBase
     {
