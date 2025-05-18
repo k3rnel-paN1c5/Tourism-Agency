@@ -2,93 +2,89 @@ using Microsoft.AspNetCore.Mvc;
 using Application.IServices.Auth;
 using Application.DTOs.Customer;
 using Application.DTOs.User;
+using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Authentication;
+using System.Security.Claims;
 namespace TourismAgency.Controllers
 {
-    public class CustomerAuthController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CustomerAuthController : ControllerBase
     {
         private readonly ICustomerAuthService _authService;
-        public CustomerAuthController(ICustomerAuthService authService)
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        public CustomerAuthController(ICustomerAuthService authService, IJwtTokenGenerator jwtTokenGenerator)
         {
             _authService = authService;
+            _jwtTokenGenerator = jwtTokenGenerator;
+
         }
-        [HttpGet]
-        public  IActionResult Register()
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] CustomerRegisterDTO dto)
         {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(CustomerRegisterDTO dto)
-        {
-            if (ModelState.IsValid)
+           
+                
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _authService.RegisterAsync(dto);
+
+            if (result.Succeeded)
             {
-                var result = await _authService.RegisterAsync(new CustomerRegisterDTO
+                // Optionally log in after registration
+                var loginResult = await _authService.LoginAsync(new LoginDTO
                 {
                     Email = dto.Email,
                     Password = dto.Password,
-                    FirstName = dto.FirstName,
-                    LastName = dto.LastName,
-                    PhoneNumber = dto.PhoneNumber,
-                    Whatsapp = dto.Whatsapp,
-                    Country = dto.Country,
+                    RememberMe = false
                 });
 
-                if (result.Succeeded)
+                if (loginResult.Succeeded)
                 {
-                    // Automatically log in the user after registration
-                    await _authService.LoginAsync(new LoginDTO
-                    {
-                        Email = dto.Email,
-                        Password = dto.Password,
-                        RememberMe = false
-                    });
-
-                    return RedirectToAction("Index", "Home");
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    return Ok(new { message = "Registration and login successful." });
                 }
             }
 
-            return View(dto);
+            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
         }
-        // GET: /CustomerAuth/Login
-        [HttpGet]
-        public IActionResult Login(string? returnUrl = null)
+
+                // POST: api/CustomerAuth/login
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto, [FromQuery] string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginDTO dto, string? returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (!ModelState.IsValid) return View(dto);
+            if (User.Identity?.IsAuthenticated == true)
+                return BadRequest(new { error = "Already logged in. Please logout first." }); 
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var result = await _authService.LoginAsync(dto);
-            if (result.Succeeded)
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                {
-                    return Redirect(returnUrl);
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
 
-            ModelState.AddModelError("", "Invalid login attempt.");
-            return View(dto);
+            if (result.Succeeded)
+            {
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var role = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+                var token = _jwtTokenGenerator.GenerateToken(userId!, dto.Email!, role!);
+                return Ok(new
+                {
+                    Token = token,
+                    message = "Login successful.",
+                    redirectUrl = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
+                        ? returnUrl
+                        : "/home"
+                });
+            }
+
+            return Unauthorized(new { error = "Invalid login attempt." });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("logout")]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _authService.LogoutAsync();
-            return RedirectToAction("Index", "Home");
+            return Ok(new { message = "Logout successful." });
         }
 
     }

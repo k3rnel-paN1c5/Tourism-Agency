@@ -1,7 +1,9 @@
 namespace Domain.Enums;
 public enum PaymentStatus
 {
-    Pending,
-    Complete,
-    Refund
-}
+        Pending,
+        Paid,
+        Failed,
+        Refunded,
+        PartiallyRefunded
+    }

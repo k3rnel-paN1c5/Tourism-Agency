@@ -1,93 +1,96 @@
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Http;
-using AutoMapper;
-using Domain.IRepositories;
-using Domain.Entities;
-using Domain.Enums;
+﻿using Application.DTOs.Booking;
 using Application.DTOs.CarBooking;
 using Application.IServices.UseCases;
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.CarBooking;
+using AutoMapper;
+using Domain.Entities;
+using Domain.IRepositories;
+using Microsoft.Extensions.Logging;
+using System;
 
-
-namespace Application.Services.UseCases{
-
+namespace Application.Services.UseCases
+{
     public class CarBookingService : ICarBookingService
     {
-        private readonly IBookingRepository _bookingRepository;
-        private readonly IRepository<CarBooking, int> _carbookingRepository;
-        private readonly ICarRepository _carRepository;
-        // private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMapper _mapper; // AutoMapper instance
-        public CarBookingService(IBookingRepository bookingRepository, ICarRepository carRepository, IRepository<CarBooking, int> carbookingRepository,  IMapper mapper )//,IHttpContextAccessor httpContextAccessor)
+        private readonly IRepository<CarBooking, int> _repo;
+        private readonly IMapper _mapper;
+        private readonly ICarService _carService;
+        readonly IBookingService _bookingService;
+
+        public CarBookingService(IRepository<CarBooking, int> repo, IMapper mapper, ICarService carService, IBookingService bookingService)
         {
-            _bookingRepository = bookingRepository;
-            _carRepository = carRepository;
-            // _httpContextAccessor = httpContextAccessor;
-            _carbookingRepository  = carbookingRepository;
+            _repo = repo;
             _mapper = mapper;
+            _carService = carService;
+            _bookingService = bookingService;
         }
-        public async Task<ReturnCarBookingDTO> CreateBookingAsync(CreateCarBookingDTO carBookingDto)
+
+        public async Task<GetCarBookingDTO> CreateCarBookingAsync(CreateCarBookingDTO dto)
         {
-            if(carBookingDto.StartDate < DateTime.UtcNow  || carBookingDto.EndDate <= carBookingDto.StartDate)
-                throw new InvalidOperationException("Invalid date range");
-            
-            var car = await _carRepository.GetByIdAsync(carBookingDto.CarId) ?? throw new InvalidOperationException("Car is not found.");
+            var tripPlan = await _carService.GetCarByIdAsync(dto.CarId)
+                ?? throw new ArgumentException($"Car with ID {dto.CarId} was not found.");
 
-            var availableCars = await _carRepository.GetAvailableCarsAsync(carBookingDto.StartDate, carBookingDto.EndDate);
-        
-        if(!availableCars.Contains(car.Id))
-                throw new InvalidOperationException("Car is not available.");
-            
+            if (dto.StartDate < DateTime.UtcNow.Date)
+                throw new ArgumentException("Start Date must be in the future.");
 
-            // var userIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst("UserId");
-            // if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
-            // {
-            //     throw new UnauthorizedAccessException("User ID not found.");
-            // }
-            // var customerId = userIdClaim.Value; 
+            if (dto.EndDate <= dto.StartDate)
+                throw new ArgumentException("End Date must be after Start Date.");
 
-            Booking booking = new Booking{
+            if (dto.NumOfPassengers <= 0)
+                throw new ArgumentException("Number of passengers must be greater than zero.");
+
+            CreateBookingDTO bookingDto = new CreateBookingDTO
+            {
                 BookingType = false,
-                StartDate = carBookingDto.StartDate,
-                EndDate = carBookingDto.EndDate,    
-                Status = BookingStatus.Pending,
-                NumOfPassengers = carBookingDto.NumOfPassengers,
-                CustomerId = "user1", //todo: change later
-                EmployeeId = "emp1" //todo: change later
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
+                NumOfPassengers = dto.NumOfPassengers
             };
-            try{
-                await _bookingRepository.AddAsync(booking);
-            }
-            catch(Exception ex){
-                throw new InvalidOperationException("Error while creating booking " + ex.Message);
-            }
 
-    #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            // the car is not null
-            CarBooking carBooking = new CarBooking{
-                BookingId = booking.Id,
-                CarId = car.Id,
-                PickUpLocation = carBookingDto.PickUpLocation!,
-                DropOffLocation = carBookingDto.DropOffLocation!,
-                WithDriver = carBookingDto.WithDriver,
-                Booking = booking,
-                Car = car
+            await _bookingService.CreateBookingAsync(bookingDto);
+            var carBooking = _mapper.Map<CarBooking>(dto);
+            await _repo.AddAsync(carBooking);
+            await _repo.SaveAsync();
+            return _mapper.Map<GetCarBookingDTO>(carBooking);
+
+
+        }
+
+        public async Task DeleteCarBookingAsync(int id)
+        {
+            await _repo.DeleteByIdAsync(id);
+            await _bookingService.DeleteBookingAsync(id);
+            await _repo.SaveAsync();
+        }
+
+        public async Task<IEnumerable<GetCarBookingDTO>> GetAllCarBookingsAsync()
+        {
+            var carBookings =await _repo.GetAllAsync();
+            return _mapper.Map<IEnumerable<GetCarBookingDTO>>(carBookings);
+        }
+
+        public async Task<GetCarBookingDTO> GetCarBookingByIdAsync(int id)
+        {
+            var carBooking = await _repo.GetByIdAsync(id)
+                   ?? throw new Exception($"Car Booking {id} was not found");
+            return _mapper.Map<GetCarBookingDTO>(carBooking);
+        }
+
+        public async Task UpdateCarBookingAsync(UpdateCarBookingDTO dto)
+        {
+            CreateBookingDTO booking = new CreateBookingDTO
+            {
+                BookingType = true,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
+                NumOfPassengers = dto.NumOfPassengers
             };
-    #pragma warning restore CS8602 // Dereference of a possibly null reference.
-            try{
-                await _carbookingRepository.AddAsync(carBooking);
-                await _bookingRepository.SaveAsync();
-                await _carbookingRepository.SaveAsync();
-            }
-            catch(Exception ex){
-                throw new InvalidOperationException("Error while creating carbooking " + ex.Message);
-            }
-            ReturnCarBookingDTO carBookingDTO = _mapper.Map<ReturnCarBookingDTO>(carBooking);
-            // = new ReturnCarBookingDTO{
-            //     CarId = carBooking.CarId,
-
-            // };
-            return carBookingDTO;
-            
+            var createdBooking = await _bookingService.CreateBookingAsync(booking);
+            var carBooking = _mapper.Map<CarBooking>(dto);
+            carBooking.BookingId = createdBooking.Id;
+            await _repo.AddAsync(carBooking);
+            await _repo.SaveAsync();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Domain.Entities
 
         [Required]
         [Column("path", TypeName = "nvarchar(50)")]
-        public string Path { get; set; } = string.Empty;
+        public string? Path { get; set; } 
 
         [Required]
         [Column("type")]

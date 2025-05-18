@@ -10,15 +10,35 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
+using Application.IServices.UseCases.Post;
+using Application.Services.UseCases.Post;
+using Microsoft.OpenApi.Models;
 
-using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Infrastructure.Authentication;
+using Microsoft.AspNetCore.Mvc;
+
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases.CarBooking;
+
+
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases.CarBooking;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Controllers and Views
+
+
 builder.Services.AddControllersWithViews();
+// builder.Services.AddControllers();
 
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
@@ -29,12 +49,10 @@ builder.Services.AddDbContext<IdentityAppDbContext>(
 // Register TourismAgencyDbContext as the default DbContext
 builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyDbContext>());
 
-builder.Services.AddAuthorization();
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
-builder.Services.AddScoped<ICarRepository, CarRepository>();
-builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+// builder.Services.AddScoped(IRepository<Payment, int>, Repository<Payment, int>);
 
 builder.Services.AddIdentity<User, IdentityRole>(
     options =>
@@ -48,27 +66,124 @@ builder.Services.AddIdentity<User, IdentityRole>(
     .AddDefaultTokenProviders()
     .AddRoles<IdentityRole>();
 
-
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 // Services
-builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
+builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<ITripPlanService, TripPlanService>();
+builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
+builder.Services.AddScoped<ITripBookingService, TripBookingService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICarBookingService, CarBookingService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+
+
 // Automapper
 builder.Services.AddAutoMapper(
-    typeof(CarBookingProfile)
+    //typeof(CarBookingProfile),
+    //typeof(CarBookingProfile),
+    typeof(RegionProfile),
+    typeof(TripProfile),
+    typeof(TripPlanProfile),
+    typeof(TripPlanCarProfile),
+    typeof(TripBookingProfile),
+    typeof(BookingProfile),
+    typeof(PostProfile),
+    typeof(CarProfile),
+    typeof(CategoryProfile),
+    typeof(PostProfile),
+    typeof(CarProfile),
+    typeof(CategoryProfile)
 );
 
+var configuration = builder.Configuration;
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidAudience = configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)
+            )
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsync("{\"message\": \"Unauthorized. Token is missing or invalid.\"}");
+            }
+        };
+    });
+builder.Services.AddAuthorization();
+
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tourism Agency API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter your token: Bearer {your token}"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+    // Only include API controllers (those with [ApiController])
+    c.DocInclusionPredicate((docName, description) =>
+    {
+        if (description.ActionDescriptor is Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor controllerActionDescriptor)
+        {
+            return controllerActionDescriptor.ControllerTypeInfo.GetCustomAttributes(true)
+                .Any(attr => attr is ApiControllerAttribute);
+        }
+        return false;
+    });
+});
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TourismAgency API V1");
+        c.RoutePrefix = "swagger"; // Makes it available at /swagger
+    });
 }
 
 // using (var scope = app.Services.CreateScope())
@@ -79,12 +194,25 @@ if (!app.Environment.IsDevelopment())
 //     await IdentitySeed.SeedRolesAndAdmin(userManager, roleManager);
 // }
 
+
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseRouting();
 
 app.UseAuthorization();
+
+
+
+
+app.UseEndpoints(endpoints =>
+{
+    _ = endpoints.MapControllers();
+});
 
 app.MapControllerRoute(
     name: "default",

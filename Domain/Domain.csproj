@@ -9,11 +9,11 @@
   <ItemGroup>
     <Folder Include="Entities/" />
     <Folder Include="Enums/" />
-    <Folder Include="IRepositories/" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
