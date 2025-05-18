@@ -1,46 +1,47 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.CarBooking
 {
     public class CreateCarBookingDTO
     {
-        public string? CustomerId { get; set; } 
 
         [Required(ErrorMessage = "Start date is required")]
+        [Display(Name = "Starting Date")]
         public DateTime StartDate { get; set; }
 
         [Required(ErrorMessage = "End date is required")]
+        [Display(Name = "Ending Date")]
         public DateTime EndDate { get; set; }
 
 
-        // the employee id is added when the booking is reviewd by an employee
-        // [Required(ErrorMessage = "Employee ID is required")]
-        // public string EmployeeId { get; set; } = string.Empty;
-
-        //? Should this be an input or just the seats of the car? 
         [Required(ErrorMessage = "Passenger count is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Passenger count must be positive")]
+        [Range(1, int.MaxValue, ErrorMessage = "Passenger count must be at least 1")]
+        [Display(Name = "Number of Passengers")]
         public int NumOfPassengers { get; set; }
 
         [Required(ErrorMessage = "Car ID is required")]
+        [Display(Name = "Car")]
         public int CarId { get; set; }
 
         [Required(ErrorMessage = "Pickup location is required")]
-        public string? PickUpLocation { get; set; } 
+        [Display(Name= "Pickup location")]
+        public string? PickUpLocation { get; set; }
 
         [Required(ErrorMessage = "Dropoff location is required")]
-        public string? DropOffLocation { get; set; } 
+        [Display(Name = "Dropoff location")]
+        public string? DropOffLocation { get; set; }
 
-        [Required(ErrorMessage = "Driver option is required")]
+        [Required]
+        public string? CustomerId { get; set; }
+        public string? EmployeeId { get; set; }
+
+        [Required]
+        [DefaultValue(value: false)]
+        [Display(Name = "Includes a Driver")]
         public bool WithDriver { get; set; }
 
-       
+
     }
-
-
-
 }
-

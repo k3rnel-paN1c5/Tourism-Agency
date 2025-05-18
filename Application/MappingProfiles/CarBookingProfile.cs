@@ -1,15 +1,24 @@
+﻿using Application.DTOs.CarBooking;
 using AutoMapper;
 using Domain.Entities;
-using Application.DTOs.CarBooking;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Application.MappingProfiles{
-    public class CarBookingProfile : Profile
+namespace Application.MappingProfiles
+{
+    public class CarBookingProfile:Profile
     {
-        public CarBookingProfile()
-        {
-            // Map ReturnCarBookingDTO to CarBooking
-            CreateMap<CarBooking, ReturnCarBookingDTO>();
+        public CarBookingProfile() {
+
+            CreateMap<CarBooking, GetCarBookingDTO>();
+            CreateMap<CreateCarBookingDTO, CarBooking>();
+            CreateMap<UpdateCarBookingDTO, CarBooking>();
+
+        
         }
-    }   
+
+    }
 }
-    

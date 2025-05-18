@@ -25,11 +25,17 @@ using Application.IServices.UseCases.Category;
 using Application.IServices.UseCases.CarBooking;
 
 
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases.CarBooking;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Controllers and Views
+
 
 builder.Services.AddControllersWithViews();
 // builder.Services.AddControllers();
@@ -81,12 +87,16 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 // Automapper
 builder.Services.AddAutoMapper(
     //typeof(CarBookingProfile),
+    //typeof(CarBookingProfile),
     typeof(RegionProfile),
     typeof(TripProfile),
     typeof(TripPlanProfile),
     typeof(TripPlanCarProfile),
     typeof(TripBookingProfile),
     typeof(BookingProfile),
+    typeof(PostProfile),
+    typeof(CarProfile),
+    typeof(CategoryProfile)
     typeof(PostProfile),
     typeof(CarProfile),
     typeof(CategoryProfile)
