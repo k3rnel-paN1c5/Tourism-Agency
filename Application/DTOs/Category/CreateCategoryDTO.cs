@@ -9,7 +9,7 @@ namespace Application.DTOs.Category
 {
    public class CreateCategoryDTO
     {
-        [Required]
+        [Required(ErrorMessage = "Name cannot be empty")]
         [StringLength(100)]
         public string? Title;
 

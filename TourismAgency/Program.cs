@@ -10,15 +10,27 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
+using Application.IServices.UseCases.Post;
+using Application.Services.UseCases.Post;
+
+
 
 using System;
+using Microsoft.OpenApi.Models;
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases.CarBooking;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Controllers and Views
-builder.Services.AddControllersWithViews();
+ builder.Services.AddControllersWithViews();
+//builder.Services.AddControllers();
+
+builder.Services.AddControllers();
+
 
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
@@ -53,19 +65,50 @@ builder.Services.AddIdentity<User, IdentityRole>(
 // Services
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
-// Automapper
+builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<ITripPlanService, TripPlanService>();
+builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
+builder.Services.AddScoped<ITripBookingService, TripBookingService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 
+
+
+// Automapper
+builder.Services.AddAutoMapper(
+    //typeof(CarBookingProfile),
+    typeof(RegionProfile),
+    typeof(TripProfile),
+    typeof(TripPlanProfile),
+    typeof(TripPlanCarProfile),
+    typeof(TripBookingProfile),
+    typeof(PostProfile),
+    typeof(CarProfile),
+    typeof(CategoryProfile)
+);
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tourism Agency API", Version = "v1" });
+});
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TourismAgency API V1");
+        c.RoutePrefix = "swagger"; // Makes it available at /swagger
+    });
 }
 
 // using (var scope = app.Services.CreateScope())
@@ -77,14 +120,26 @@ if (!app.Environment.IsDevelopment())
 // }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseRouting();
 
 app.UseAuthorization();
 
+
+
+
+app.UseEndpoints(endpoints =>
+{
+    _ = endpoints.MapControllers();
+});
+
 app.MapControllerRoute(
-    name: "default",
+   name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

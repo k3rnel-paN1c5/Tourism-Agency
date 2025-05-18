@@ -5,10 +5,7 @@ namespace Domain.Entities
 {
         public partial class CarBooking
     {
-        public CarBooking()
-        {
-            ImageShots = new HashSet<ImageShot>();
-        }
+
         [Key]
         [Column("bookingId")]
         [ForeignKey("Booking")]
@@ -21,12 +18,12 @@ namespace Domain.Entities
 
         [Required]
         [Column("pickUpLocation", TypeName = "nvarchar(50)")]
-        public string PickUpLocation { get; set; } = string.Empty;
+        public string? PickUpLocation { get; set; }
 
 
         [Required]
         [Column("dropOffLocation", TypeName = "nvarchar(50)")]
-        public string DropOffLocation { get; set; } = string.Empty;
+        public string? DropOffLocation { get; set; }
 
         [Required]
         [Column("withDriver")]
@@ -35,7 +32,7 @@ namespace Domain.Entities
         // Navigation Properties
         public Car? Car { get; set; }
         public Booking? Booking { get; set; }
-        public ICollection<ImageShot> ImageShots { get; set; }
+        public ICollection<ImageShot>? ImageShots { get; set; }
 
 
 
