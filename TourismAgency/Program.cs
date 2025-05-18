@@ -17,14 +17,17 @@ using Application.Services.UseCases.Post;
 
 using System;
 using Microsoft.OpenApi.Models;
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases.CarBooking;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Controllers and Views
-// builder.Services.AddControllersWithViews();
-builder.Services.AddControllers();
+ builder.Services.AddControllersWithViews();
+//builder.Services.AddControllers();
 
 builder.Services.AddControllers();
 
@@ -69,6 +72,12 @@ builder.Services.AddScoped<ITripPlanService, TripPlanService>();
 builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
 builder.Services.AddScoped<ITripBookingService, TripBookingService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICarBookingService, CarBookingService>();
+
+
+
 // Automapper
 builder.Services.AddAutoMapper(
     typeof(CarBookingProfile),
@@ -77,7 +86,9 @@ builder.Services.AddAutoMapper(
     typeof(TripPlanProfile),
     typeof(TripPlanCarProfile),
     typeof(TripBookingProfile),
-    typeof(PostProfile)
+    typeof(PostProfile),
+    typeof(CarProfile),
+    typeof(CategoryProfile)
 );
 
 builder.Services.AddHttpContextAccessor();
@@ -90,11 +101,14 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TourismAgency API V1");
+        c.RoutePrefix = "swagger"; // Makes it available at /swagger
+    });
 }
 
 // using (var scope = app.Services.CreateScope())
@@ -124,8 +138,8 @@ app.UseEndpoints(endpoints =>
     _ = endpoints.MapControllers();
 });
 
-// app.MapControllerRoute(
-//     name: "default",
-//     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+   name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
