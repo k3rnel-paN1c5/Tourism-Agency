@@ -12,6 +12,10 @@ namespace Application.Services.UseCases
     {
         private readonly IRepository<Category, int> _categoryRepo;
         private readonly IMapper _mapper;
+        public CategoryService(IRepository<Category, int> categoryRepo, IMapper mapper){
+            _categoryRepo = categoryRepo;
+            _mapper = mapper;
+        }
         public async Task<GetCategoryDTO> CreateCategoryAsync(CreateCategoryDTO dto)
         {
             if(await _categoryRepo.GetByPredicateAsync(c=> dto.Title!.Equals(c.Title)) is not null)

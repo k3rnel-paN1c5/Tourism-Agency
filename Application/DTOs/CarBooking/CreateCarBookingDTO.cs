@@ -34,10 +34,6 @@ namespace Application.DTOs.CarBooking
         public string? DropOffLocation { get; set; }
 
         [Required]
-        public string? CustomerId { get; set; }
-        public string? EmployeeId { get; set; }
-
-        [Required]
         [DefaultValue(value: false)]
         [Display(Name = "Includes a Driver")]
         public bool WithDriver { get; set; }

@@ -59,7 +59,7 @@ namespace Application.Services.UseCases
 
         public async Task DeleteCarBookingAsync(int id)
         {
-            _repo.DeleteByIdAsync(id);
+            await _repo.DeleteByIdAsync(id);
             await _bookingService.DeleteBookingAsync(id);
             await _repo.SaveAsync();
         }
@@ -84,13 +84,11 @@ namespace Application.Services.UseCases
                 BookingType = true,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
-                Status = dto.Status,
-                NumOfPassengers = dto.NumOfPassengers,
-                CustomerId = dto.CustomerId
-
+                NumOfPassengers = dto.NumOfPassengers
             };
-            await _bookingService.CreateBookingAsync(booking);
+            var createdBooking = await _bookingService.CreateBookingAsync(booking);
             var carBooking = _mapper.Map<CarBooking>(dto);
+            carBooking.BookingId = createdBooking.Id;
             await _repo.AddAsync(carBooking);
             await _repo.SaveAsync();
         }
