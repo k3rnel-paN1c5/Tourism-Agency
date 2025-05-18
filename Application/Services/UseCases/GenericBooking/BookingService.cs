@@ -61,6 +61,7 @@ public class BookingService : IBookingService
             var bookingEntity = _mapper.Map<Booking>(dto);
             bookingEntity.CustomerId = userIdClaim;
             bookingEntity.EmployeeId = "09544eaa-7671-42a2-bfe3-ddfff5690d88"; //! this should change once an employee  accept 
+            bookingEntity.Status = Domain.Enums.BookingStatus.Pending;
             await _repo.AddAsync(bookingEntity).ConfigureAwait(false);
             await _repo.SaveAsync().ConfigureAwait(false);
             _logger.LogInformation("Booking '{Id}' created successfully.", bookingEntity.Id);

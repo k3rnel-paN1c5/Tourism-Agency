@@ -57,7 +57,7 @@ namespace Application.Services.UseCases
 
         public async Task DeleteCarAsync(int id)
         {
-            _repo.DeleteByIdAsync(id);
+            await _repo.DeleteByIdAsync(id);
             await _repo.SaveAsync();
         }
 
