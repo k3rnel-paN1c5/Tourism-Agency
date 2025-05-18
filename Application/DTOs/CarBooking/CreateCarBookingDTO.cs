@@ -33,6 +33,7 @@ namespace Application.DTOs.CarBooking
         [Display(Name = "Dropoff location")]
         public string? DropOffLocation { get; set; }
 
+
         [Required]
         [DefaultValue(value: false)]
         [Display(Name = "Includes a Driver")]
