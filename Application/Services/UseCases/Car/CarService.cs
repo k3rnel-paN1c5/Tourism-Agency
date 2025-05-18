@@ -82,6 +82,10 @@ namespace Application.Services.UseCases
             return _mapper.Map<IEnumerable<GetCarDTO>>(cars);
 
         }
-                
+
+        public Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

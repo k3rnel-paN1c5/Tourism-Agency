@@ -16,7 +16,7 @@ public class GetTripPlanDTO
     [Display(Name = "Starting Date")]
     public DateTime StartDate { get; set; }
     [Display(Name = "Ending Date")]
-    public DateTime EndtDate { get; set; }
+    public DateTime EndDate { get; set; }
     [Display(Name = "Duration")]
     public TimeSpan Duration { get; set; } 
     [Display(Name = "Included Services")]
