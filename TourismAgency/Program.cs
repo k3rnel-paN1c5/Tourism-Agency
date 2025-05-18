@@ -80,7 +80,7 @@ builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 
 // Automapper
 builder.Services.AddAutoMapper(
-    typeof(CarBookingProfile),
+    //typeof(CarBookingProfile),
     typeof(RegionProfile),
     typeof(TripProfile),
     typeof(TripPlanProfile),
