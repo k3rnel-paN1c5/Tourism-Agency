@@ -17,6 +17,7 @@ using Application.Services.UseCases.Post;
 
 using System;
 using Microsoft.OpenApi.Models;
+using Application.IServices.UseCases.Car;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,15 +70,19 @@ builder.Services.AddScoped<ITripPlanService, TripPlanService>();
 builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
 builder.Services.AddScoped<ITripBookingService, TripBookingService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ICarService, CarService>();
+
+
 // Automapper
 builder.Services.AddAutoMapper(
-    typeof(CarBookingProfile),
+    //typeof(CarBookingProfile),
     typeof(RegionProfile),
     typeof(TripProfile),
     typeof(TripPlanProfile),
     typeof(TripPlanCarProfile),
     typeof(TripBookingProfile),
-    typeof(PostProfile)
+    typeof(PostProfile),
+    typeof(CarProfile)
 );
 
 builder.Services.AddHttpContextAccessor();

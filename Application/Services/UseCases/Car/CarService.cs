@@ -75,16 +75,13 @@ namespace Application.Services.UseCases
             return _mapper.Map<GetCarDTO>(car);
         }
 
-        public async Task<IEnumerable<GetCarDTO>> GetCarByCategoryAsync(int categoryId)
+        public async Task<IEnumerable<GetCarDTO>> GetCarsByCategoryAsync(int categoryId)
         {
-            throw new NotImplementedException();
-        }
+            var cars = await _repo.GetAllByPredicateAsync(c => c.CategoryId.Equals(categoryId))
+                ?? throw new Exception($"No cars with category ID {categoryId} were found");
+            return _mapper.Map<IEnumerable<GetCarDTO>>(cars);
 
-        public Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
-        {
-            throw new NotImplementedException();
         }
-
-        
+                
     }
 }
