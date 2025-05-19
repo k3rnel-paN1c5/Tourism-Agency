@@ -42,7 +42,7 @@ builder.Services.AddControllersWithViews();
 
 // Database Contexts
 builder.Services.AddDbContext<TourismAgencyDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddDbContext<IdentityAppDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
 
