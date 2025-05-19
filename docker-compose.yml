@@ -8,7 +8,12 @@ services:
     ports:
       - "5050:80"
     volumes:
+      # Mount each project directory individually
+      - ./Domain:/src/Domain
+      - ./Application:/src/Application
+      - ./Infrastructure:/src/Infrastructure
       - ./TourismAgency:/src/TourismAgency
+      # Mount NuGet cache for faster restores
       - ~/.nuget:/root/.nuget
     depends_on:
       - tourismdb
