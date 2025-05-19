@@ -116,7 +116,7 @@ namespace Application.Services.UseCases
             return new ReturnPaymentMethodDTO
             {
                 Id = paymentMethod.Id,
-                Method = paymentMethod.Method,
+                Method = paymentMethod.Method!,
                 Icon = paymentMethod.Icon
             };
         }

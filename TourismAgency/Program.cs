@@ -25,10 +25,6 @@ using Application.IServices.UseCases.Category;
 using Application.IServices.UseCases.CarBooking;
 
 
-using Application.IServices.UseCases.Car;
-using Application.IServices.UseCases.Category;
-using Application.IServices.UseCases.CarBooking;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
