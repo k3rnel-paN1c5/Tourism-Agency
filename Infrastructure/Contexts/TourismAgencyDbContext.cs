@@ -270,9 +270,10 @@ namespace Infrastructure.Contexts
                       .OnDelete(DeleteBehavior.Restrict);
 
 
-                entity.HasMany(b => b.Payments)
+                entity.HasOne(b => b.Payment)
                       .WithOne(p => p.Booking)
-                      .HasForeignKey(p => p.BookingId)
+                      .HasForeignKey<Payment>(p => p.BookingId)
+                      .IsRequired(false)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(b => b.Employee)

@@ -13,13 +13,15 @@ namespace Application.Services.UseCases;
 public class BookingService : IBookingService
 {
     private readonly IRepository<Booking, int> _repo;
+    private readonly IPaymentService _paymentService;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<BookingService> _logger;
 
-    public BookingService(IRepository<Booking, int> repository, IMapper mapper, IHttpContextAccessor httpContextAccessor, ILogger<BookingService> logger)
+    public BookingService(IRepository<Booking, int> repository, IPaymentService paymentService, IMapper mapper, IHttpContextAccessor httpContextAccessor, ILogger<BookingService> logger)
     {
         _repo = repository;
+        _paymentService = paymentService;
         _mapper = mapper;
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;

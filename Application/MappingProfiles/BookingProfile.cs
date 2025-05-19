@@ -33,7 +33,7 @@ public class BookingProfile : Profile
                 .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()) //  assigned later
                 .ForMember(dest => dest.CarBooking, opt => opt.Ignore())
                 .ForMember(dest => dest.TripBooking, opt => opt.Ignore())
-                .ForMember(dest => dest.Payments, opt => opt.Ignore());
+                .ForMember(dest => dest.Payment, opt => opt.Ignore());
 
         CreateMap<UpdateBookingDTO, Booking>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -45,6 +45,6 @@ public class BookingProfile : Profile
                 .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
                 .ForMember(dest => dest.CarBooking, opt => opt.Ignore())
                 .ForMember(dest => dest.TripBooking, opt => opt.Ignore())
-                .ForMember(dest => dest.Payments, opt => opt.Ignore());
+                .ForMember(dest => dest.Payment, opt => opt.Ignore());
     }
 }

@@ -43,7 +43,8 @@ public class TripPlanProfile : Profile
             .ForMember(dest => dest.Trip, opt => opt.Ignore())
             .ForMember(dest => dest.Region, opt => opt.Ignore())
             .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-            .ForMember(dest => dest.PlanCars, opt => opt.Ignore());
+            .ForMember(dest => dest.PlanCars, opt => opt.Ignore())
+            .ReverseMap();
 
             
         // Map from Update DTO -> Entity

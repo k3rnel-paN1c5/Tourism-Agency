@@ -11,15 +11,13 @@ namespace Application.Services.UseCases;
 public class TripPlanCarService : ITripPlanCarService
 {
     IRepository<TripPlanCar, int> _repo;
-    ITripPlanService _tripPlanService;
     ICarService _carService;
     private readonly ILogger<TripPlanCarService> _logger;
     IMapper _mapper;
 
-    public TripPlanCarService(IRepository<TripPlanCar, int> repository, ITripPlanService tripPlanService, ICarService carService, IMapper mapper, ILogger<TripPlanCarService> logger)
+    public TripPlanCarService(IRepository<TripPlanCar, int> repository, ICarService carService, IMapper mapper, ILogger<TripPlanCarService> logger)
     {
         _repo = repository;
-        _tripPlanService = tripPlanService;
         _carService = carService;
         _mapper = mapper;
         _logger = logger;
@@ -32,7 +30,7 @@ public class TripPlanCarService : ITripPlanCarService
         {
             var car = await _carService.GetCarByIdAsync(dto.TripPlanId); 
             var tripPlanCarEntity = _mapper.Map<TripPlanCar>(dto);
-            var tripPlan = await _tripPlanService.GetTripPlanByIdAsync(dto.TripPlanId);
+            var tripPlan = dto.TripPlanCarDTO ?? throw new Exception("Trip plan associated with this car cannot be null");
             var availableCars = await _carService.GetAvailableCarsAsync(tripPlan.StartDate , tripPlan.EndDate);
             if(!availableCars.Contains(car)){
                 throw new InvalidDataException("Car is not available");
@@ -110,10 +108,9 @@ public class TripPlanCarService : ITripPlanCarService
         {   
             var existingTripPlanCar = await _repo.GetByIdAsync(dto.Id).ConfigureAwait(false)
                 ?? throw new ArgumentException($"Trip plan car with ID {dto.Id} was not found.");
-            var car = await _carService.GetCarByIdAsync(dto.TripPlanId); 
+            var car = await _carService.GetCarByIdAsync(dto.TripPlanId);
 
-            var tripPlan = await _tripPlanService.GetTripPlanByIdAsync(dto.TripPlanId);
-
+            var tripPlan = dto.TripPlanDTO ?? throw new Exception("Updating a trip Plan Car for a trip Plan that doesn't exist");
             var availableCars = await _carService.GetAvailableCarsAsync(tripPlan.StartDate , tripPlan.EndDate);
             if(!availableCars.Contains(car)){
                 throw new InvalidDataException("Car is not available");
