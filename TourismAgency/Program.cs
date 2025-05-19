@@ -95,7 +95,8 @@ builder.Services.AddAutoMapper(
     typeof(CategoryProfile),
     typeof(PostProfile),
     typeof(CarProfile),
-    typeof(CategoryProfile)
+    typeof(CategoryProfile),
+    typeof(PaymentProfile)
 );
 
 var configuration = builder.Configuration;
