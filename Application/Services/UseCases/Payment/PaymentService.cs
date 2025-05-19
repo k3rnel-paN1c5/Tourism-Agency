@@ -3,114 +3,152 @@ using Domain.Enums;
 using Domain.IRepositories;
 using Application.IServices.UseCases;
 using Application.DTOs.Payment;
-
-using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Http;
 using AutoMapper;
-
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-public class PaymentService : IPaymentService
+namespace Application.Services.UseCases
 {
-    private readonly IRepository<Payment, int> _paymentRepository;
-    private readonly IRepository<Booking, int> _bookingRepository;
-    private readonly ILogger<PaymentService> _logger;
-
-    public PaymentService(
-        IRepository<Payment, int> paymentRepository,
-        IRepository<Booking, int> bookingRepository,
-        ILogger<PaymentService> logger)
+    public class PaymentService : IPaymentService
     {
-        _paymentRepository = paymentRepository;
-        _bookingRepository = bookingRepository;
-        _logger = logger;
-    }
+        private readonly IRepository<Payment, int> _paymentRepository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<PaymentService> _logger;
 
-    public async Task<Payment> CreatePaymentAsync(int bookingId, decimal amountDue)
-    {
-        var booking = await _bookingRepository.GetByIdAsync(bookingId);
-        if (booking == null)
-            throw new KeyNotFoundException($"Booking {bookingId} not found.");
-
-        var payment = new Payment
+        public PaymentService(
+            IRepository<Payment, int> paymentRepository,
+            IMapper mapper,
+            ILogger<PaymentService> logger)
         {
-            BookingId = bookingId,
-            AmountDue = amountDue,
-            AmountPaid = 0,
-            Status = PaymentStatus.Pending,
-            PaymentDate = null
-        };
+            _paymentRepository = paymentRepository;
+            _mapper = mapper;
+            _logger = logger;
+        }
 
-        await _paymentRepository.AddAsync(payment);
-        await _paymentRepository.SaveAsync(); 
+        public async Task<ReturnPaymentDTO> CreatePaymentAsync(CreatePaymentDTO paymentDto)
+        {
+            var payment = _mapper.Map<Payment>(paymentDto);
+            payment.AmountPaid = 0;
+            payment.Status = PaymentStatus.Pending;
 
-        _logger.LogInformation($"Created payment {payment.Id} for booking {bookingId}.");
-        return payment;
+            await _paymentRepository.AddAsync(payment);
+            await _paymentRepository.SaveAsync();
+
+            _logger.LogInformation("Created payment for booking {BookingId}", paymentDto.BookingId);
+            return _mapper.Map<ReturnPaymentDTO>(payment);
+        }
+
+        public async Task<IEnumerable<ReturnPaymentDTO>> GetAllPaymentsAsync()
+        {
+            var payments = await _paymentRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<ReturnPaymentDTO>>(payments);
+        }
+
+        public async Task<ReturnPaymentDTO> GetPaymentByIdAsync(int paymentId)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(paymentId);
+            if (payment == null)
+            {
+                _logger.LogWarning("Payment {PaymentId} not found", paymentId);
+                throw new KeyNotFoundException($"Payment with ID {paymentId} not found");
+            }
+
+            return _mapper.Map<ReturnPaymentDTO>(payment);
+        }
+
+        public async Task<ReturnPaymentDTO> GetPaymentByBookingIdAsync(int bookingId)
+        {
+            var payment = (await _paymentRepository.GetAllByPredicateAsync(p => p.BookingId == bookingId))
+                .FirstOrDefault();
+
+            if (payment == null)
+            {
+                _logger.LogWarning("Payment for booking {BookingId} not found", bookingId);
+                throw new KeyNotFoundException($"Payment for booking ID {bookingId} not found");
+            }
+
+            return _mapper.Map<ReturnPaymentDTO>(payment);
+        }
+
+        public async Task<IEnumerable<ReturnPaymentDTO>> GetPaymentsByStatusAsync(PaymentStatus status)
+        {
+            var payments = await _paymentRepository.GetAllByPredicateAsync(p => p.Status == status);
+            return _mapper.Map<IEnumerable<ReturnPaymentDTO>>(payments);
+        }
+
+        public async Task<ReturnPaymentDTO> UpdatePaymentStatusAsync(UpdatePaymentStatusDTO statusDto)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(statusDto.PaymentId);
+            if (payment == null)
+            {
+                throw new KeyNotFoundException($"Payment with ID {statusDto.PaymentId} not found");
+            }
+
+            if (payment.Status == PaymentStatus.Refunded)
+            {
+                throw new InvalidOperationException("Cannot modify status of refunded payments");
+            }
+
+            payment.Status = statusDto.NewStatus;
+
+            if (statusDto.NewStatus == PaymentStatus.Paid && payment.PaymentDate == null)
+            {
+                payment.PaymentDate = DateTime.UtcNow;
+            }
+
+            _paymentRepository.Update(payment);
+            await _paymentRepository.SaveAsync();
+
+            _logger.LogInformation("Updated status for payment {PaymentId} to {Status}", 
+                statusDto.PaymentId, statusDto.NewStatus);
+            
+            return _mapper.Map<ReturnPaymentDTO>(payment);
+        }
+
+        public async Task<ReturnPaymentDTO> ProcessRefundAsync(ProcessRefundDTO refundDto)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(refundDto.PaymentId);
+            if (payment == null)
+            {
+                throw new KeyNotFoundException($"Payment with ID {refundDto.PaymentId} not found");
+            }
+
+            if (payment.Status != PaymentStatus.Paid)
+            {
+                throw new InvalidOperationException("Only completed payments can be refunded");
+            }
+
+            if (refundDto.Amount <= 0 || refundDto.Amount > payment.AmountPaid)
+            {
+                throw new ArgumentException("Invalid refund amount");
+            }
+
+            payment.AmountPaid -= refundDto.Amount;
+            payment.Notes = $"REFUND: {refundDto.Reason}";
+            payment.Status = payment.AmountPaid == 0 ? 
+                PaymentStatus.Refunded : 
+                PaymentStatus.PartiallyRefunded;
+
+            _paymentRepository.Update(payment);
+            await _paymentRepository.SaveAsync();
+
+            _logger.LogInformation("Processed refund of {Amount} for payment {PaymentId}", 
+                refundDto.Amount, refundDto.PaymentId);
+            
+            return _mapper.Map<ReturnPaymentDTO>(payment);
+        }
+
+        public async Task<PaymentDetailsDTO> GetPaymentDetailsAsync(int paymentId)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(paymentId);
+            if (payment == null)
+            {
+                throw new KeyNotFoundException($"Payment with ID {paymentId} not found");
+            }
+
+            return _mapper.Map<PaymentDetailsDTO>(payment);
+        }
     }
-
-     public async Task<Payment> GetPaymentByIdAsync(int paymentId)
-     {
-         var payment = await _paymentRepository.GetByIdAsync(paymentId);
-         if (payment == null)
-             throw new KeyNotFoundException($"Payment {paymentId} not found.");
-         return payment;
-     }
-
-     public async Task<Payment> GetPaymentByBookingIdAsync(int bookingId)
-     {
-         var payment = await _paymentRepository.GetByPredicateAsync(payment => payment.BookingId == bookingId);
-         if (payment == null)
-             throw new KeyNotFoundException($"No payment found for booking {bookingId}.");
-         return payment;
-     }
-
-     public async Task<Payment> UpdatePaymentStatusAsync(int paymentId, PaymentStatus status)
-     {
-         var payment = await GetPaymentByIdAsync(paymentId);
-
-         if (payment.Status == PaymentStatus.Refunded)
-             throw new InvalidOperationException("Refunded payments cannot be modified.");
-
-         payment.Status = status;
-
-         if (status == PaymentStatus.Paid)
-             payment.PaymentDate = DateTime.UtcNow;
-
-         _paymentRepository.Update(payment);
-         await _paymentRepository.SaveAsync();
-         _logger.LogInformation($"Updated payment {paymentId} status to {status}.");
-         return payment;
-     }
-
-     public async Task<Payment> ProcessRefundAsync(int paymentId, decimal refundAmount, string reason)
-     {
-         var payment = await GetPaymentByIdAsync(paymentId);
-
-         if (payment.Status != PaymentStatus.Paid)
-             throw new InvalidOperationException("Only paid payments can be refunded.");
-
-         if (refundAmount <= 0 || refundAmount > payment.AmountPaid)
-             throw new ArgumentException($"Invalid refund amount: {refundAmount}");
-
-         payment.AmountPaid -= refundAmount;
-         payment.Notes = $"REFUND: {reason}";
-
-         if (payment.AmountPaid == 0)
-             payment.Status = PaymentStatus.Refunded;
-         else
-             payment.Status = PaymentStatus.PartiallyRefunded;
-
-         _paymentRepository.Update(payment);
-         await _paymentRepository.SaveAsync();
-         _logger.LogInformation($"Processed refund of {refundAmount} for payment {paymentId}.");
-         return payment;
-     }
-
-     public async Task<IEnumerable<Payment>> GetPaymentsByStatusAsync(PaymentStatus status)
-     {
-         return await _paymentRepository.GetAllByPredicateAsync(payment => payment.Status == status);
-     }
 }
