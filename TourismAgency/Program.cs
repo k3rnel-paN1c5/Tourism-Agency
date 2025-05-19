@@ -25,11 +25,17 @@ using Application.IServices.UseCases.Category;
 using Application.IServices.UseCases.CarBooking;
 
 
+using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases.CarBooking;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 // Controllers and Views
+
 
 builder.Services.AddControllersWithViews();
 // builder.Services.AddControllers();
@@ -46,6 +52,7 @@ builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyD
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IRepository<Employee, string>, Repository<Employee, string>>();
+// builder.Services.AddScoped(IRepository<Payment, int>, Repository<Payment, int>);
 
 builder.Services.AddIdentity<User, IdentityRole>(
     options =>
@@ -74,11 +81,12 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICarBookingService, CarBookingService>();
-
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 
 // Automapper
 builder.Services.AddAutoMapper(
+    //typeof(CarBookingProfile),
     //typeof(CarBookingProfile),
     typeof(RegionProfile),
     typeof(TripProfile),
@@ -86,6 +94,9 @@ builder.Services.AddAutoMapper(
     typeof(TripPlanCarProfile),
     typeof(TripBookingProfile),
     typeof(BookingProfile),
+    typeof(PostProfile),
+    typeof(CarProfile),
+    typeof(CategoryProfile),
     typeof(PostProfile),
     typeof(CarProfile),
     typeof(CategoryProfile)

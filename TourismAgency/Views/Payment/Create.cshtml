@@ -1,0 +1,35 @@
+@model Application.DTOs.Payment.CreatePaymentDTO
+
+@{
+    ViewData["Title"] = "Create Payment";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+    
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <input type="hidden" asp-for="BookingId" />
+                
+                <div class="form-group">
+                    <label asp-for="AmountDue" class="control-label"></label>
+                    <input asp-for="AmountDue" class="form-control" />
+                    <span asp-validation-for="AmountDue" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <input type="submit" value="Create Payment" class="btn btn-primary" />
+                    <a asp-action="ByBooking" asp-route-bookingId="@Model.BookingId" class="btn btn-secondary">Back to Booking</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,4 +1,4 @@
-# docker-compose.yml
+  # docker-compose.yml
 
 services:
   tourismwebapp:
@@ -14,8 +14,8 @@ services:
       - tourismdb
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=tourismdb,1433;Database=TourismAgencyDB;User=sa;Password=YourPassword123!;
-      - ConnectionStrings__Identity=Server=tourismdb,1433;Database=TourismIdentity;User=sa;Password=YourPassword123!;
+      - ConnectionStrings__DefaultConnection=Server=tourismdb,1433;Database=TourismAgencyDB;User=sa;Password=YourPassword123!;TrustServerCertificate=True;
+      - ConnectionStrings__Identity=Server=tourismdb,1433;Database=TourismIdentity;User=sa;Password=YourPassword123!;TrustServerCertificate=True;
 
   tourismdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
