@@ -1,8 +1,6 @@
 ﻿using Application.DTOs.Booking;
 using Application.DTOs.CarBooking;
 using Application.IServices.UseCases;
-using Application.IServices.UseCases.Car;
-using Application.IServices.UseCases.CarBooking;
 using AutoMapper;
 using Domain.Entities;
 using Domain.IRepositories;

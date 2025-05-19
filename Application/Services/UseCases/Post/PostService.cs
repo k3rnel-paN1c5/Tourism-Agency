@@ -1,10 +1,10 @@
 //namespace Tourism-Agency;
 using Application.DTOs.Post;
-using Application.IServices.UseCases.Post;
+using Application.IServices.UseCases;
 using AutoMapper;
 using Domain.IRepositories;
 
-namespace Application.Services.UseCases.Post
+namespace Application.Services.UseCases
 {
 public class PostService: IPostService
 {

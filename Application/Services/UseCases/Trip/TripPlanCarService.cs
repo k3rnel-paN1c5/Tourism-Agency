@@ -5,7 +5,6 @@ using Domain.Entities;
 using Application.IServices.UseCases;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Application.IServices.UseCases.Car;
 namespace Application.Services.UseCases;
 
 public class TripPlanCarService : ITripPlanCarService

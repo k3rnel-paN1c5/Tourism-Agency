@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using Application.DTOs.Car;
 
-namespace Application.IServices.UseCases.Car
+namespace Application.IServices.UseCases
 {
     public interface ICarService
     {

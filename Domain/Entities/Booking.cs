@@ -42,9 +42,6 @@ namespace Domain.Entities
         [ForeignKey("Employee")]
         public string? EmployeeId { get; set; } 
 
-        [Column("paymentId")]
-        [ForeignKey("Payment")]
-        public int? PaytmentId { get; set; } 
 
         // Navigation Properties
         public Employee? Employee { get; set; }

@@ -1,10 +1,9 @@
 ﻿using System;
 using Domain.Entities;
 using Application.DTOs.Car;
-using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases;
 using AutoMapper;
 using Domain.IRepositories;
-using Application.IServices.UseCases.Category;
 
 
 
