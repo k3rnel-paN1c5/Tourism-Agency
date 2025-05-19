@@ -129,6 +129,21 @@ public class TripService : ITripService
         }
     }
 
+    public async Task<IEnumerable<GetTripDTO>> GetAvailableTripsAsync()
+    {
+        try
+        {
+            var trips = await _repo.GetAllByPredicateAsync(t => t.IsAvailable).ConfigureAwait(false);
+            _logger.LogDebug("Retrieved {Count} trips.", trips?.Count() ?? 0);
+            return _mapper.Map<IEnumerable<GetTripDTO>>(trips);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while retrieving all trips.");
+            throw;
+        }
+    }
+
     public async Task<GetTripDTO> GetTripByIdAsync(int id)
     {
         try

@@ -7,11 +7,6 @@ namespace Domain.Entities
 
     public partial class Payment
     {
-        public Payment()
-        {
-            Transactions = new HashSet<PaymentTransaction>();
-        }
-
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -42,7 +37,7 @@ namespace Domain.Entities
         public string Notes { get; set; } = string.Empty;
 
         // Navigation Properties
-        public virtual ICollection<PaymentTransaction> Transactions { get; set; }
+        public virtual ICollection<PaymentTransaction>? Transactions { get; set; }
         public Booking? Booking { get; set; }
     }
 }

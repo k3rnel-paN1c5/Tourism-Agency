@@ -1,6 +1,6 @@
 //namespace Tourism-Agency;
 using Application.DTOs.Post;
-namespace Application.IServices.UseCases.Post
+namespace Application.IServices.UseCases
 {
     public interface IPostService
     {

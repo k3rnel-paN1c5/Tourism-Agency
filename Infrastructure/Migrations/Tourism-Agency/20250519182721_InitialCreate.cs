@@ -117,7 +117,7 @@ namespace Infrastructure.Migrations.TourismAgency
                     name = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     slug = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     isAvailable = table.Column<bool>(type: "bit", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(200)", nullable: false),
+                    description = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     isPrivate = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -163,7 +163,7 @@ namespace Infrastructure.Migrations.TourismAgency
                     status = table.Column<string>(type: "nvarchar(30)", nullable: false),
                     numOfPassengers = table.Column<int>(type: "int", nullable: false),
                     customerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    employeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    employeeId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -227,10 +227,10 @@ namespace Infrastructure.Migrations.TourismAgency
                     startDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     endDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     duration = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    includedServices = table.Column<string>(type: "nvarchar(200)", nullable: false),
-                    stops = table.Column<string>(type: "nvarchar(200)", nullable: false),
-                    mealsPlan = table.Column<string>(type: "nvarchar(200)", nullable: false),
-                    hotelStays = table.Column<string>(type: "nvarchar(200)", nullable: false)
+                    includedServices = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    stops = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    mealsPlan = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    hotelStays = table.Column<string>(type: "nvarchar(200)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -529,7 +529,8 @@ namespace Infrastructure.Migrations.TourismAgency
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_bookingId",
                 table: "Payments",
-                column: "bookingId");
+                column: "bookingId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentTransaction_paymentId_paymentMethodId_transactionDate",

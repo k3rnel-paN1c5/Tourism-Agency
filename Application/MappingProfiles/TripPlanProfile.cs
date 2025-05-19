@@ -14,7 +14,7 @@ public class TripPlanProfile : Profile
                 .ForMember(dest => dest.TripId, opt => opt.MapFrom(src => src.TripId))
                 .ForMember(dest => dest.RegionId, opt => opt.MapFrom(src => src.RegionId))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
-                .ForMember(dest => dest.EndtDate, opt => opt.MapFrom(src => src.EndDate)) // Note: Typo in DTO as EndtDate
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate)) // Note: Typo in DTO as EndDate
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
                 .ForMember(dest => dest.IncludedServices, opt => opt.MapFrom(src => src.IncludedServices))
                 .ForMember(dest => dest.Stops, opt => opt.MapFrom(src => src.Stops))
@@ -43,7 +43,8 @@ public class TripPlanProfile : Profile
             .ForMember(dest => dest.Trip, opt => opt.Ignore())
             .ForMember(dest => dest.Region, opt => opt.Ignore())
             .ForMember(dest => dest.Bookings, opt => opt.Ignore())
-            .ForMember(dest => dest.PlanCars, opt => opt.Ignore());
+            .ForMember(dest => dest.PlanCars, opt => opt.Ignore())
+            .ReverseMap();
 
             
         // Map from Update DTO -> Entity

@@ -41,7 +41,6 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnName("customerId");
 
                     b.Property<string>("EmployeeId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("employeeId");
 
@@ -382,7 +381,8 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("notes");
 
-                    b.Property<DateTime>("PaymentDate")
+                    b.Property<DateTime?>("PaymentDate")
+                        .IsRequired()
                         .HasColumnType("datetime2(7)")
                         .HasColumnName("paymentDate");
 
@@ -393,7 +393,8 @@ namespace Infrastructure.Migrations.TourismAgency
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookingId");
+                    b.HasIndex("BookingId")
+                        .IsUnique();
 
                     b.ToTable("Payments", (string)null);
                 });
@@ -666,7 +667,6 @@ namespace Infrastructure.Migrations.TourismAgency
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("description");
 
@@ -734,22 +734,19 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("duration");
 
-                    b.Property<DateTime>("EndtDate")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2(7)")
                         .HasColumnName("endDate");
 
                     b.Property<string>("HotelStays")
-                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("hotelStays");
 
                     b.Property<string>("IncludedServices")
-                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("includedServices");
 
                     b.Property<string>("MealsPlan")
-                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("mealsPlan");
 
@@ -762,7 +759,6 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnName("startDate");
 
                     b.Property<string>("Stops")
-                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("stops");
 
@@ -820,8 +816,7 @@ namespace Infrastructure.Migrations.TourismAgency
                     b.HasOne("Domain.Entities.Employee", "Employee")
                         .WithMany("Bookings")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Customer");
 
@@ -872,8 +867,8 @@ namespace Infrastructure.Migrations.TourismAgency
             modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
                     b.HasOne("Domain.Entities.Booking", "Booking")
-                        .WithMany("Payments")
-                        .HasForeignKey("BookingId")
+                        .WithOne("Payment")
+                        .HasForeignKey("Domain.Entities.Payment", "BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1009,7 +1004,7 @@ namespace Infrastructure.Migrations.TourismAgency
                 {
                     b.Navigation("CarBooking");
 
-                    b.Navigation("Payments");
+                    b.Navigation("Payment");
 
                     b.Navigation("TripBooking");
                 });

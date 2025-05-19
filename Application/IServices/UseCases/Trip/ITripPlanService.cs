@@ -9,6 +9,7 @@ public interface ITripPlanService
 {
     Task<GetTripPlanDTO> CreateTripPlanAsync(CreateTripPlanDTO dto);
     Task UpdateTripPlanAsync(UpdateTripPlanDTO dto);
+    Task UpdateCarOfTripPlanAsync(UpdateTripPlanCarDTO dto);
     Task DeleteTripPlanAsync(int id);
     Task<IEnumerable<GetTripPlanDTO>> GetAllTripPlansAsync();
     Task<GetTripPlanDTO> GetTripPlanByIdAsync(int id);

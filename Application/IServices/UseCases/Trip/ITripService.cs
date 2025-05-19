@@ -9,5 +9,6 @@ public interface ITripService
     Task UpdateTripAsync(UpdateTripDTO dto);
     Task DeleteTripAsync(int id);
     Task<IEnumerable<GetTripDTO>> GetAllTripsAsync();
+    Task<IEnumerable<GetTripDTO>> GetAvailableTripsAsync();
     Task<GetTripDTO> GetTripByIdAsync(int id);
 }

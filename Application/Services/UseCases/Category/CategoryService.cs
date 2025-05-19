@@ -1,6 +1,6 @@
 ﻿using System;
 using Domain.Entities;
-using Application.IServices.UseCases.Category;
+using Application.IServices.UseCases;
 using Application.DTOs.Category;
 using Domain.IRepositories;
 using AutoMapper;

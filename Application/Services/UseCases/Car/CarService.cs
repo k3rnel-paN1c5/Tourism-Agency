@@ -1,10 +1,9 @@
 ﻿using System;
 using Domain.Entities;
 using Application.DTOs.Car;
-using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases;
 using AutoMapper;
 using Domain.IRepositories;
-using Application.IServices.UseCases.Category;
 
 
 
@@ -82,6 +81,10 @@ namespace Application.Services.UseCases
             return _mapper.Map<IEnumerable<GetCarDTO>>(cars);
 
         }
-                
+
+        public Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
