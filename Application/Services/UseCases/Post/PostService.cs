@@ -94,27 +94,6 @@ namespace Application.Services.UseCases
     return true; // Return success status
 }
 
-        public async Task<GetPostDTO> UpdatePostAsync(UpdatePostDTO dto)
-{
-    // Retrieve the post from the database
-    var post = await _postRepository.GetByIdAsync(dto.Id);
-    if (post == null)
-    {
-        throw new Exception("Post not found!");
-    }
-
-    // Use Mapper to update only the provided values
-    _mapper.Map(dto, post);
-
-    // Log update confirmation in terminal
-    Console.WriteLine($"Post Updated: {post.Id} - {post.Title} - {post.Body}");
-
-    // Save the updated entity
-    await _postRepository.UpdateAsync(post);
-    await _postRepository.SaveAsync();
-
-    return _mapper.Map<GetPostDTO>(post); // Return updated post DTO
-}
         private string GenerateSlug(string title)
         {
             return title.ToLower().Replace(" ", "-");

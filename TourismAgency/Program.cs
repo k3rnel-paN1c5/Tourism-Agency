@@ -8,25 +8,18 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
-using Infrastructure.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Mvc;
+using Application.IServices.UseCases.Post;
+using Application.Services.UseCases.Post;
 
 
 
+using System;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TourismAgencyDatabase")));
 
 // Add services to the container.
 

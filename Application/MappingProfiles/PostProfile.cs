@@ -22,6 +22,8 @@ namespace Application.MappingProfiles
 
             // Mapping UpdatePostDTO to Post
             CreateMap<UpdatePostDTO, Post>(); 
+            
+
         }
     }
 }
