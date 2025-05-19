@@ -55,7 +55,11 @@ namespace Infrastructure.Repositories
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
-                Delete(entity);
+            {
+              Delete(entity);
+              await SaveAsync();
+            }
+  
         }
 
         public async Task SaveAsync()

@@ -55,6 +55,30 @@ namespace Application.Services.UseCases.Post
 
     return _mapper.Map<GetPostDTO>(post); // Return updated post DTO
 }
+
+    public async Task<bool> DeletePostAsync(int id)
+{
+    // Retrieve the post from the database
+    var post = await _postRepository.GetByIdAsync(id);
+
+    // If the post does not exist, throw an exception
+    if (post == null)
+    {
+        throw new Exception("Post not found!");
+    }
+
+    // Remove the post from the repository
+    _postRepository.Delete(post);
+
+    // Save changes to the database
+    await _postRepository.SaveAsync();
+
+    // Log confirmation message in the terminal
+    Console.WriteLine($"Post Deleted: {id}");
+
+    return true; // Return success status
+}
+
         private string GenerateSlug(string title)
         {
             return title.ToLower().Replace(" ", "-");
