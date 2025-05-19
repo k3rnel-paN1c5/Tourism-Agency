@@ -55,7 +55,8 @@ namespace Infrastructure.Repositories
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
-                Delete(entity);
+              Delete(entity);
+  
         }
 
         public async Task SaveAsync()
@@ -63,7 +64,7 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task DeleteByIdAsync(TKey id)
+        Task IRepository<T, TKey>.DeleteByIdAsync(TKey id)
         {
             throw new NotImplementedException();
         }

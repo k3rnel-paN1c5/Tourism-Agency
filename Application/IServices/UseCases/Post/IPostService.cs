@@ -6,6 +6,8 @@ namespace Application.IServices.UseCases
     {
         Task<GetPostDTO> CreatePostAsync(CreatePostDTO dto);//  Create Post
         Task<GetPostDTO> UpdatePostAsync(UpdatePostDTO dto); //  Update Post
+        Task<bool> DeletePostAsync(int id);
+
     }
 }
 

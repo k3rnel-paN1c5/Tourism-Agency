@@ -20,7 +20,11 @@ using Microsoft.AspNetCore.Mvc;
 
 
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TourismAgencyDatabase")));
 
 // Add services to the container.
 

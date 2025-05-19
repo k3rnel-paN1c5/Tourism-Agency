@@ -50,6 +50,19 @@ namespace TourismAgency.Controllers
                 message = "Post has been successfully updated!" 
             });
         }
+        [HttpDelete("DeletePost/{id}")]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+          Console.WriteLine($"Received Delete Request: ID={id}");
+
+          var result = await _postService.DeletePostAsync(id);
+          if (!result)
+          {
+           return NotFound(new { message = "Post not found!" });
+          }
+
+          return Ok(new { message = "Post has been successfully deleted!" });
+        }
     }
 }
     
