@@ -44,10 +44,9 @@ namespace Infrastructure.Repositories
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task UpdateAsync(T entity)
+        public void UpdateAsync(T entity)
         {
             _dbSet.Update(entity); // Update the entity
-            await _context.SaveChangesAsync(); // Commit changes to database
         }
 
         public void Delete(T entity)
@@ -60,11 +59,8 @@ namespace Infrastructure.Repositories
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
-            {
               Delete(entity);
               await SaveAsync();
-            }
-  
         }
 
 
