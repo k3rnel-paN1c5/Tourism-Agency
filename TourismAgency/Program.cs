@@ -23,12 +23,6 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<IdentityAppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
-
-builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TourismAgencyConnection")));
-
 // Add services to the container.
 
 // Controllers and Views
