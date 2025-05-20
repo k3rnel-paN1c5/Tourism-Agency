@@ -55,16 +55,13 @@ namespace Infrastructure.Repositories
         }
 
 
-        public async void DeleteByIdAsync(TKey id)
+        public async Task DeleteByIdAsync(TKey id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
               Delete(entity);
               await SaveAsync();
-              Delete(entity);
-              await SaveAsync();
         }
-
 
         public async Task SaveAsync()
         {
