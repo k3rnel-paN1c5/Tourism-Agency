@@ -9,6 +9,7 @@ namespace Application.Services.UseCases
     public class PostService : IPostService
     {
         private readonly IRepository<Domain.Entities.Post, int> _postRepository;
+        private readonly IRepository<Domain.Entities.Employee, string> _employeeRepository;
         private readonly IMapper _mapper;
         
 
