@@ -10,7 +10,7 @@ namespace Application.IServices.UseCases
         Task<GetCarDTO> CreateCarAsync(CreateCarDTO dto);
         Task UpdateCarAsync(UpdateCarDTO dto);
         Task DeleteCarAsync(int id);
-        Task<IEnumerable<GetCarDTO>> GetAllTripAsync();
+        Task<IEnumerable<GetCarDTO>> GetAllCarsAsync();
         Task<GetCarDTO> GetCarByIdAsync(int id);
         Task<IEnumerable<GetCarDTO>> GetCarsByCategoryAsync(int categoryId);
         

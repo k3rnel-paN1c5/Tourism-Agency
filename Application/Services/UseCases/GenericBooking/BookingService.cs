@@ -1,6 +1,7 @@
 using System;
 using System.Security.Claims;
 using Application.DTOs.Booking;
+using Application.DTOs.Payment;
 using Application.IServices.UseCases;
 using AutoMapper;
 using Domain.Entities;
@@ -62,10 +63,17 @@ public class BookingService : IBookingService
 
             var bookingEntity = _mapper.Map<Booking>(dto);
             bookingEntity.CustomerId = userIdClaim;
-            bookingEntity.EmployeeId = "09544eaa-7671-42a2-bfe3-ddfff5690d88"; //! this should change once an employee  accept 
+            _logger.LogInformation(userIdClaim);
+            // bookingEntity.EmployeeId = "09544eaa-7671-42a2-bfe3-ddfff5690d88"; //! this should change once an employee  accept 
             bookingEntity.Status = Domain.Enums.BookingStatus.Pending;
             await _repo.AddAsync(bookingEntity).ConfigureAwait(false);
             await _repo.SaveAsync().ConfigureAwait(false);
+            var newPayment = new CreatePaymentDTO
+            {
+                BookingId = bookingEntity.Id,
+                AmountDue = 1400
+            };
+            await _paymentService.CreatePaymentAsync(newPayment);
             _logger.LogInformation("Booking '{Id}' created successfully.", bookingEntity.Id);
             return _mapper.Map<GetBookingDTO>(bookingEntity);
         }
@@ -75,7 +83,6 @@ public class BookingService : IBookingService
             throw;
         }
     }
-
     public async Task DeleteBookingAsync(int id)
     {
         try

@@ -32,6 +32,7 @@ namespace Application.Services.UseCases
             var payment = _mapper.Map<Payment>(paymentDto);
             payment.AmountPaid = 0;
             payment.Status = PaymentStatus.Pending;
+            payment.PaymentDate = DateTime.UtcNow;
 
             await _paymentRepository.AddAsync(payment);
             await _paymentRepository.SaveAsync();

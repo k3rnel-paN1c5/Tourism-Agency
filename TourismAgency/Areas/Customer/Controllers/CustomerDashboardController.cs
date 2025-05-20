@@ -2,11 +2,13 @@ using Application.DTOs.TripBooking;
 using Application.IServices.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TourismAgency.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [ApiController]
+    [Authorize]
     [Route("api/[area]/[controller]")]
     public class CustomerDashboardController : ControllerBase
     {

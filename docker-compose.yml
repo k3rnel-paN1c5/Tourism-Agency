@@ -19,7 +19,7 @@ services:
       - tourismdb
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=tourismdb,1433;Database=TourismAgencyDB;User=sa;Password=YourPassword123!;TrustServerCertificate=True;
+      - ConnectionStrings__Default=Server=tourismdb,1433;Database=TourismAgencyDB;User=sa;Password=YourPassword123!;TrustServerCertificate=True;
       - ConnectionStrings__Identity=Server=tourismdb,1433;Database=TourismIdentity;User=sa;Password=YourPassword123!;TrustServerCertificate=True;
 
   tourismdb:

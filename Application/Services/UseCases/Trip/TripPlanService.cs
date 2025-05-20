@@ -61,19 +61,22 @@ public class TripPlanService : ITripPlanService
             // tripPlanEntity.Trip = _mapper.Map<Trip>(trip);
             // tripPlanEntity.Region = _mapper.Map<Region>(region);
             
+            await _repo.AddAsync(tripPlanEntity).ConfigureAwait(false);
+            await _repo.SaveAsync().ConfigureAwait(false);
             if (dto.TripPlanCars != null && dto.TripPlanCars.Count > 0)
             {
                 tripPlanEntity.PlanCars = new HashSet<TripPlanCar>();
                 foreach (var carDto in dto.TripPlanCars)
                 {
-                    carDto.TripPlanCarDTO = _mapper.Map<GetTripPlanDTO>(tripPlanEntity);
+                    // carDto.TripPlanCarDTO = _mapper.Map<GetTripPlanDTO>(tripPlanEntity);
+                    carDto.StartDate = tripPlanEntity.StartDate;
+                    carDto.EndDate = tripPlanEntity.EndDate;
+                    carDto.TripPlanId = tripPlanEntity.Id;
                     var carResult = await _tripPlanCarService.CreateTripPlanCarAsync(carDto);
                     tripPlanEntity.PlanCars.Add(_mapper.Map<TripPlanCar>(carResult));
                 }
             }
 
-            await _repo.AddAsync(tripPlanEntity).ConfigureAwait(false);
-            await _repo.SaveAsync().ConfigureAwait(false);
 
             _logger.LogInformation("Trip plan '{Id}' created successfully.", tripPlanEntity.Id);
 
@@ -131,8 +134,9 @@ public class TripPlanService : ITripPlanService
         ArgumentNullException.ThrowIfNull(dto);
         try
         {
-            var tripPlan = await _repo.GetByIdAsync(dto.TripPlanId);
-            dto.TripPlanDTO = _mapper.Map<GetTripPlanDTO>(tripPlan);
+            var tripPlan = await _repo.GetByIdAsync(dto.TripPlanId)  ?? throw new ArgumentException($"Trip Plan with ID {dto.TripPlanId} was not found.");
+            dto.StartDate = tripPlan.StartDate;
+            dto.EndDate = tripPlan.EndDate;
             await _tripPlanCarService.UpdateTripPlanCarAsync(dto);
         }
         catch (Exception ex)
@@ -198,7 +202,8 @@ public class TripPlanService : ITripPlanService
         {
             var tripPlan = await _repo.GetByIdAsync(dto.TripPlanId).ConfigureAwait(false)
                 ?? throw new ArgumentException($"Trip plan with ID {dto.TripPlanId} was not found.");
-            dto.TripPlanCarDTO = _mapper.Map<GetTripPlanDTO>(tripPlan);
+            dto.StartDate = tripPlan.StartDate;
+            dto.EndDate = tripPlan.EndDate;
             var car = await _tripPlanCarService.CreateTripPlanCarAsync(dto).ConfigureAwait(false);
             tripPlan.PlanCars ??= new HashSet<TripPlanCar>();
             tripPlan.PlanCars.Add(_mapper.Map<TripPlanCar>(car));

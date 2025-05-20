@@ -60,7 +60,7 @@ namespace Application.Services.UseCases
             await _repo.SaveAsync();
         }
 
-        public async Task<IEnumerable<GetCarDTO>> GetAllTripAsync()
+        public async Task<IEnumerable<GetCarDTO>> GetAllCarsAsync()
         {
             var cars= await _repo.GetAllAsync();
             return _mapper.Map<IEnumerable<GetCarDTO>>(cars);
@@ -84,7 +84,7 @@ namespace Application.Services.UseCases
 
         public Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
         {
-            throw new NotImplementedException();
+            return GetAllCarsAsync();
         }
     }
 }

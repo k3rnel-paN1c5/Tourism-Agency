@@ -21,5 +21,8 @@ public class UpdateTripPlanCarDTO
     [Required(ErrorMessage = "{0} is required.")]
     [Display(Name = "Price")]
     public decimal Price { get; set; }
-    public GetTripPlanDTO? TripPlanDTO { get; set; }
+    // public GetTripPlanDTO? TripPlanDTO { get; set; }
+
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
 }

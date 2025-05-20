@@ -35,7 +35,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
         [HttpGet] // No route parameter
         public IActionResult GetDefault()
         {
-            return Ok(new { Message = "Welcome to the Dashboard" });
+            return Ok(new { Message = "Welcome to the Trip Supervisor Dashboard" });
         }
 
         //* Regions *//
@@ -48,9 +48,16 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
         [HttpGet("Regions/{id}")]
         public async Task<IActionResult> GetRegionById(int id)
         {
-            var region = await _regionServ.GetRegionByIdAsync(id);
-            if (region == null) return NotFound();
-            return Ok(region);
+            try
+            {
+                var region = await _regionServ.GetRegionByIdAsync(id);
+                if (region == null) return NotFound();
+                return Ok(region);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
         [HttpPost("Region")]
         public async Task<IActionResult> CreateRegion([FromBody] CreateRegionDTO dto){

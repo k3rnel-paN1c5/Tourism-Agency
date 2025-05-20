@@ -27,13 +27,17 @@ public class TripPlanCarService : ITripPlanCarService
 
         try
         {
-            var car = await _carService.GetCarByIdAsync(dto.TripPlanId); 
+            var car = await _carService.GetCarByIdAsync(dto.CarId); 
             var tripPlanCarEntity = _mapper.Map<TripPlanCar>(dto);
-            var tripPlan = dto.TripPlanCarDTO ?? throw new Exception("Trip plan associated with this car cannot be null");
-            var availableCars = await _carService.GetAvailableCarsAsync(tripPlan.StartDate , tripPlan.EndDate);
-            if(!availableCars.Contains(car)){
-                throw new InvalidDataException("Car is not available");
-            }
+            // var tripPlan = dto.TripPlanCarDTO ?? throw new Exception("Trip plan associated with this car cannot be null");
+            var availableCars = await _carService.GetAvailableCarsAsync(dto.StartDate , dto.EndDate);
+            // if(!availableCars.Contains(car)){
+            //     foreach (var a in availableCars)
+            //     {
+            //         _logger.LogDebug("Available car id: {Id}\n", a.Id);
+            //     }
+            //     throw new InvalidDataException("Car is not available");
+            // }
             await _repo.AddAsync(tripPlanCarEntity).ConfigureAwait(false);
             await _repo.SaveAsync().ConfigureAwait(false);
 
@@ -107,16 +111,15 @@ public class TripPlanCarService : ITripPlanCarService
         {   
             var existingTripPlanCar = await _repo.GetByIdAsync(dto.Id).ConfigureAwait(false)
                 ?? throw new ArgumentException($"Trip plan car with ID {dto.Id} was not found.");
-            var car = await _carService.GetCarByIdAsync(dto.TripPlanId);
+            var car = await _carService.GetCarByIdAsync(dto.CarId);
 
-            var tripPlan = dto.TripPlanDTO ?? throw new Exception("Updating a trip Plan Car for a trip Plan that doesn't exist");
-            var availableCars = await _carService.GetAvailableCarsAsync(tripPlan.StartDate , tripPlan.EndDate);
-            if(!availableCars.Contains(car)){
-                throw new InvalidDataException("Car is not available");
-            }
+            // var tripPlan = dto.TripPlanDTO ?? throw new Exception("Updating a trip Plan Car for a trip Plan that doesn't exist");
+            // var availableCars = await _carService.GetAvailableCarsAsync(dto.StartDate , dto.EndDate);
+            // if(!availableCars.Contains(car)){
+            //     throw new InvalidDataException("Car is not available");
+            // }
             existingTripPlanCar = _mapper.Map<TripPlanCar>(dto);
 
-            existingTripPlanCar = _mapper.Map<TripPlanCar>(dto);
 
             _repo.Update(existingTripPlanCar);
             await _repo.SaveAsync().ConfigureAwait(false);
