@@ -9,16 +9,27 @@ namespace Application.Services.UseCases.Post
     public class PostService : IPostService
     {
         private readonly IRepository<Domain.Entities.Post, int> _postRepository;
+        private readonly IRepository<Domain.Entities.Employee, string> _employeeRepository;
         private readonly IMapper _mapper;
+        
 
-        public PostService(IRepository<Domain.Entities.Post, int> postRepository, IMapper mapper)
+
+        public PostService(IRepository<Domain.Entities.Post, int> postRepository,IRepository<Domain.Entities.Employee, string> employeeRepository, IMapper mapper)
         {
             _postRepository = postRepository;
+            _employeeRepository = employeeRepository; 
             _mapper = mapper;
         }
 
         public async Task<GetPostDTO> CreatePostAsync(CreatePostDTO dto)
         {
+            //  Check if the employee exists before creating the post
+            var employeeExists = await _employeeRepository.GetByIdAsync(dto.EmployeeId);
+               if (employeeExists == null)
+            {
+               throw new Exception("Invalid employeeId! The employee does not exist.");
+            }
+
             // Convert CreatePostDTO to Post using Mapper
             var post = _mapper.Map<Domain.Entities.Post>(dto);
 
