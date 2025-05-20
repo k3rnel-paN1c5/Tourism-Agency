@@ -61,7 +61,7 @@ namespace Application.Services.UseCases
     Console.WriteLine($"Post Updated: {post.Id} - {post.Title} - {post.Body}");
 
     // Save the updated entity
-    _postRepository.Update(post);
+    await _postRepository.UpdateAsync(post);
     await _postRepository.SaveAsync();
 
     return _mapper.Map<GetPostDTO>(post); // Return updated post DTO
