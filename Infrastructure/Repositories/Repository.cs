@@ -61,6 +61,8 @@ namespace Infrastructure.Repositories
             if (entity != null)
               Delete(entity);
               await SaveAsync();
+              Delete(entity);
+              await SaveAsync();
         }
 
 

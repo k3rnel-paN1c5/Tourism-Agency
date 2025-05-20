@@ -16,6 +16,7 @@ using Application.Services.UseCases.Post;
 using System;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
