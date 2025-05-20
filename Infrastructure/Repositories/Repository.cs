@@ -20,20 +20,24 @@ namespace Infrastructure.Repositories
             return await _dbSet.ToListAsync();
         }
 
+
         public async Task<IEnumerable<T>> GetAllByPredicateAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
+
 
         public async Task<T?> GetByIdAsync(TKey id)
         {
             return await _dbSet.FindAsync(id);
         }
 
+
         public async Task<T?> GetByPredicateAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.FirstOrDefaultAsync(predicate);
         }
+
 
         public async Task AddAsync(T entity)
         {
@@ -50,13 +54,17 @@ namespace Infrastructure.Repositories
             _dbSet.Remove(entity);
         }
 
+
         public async void DeleteByIdAsync(TKey id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
               Delete(entity);
               await SaveAsync();
+              Delete(entity);
+              await SaveAsync();
         }
+
 
         public async Task SaveAsync()
         {
