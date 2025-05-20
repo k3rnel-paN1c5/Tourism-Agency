@@ -62,7 +62,7 @@ public class BookingService : IBookingService
                 throw new ArgumentException("Number of passengers must be greater than zero.");
 
             var bookingEntity = _mapper.Map<Booking>(dto);
-            bookingEntity.CustomerId = userIdClaim;
+            bookingEntity.CustomerId = userIdClaim; //todo: do it in mapping profile
             _logger.LogInformation(userIdClaim);
             // bookingEntity.EmployeeId = "09544eaa-7671-42a2-bfe3-ddfff5690d88"; //! this should change once an employee  accept 
             bookingEntity.Status = Domain.Enums.BookingStatus.Pending;
