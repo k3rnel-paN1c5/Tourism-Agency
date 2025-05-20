@@ -8,8 +8,6 @@ namespace Application.MappingProfiles
 {
     public class PostProfile : Profile
     {
-    public class PostProfile : Profile
-    {
         public PostProfile()
         {
             // Mapping CreatePostDTO to Post
