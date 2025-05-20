@@ -16,20 +16,19 @@ using Application.Services.UseCases.Post;
 
 
 using System;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<IdentityAppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection")));
-
 builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TourismAgencyConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TourismAgencyDatabase")));
 
 // Add services to the container.
 
 // Controllers and Views
-builder.Services.AddControllersWithViews();
+// builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 
 builder.Services.AddControllers();
 
@@ -68,15 +67,28 @@ builder.Services.AddIdentity<User, IdentityRole>(
 builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
+builder.Services.AddScoped<IRegionService, RegionService>();
 builder.Services.AddScoped<IPostService, PostService>();
-
+builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<ITripPlanService, TripPlanService>();
+builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
+builder.Services.AddScoped<ITripBookingService, TripBookingService>();
 // Automapper
 builder.Services.AddAutoMapper(
     typeof(CarBookingProfile),
-    typeof(PostProfile) // ✅ Add PostProfile file
+    typeof(RegionProfile),
+    typeof(TripProfile),
+    typeof(TripPlanProfile),
+    typeof(TripPlanCarProfile),
+    typeof(TripBookingProfile),
+    typeof(PostProfile)
 );
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tourism Agency API", Version = "v1" });
+});
 
 
 var app = builder.Build();
@@ -101,14 +113,23 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+app.UseEndpoints(endpoints =>
+{
+    _ = endpoints.MapControllers();
+});
+
+// app.MapControllerRoute(
+//     name: "default",
+//     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
