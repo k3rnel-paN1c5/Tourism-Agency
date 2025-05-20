@@ -8,12 +8,18 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
-using Application.IServices.UseCases.Post;
-using Application.Services.UseCases.Post;
 
 
 
 using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Infrastructure.Authentication;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 
