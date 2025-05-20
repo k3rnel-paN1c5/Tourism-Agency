@@ -22,7 +22,9 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TourismAgencyDatabase")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
 
 // Add services to the container.
 
