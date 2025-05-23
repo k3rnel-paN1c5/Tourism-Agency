@@ -44,7 +44,8 @@ const register = async (
   return response.data;
 };
 
-const logout = () => {
+const logout = async () => {
+  await apiClient.post('/api/customer/logout');
   localStorage.removeItem('token');
 };
 
