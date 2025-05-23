@@ -8,7 +8,7 @@ using Application.DTOs.Category;
 namespace TourismAgency.Areas.CarSupervisor.Controllers
 {
     [Area("CarSupervisor")]
-    [Route("api/[area]/[controller]")]
+    [Route("api/[controller]")]
     [Authorize(Roles = "CarSupervisor,Admin")]
     [ApiController]
     public class CarSupervisorDashboardController : ControllerBase
@@ -30,28 +30,21 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
             return Ok(new { Message = "Welcome to the Car Supervisor Dashboard" });
         }
 
-        //* Categories *//
-        [HttpGet("Categories")]
-        public async Task<IActionResult> GetCategories()
+        //* Category *//
+        [HttpGet("category")]
+        public async Task<IActionResult> GetCategorys()
         {
             var result = await _categoryService.GetAllCategoriesAsync();
             return Ok(result);
         }
-        [HttpGet("Category/{id}")]
+        [HttpGet("category/{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
-            try
-            {
-                var cat = await _categoryService.GetCategoryByIdAsync(id);
-                if (cat == null) return NotFound();
-                return Ok(cat);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var cat = await _categoryService.GetCategoryByIdAsync(id);
+            if (cat == null) return NotFound();
+            return Ok(cat);
         }
-        [HttpPost("Category")]
+        [HttpPost("category")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDTO dto)
         {
             if (!ModelState.IsValid)
@@ -62,22 +55,18 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
 
         //* Cars *//
 
-        [HttpGet("Cars")]
+        [HttpGet("cars")]
         public async Task<IActionResult> GetCars()
         {
             var result = await _carService.GetAllCarsAsync();
             return Ok(result);
         }
-        [HttpGet("Car/{id}")]
+        [HttpGet("car/{id}")]
         public async Task<IActionResult> GetCarById(int id)
         {
-            try
-            {
-                var car = await _carService.GetCarByIdAsync(id);
-                if (car == null) return NotFound();
-                return Ok(car);
-            }
-            catch {  return BadRequest(); }
+            var car = await _carService.GetCarByIdAsync(id);
+            if (car == null) return NotFound();
+            return Ok(car);
         }
         [HttpPost("Car")]
         public async Task<IActionResult> CreateCar([FromBody] CreateCarDTO dto)
@@ -88,24 +77,7 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
             return CreatedAtAction(nameof(GetCarById), new { id = newCar.Id }, newCar);
         }
 
-        [HttpPut("Car/{id}")]
-        public async Task<IActionResult> UpdateCar(string id, [FromBody] UpdateCarDTO dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            try
-            {
-                await _carService.UpdateCarAsync(dto);
-                return Ok(dto);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-
-        //* CarBooking *//
+        //* Cars *//
         
         [HttpGet("carbooking")]
         public async Task<IActionResult> GetCarBookings()
