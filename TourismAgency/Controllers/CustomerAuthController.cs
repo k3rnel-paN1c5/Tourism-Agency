@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace TourismAgency.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/customer")]
     public class CustomerAuthController : ControllerBase
     {
         private readonly ICustomerAuthService _authService;
@@ -20,6 +20,12 @@ namespace TourismAgency.Controllers
 
         }
 
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok(new { message = "CORS working!" });
+        }
+        
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] CustomerRegisterDTO dto)
         {
@@ -39,10 +45,19 @@ namespace TourismAgency.Controllers
                     Password = dto.Password,
                     RememberMe = false
                 });
-
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var role = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+                var token =  _jwtTokenGenerator.GenerateToken(userId!, dto.Email!, role!);
                 if (loginResult.Succeeded)
                 {
-                    return Ok(new { message = "Registration and login successful." });
+                    return Ok(new
+                    {
+                        status = 200,
+                        result = loginResult,
+                        isSuccess = true,
+                        Token = token,
+                        message = "Registration and login successful."
+                    });
                 }
             }
 
@@ -54,7 +69,10 @@ namespace TourismAgency.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDTO dto, [FromQuery] string? returnUrl = null)
         {
             if (User.Identity?.IsAuthenticated == true)
-                return BadRequest(new { error = "Already logged in. Please logout first." }); 
+                return BadRequest(new
+                {
+                    error = "Already logged in. Please logout first."
+                }); 
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -68,11 +86,14 @@ namespace TourismAgency.Controllers
                 var token = _jwtTokenGenerator.GenerateToken(userId!, dto.Email!, role!);
                 return Ok(new
                 {
+                    status = 200,
+                    isSuccess = true,
                     Token = token,
                     message = "Login successful.",
+                    result,
                     redirectUrl = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
                         ? returnUrl
-                        : "/home"
+                        : "/api/customer/customerdashboard"
                 });
             }
 
