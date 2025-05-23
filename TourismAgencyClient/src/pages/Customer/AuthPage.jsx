@@ -1,20 +1,42 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
+import { useState } from 'react';
 import Login from '../../components/Login';
 import Register from '../../components/Register';
+import './AuthPage.css'
 
 export default function AuthPage() {
-  const location = useLocation();
-  const isLogin = location.pathname.includes('login');
+  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto' }}>
-      {isLogin ? <Login /> : <Register />}
-      <p>
-        {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
-        <Link to={isLogin ? '/register' : '/login'}>
-          {isLogin ? 'Register' : 'Login'}
-        </Link>
-      </p>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="logo-container">
+          {/* <div className="logo"></div> */}
+          <h1>HIAST Tourism Agency</h1>
+        </div>
+        
+        {isLogin ? <Login /> : <Register />}
+        
+        <div className="toggle-container">
+          <p>
+            {isLogin ? "Don't have an account?" : "Already have an account?"}
+            <button 
+              className="toggle-button"
+              onClick={() => setIsLogin(!isLogin)}
+            >
+              {isLogin ? "Sign Up" : "Sign In"}
+            </button>
+          </p>
+        </div>
+      </div>
+      
+      <div className="background-shapes">
+        <div className="shape circle-1"></div>
+        <div className="shape circle-2"></div>
+        <div className="shape blob-1"></div>
+        <div className="shape blob-2"></div>
+      </div>
     </div>
   );
 }

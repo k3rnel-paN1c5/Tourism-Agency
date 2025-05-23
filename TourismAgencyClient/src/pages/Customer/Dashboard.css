@@ -1,0 +1,123 @@
+/* pages/Customer/Dashboard.css */
+.dashboard-container {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #0d1117;
+  color: #ffffff;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+  color: #8892a4;
+  font-size: 1.1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-card h3 {
+  font-size: 1.1rem;
+  color: #8892a4;
+  margin-bottom: 0.5rem;
+}
+
+.stat-number {
+  font-size: 2rem;
+  color: #4da6ff;
+  font-weight: 600;
+}
+
+.recent-activity h2 {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.activity-list {
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activity-icon.login {
+  background: rgba(77, 166, 255, 0.2);
+}
+
+.activity-icon.profile {
+  background: rgba(102, 179, 255, 0.2);
+}
+
+.activity-icon.device {
+  background: rgba(128, 191, 255, 0.2);
+}
+
+.activity-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #4da6ff;
+}
+
+.activity-details {
+  flex-grow: 1;
+}
+
+.activity-details p {
+  margin: 0;
+  color: #ffffff;
+}
+
+.activity-details small {
+  color: #8892a4;
+  font-size: 0.85rem;
+}
