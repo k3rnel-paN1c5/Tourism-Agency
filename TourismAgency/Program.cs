@@ -79,6 +79,8 @@ builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
 builder.Services.AddScoped<ITripPlanService, TripPlanService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<ITripBookingService, TripBookingService>();
+builder.Services.AddScoped<ITagService, TagService>();
+
 
 
 // Automapper
