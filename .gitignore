@@ -432,3 +432,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Vite/React environment files
+.env.local
+.env.development.local
+.env.production.local
+.env.staging.local
+.env.test.local

@@ -22,18 +22,16 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policyBuilder =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policyBuilder
-            .WithOrigins("http://localhost:5173") // Your frontend URL
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials(); // Optional, if you send cookies/auth headers
+        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
-
 // Controllers and Views
 
 
@@ -198,22 +196,9 @@ app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.Use(async (context, next) =>
-{
-    if (context.Request.Method == "OPTIONS")
-    {
-        context.Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:5173");
-        context.Response.Headers.Add("Access-Control-Allow-Headers", "*");
-        context.Response.Headers.Add("Access-Control-Allow-Methods", "*");
-        context.Response.StatusCode = 200;
-        return;
-    }
-
-    await next(context);
-});
+app.UseCors("AllowFrontend");
 
 app.UseRouting();
-app.UseCors("AllowAll"); 
 
 app.UseAuthentication();
 app.UseAuthorization();
