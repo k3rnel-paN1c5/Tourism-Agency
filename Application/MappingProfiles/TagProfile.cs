@@ -10,6 +10,7 @@ namespace Application.MappingProfiles
         {
             CreateMap<Tag, CreateTagDTO>().ReverseMap();
             CreateMap<Tag, TagDto>().ReverseMap();
+            CreateMap<Tag, UpdateTagDTO>().ReverseMap();
         }
     }
 }
