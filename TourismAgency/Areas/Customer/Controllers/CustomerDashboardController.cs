@@ -1,4 +1,5 @@
 using Application.DTOs.TripBooking;
+using Application.DTOs.TripBooking;
 using Application.IServices.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +14,18 @@ namespace TourismAgency.Areas.Customer.Controllers
     public class CustomerDashboardController : ControllerBase
     {
         private readonly ITripBookingService _tripBookingService;
-        public CustomerDashboardController(ITripBookingService tripBookingService)
+        private readonly ICarBookingService _carBookingService;
+        
+        public CustomerDashboardController(ITripBookingService tripBookingService, ICarBookingService carBookingService)
         {
             _tripBookingService = tripBookingService;
+            _carBookingService = carBookingService;
         }
 
         [HttpGet] // No route parameter
         public IActionResult GetDefault()
         {
-            return Ok(new { Message = "Welcome to the Normal Dashboard" });
+            return Ok(new { Message = "Welcome to the Customer Dashboard" });
         }
 
         //* Trip Booking *//
@@ -41,11 +45,11 @@ namespace TourismAgency.Areas.Customer.Controllers
         {   
             try{
                 var tripBooking = await _tripBookingService.GetTripBookingByIdAsync(id);
-                if (tripBooking == null) return NotFound();
+                if (tripBooking == null) return NotFound("trip booking not found");
                 return Ok(tripBooking);
             }
             catch(Exception ex){
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
         [HttpPost("TripBooking")]
@@ -57,7 +61,7 @@ namespace TourismAgency.Areas.Customer.Controllers
                 return CreatedAtAction(nameof(GetTripBookingById), new { id = newTripBooking.Id }, newTripBooking);
             }
             catch(Exception ex){
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
         [HttpPut("TripBooking/{id}")]
@@ -69,7 +73,55 @@ namespace TourismAgency.Areas.Customer.Controllers
                 return Ok(dto);
             }
             catch(Exception ex){
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+        //* Car Booking *//
+
+        [HttpGet("CarBooking")]
+        public async Task<IActionResult> GetCarBookings(){
+            try{
+                var result = await _carBookingService.GetAllCarBookingsAsync();
+                return Ok(result);
+            }
+            catch(Exception ex){
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("CarBooking/{id}")]
+        public async Task<IActionResult> GetCarBookingById(int id)
+        {   
+            try{
+                var carBooking = await _carBookingService.GetCarBookingByIdAsync(id);
+                if (carBooking == null) return NotFound("car booking not found");
+                return Ok(carBooking);
+            }
+            catch(Exception ex){
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("CarBooking")]
+        public async Task<IActionResult> CreateCarBooking([FromBody] CreateCarBookingDTO dto){
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); 
+            try{
+                var newCarBooking = await _carBookingService.CreateCarBookingAsync(dto);
+                return CreatedAtAction(nameof(GetCarBookingById), new { id = newCarBooking.Id }, newCarBooking);
+            }
+            catch(Exception ex){
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut("CarBooking/{id}")]
+        public async Task<IActionResult> UpdateCarBooking(string id, [FromBody] UpdateCarBookingDTO dto){
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState); 
+            try{
+                await _carBookingService.UpdateCarBookingAsync(dto);
+                return Ok(dto);
+            }
+            catch(Exception ex){
+                return BadRequest(ex.Message);
             }
         }
     }

@@ -1,0 +1,66 @@
+.booking-card {
+  background: #161e2e;
+  border-radius: 12px;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+}
+
+.booking-card.trip {
+  border-left: 4px solid #4da6ff;
+}
+
+.booking-card.car {
+  border-left: 4px solid #ff4d4d;
+}
+
+.booking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.booking-header h3 {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin: 0;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status.active {
+  background: rgba(77, 166, 255, 0.2);
+  color: #4da6ff;
+}
+
+.status.completed {
+  background: rgba(46, 213, 115, 0.2);
+  color: #2ed573;
+}
+
+.status.cancelled {
+  background: rgba(255, 71, 87, 0.2);
+  color: #ff4757;
+}
+
+.booking-details {
+  color: #8892a4;
+}
+
+.booking-details p {
+  margin: 0.5rem 0;
+}
+
+.booking-details strong {
+  color: #ffffff;
+} 

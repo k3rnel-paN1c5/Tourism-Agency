@@ -8,6 +8,7 @@ using Domain.Entities;
 using Domain.IRepositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace Application.Services.UseCases;
 
@@ -16,13 +17,16 @@ public class TripBookingService : ITripBookingService
     readonly IRepository<TripBooking ,int> _repo;
     readonly IBookingService _bookingService;
     readonly ITripPlanService _tripPlanService;
+    readonly IHttpContextAccessor _httpContextAccessor;
     readonly IMapper _mapper;
     private readonly ILogger<TripBookingService> _logger;
     public TripBookingService(
         IRepository<TripBooking ,int> repository, 
         IBookingService bookingService, 
         ITripPlanService tripPlanService, 
-        IMapper mapper, ILogger<TripBookingService> logger
+        IMapper mapper, 
+        ILogger<TripBookingService> logger,
+        IHttpContextAccessor httpContextAccessor
         )
     {
         _repo = repository;
@@ -30,6 +34,7 @@ public class TripBookingService : ITripBookingService
         _tripPlanService = tripPlanService;
         _mapper = mapper;
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
     public async Task<GetTripBookingDTO> CreateTripBookingAsync(CreateTripBookingDTO dto)
     {
@@ -103,7 +108,18 @@ public class TripBookingService : ITripBookingService
     {
         try
         {
-            var tripBookings = await _repo.GetAllAsync().ConfigureAwait(false);
+            IEnumerable<TripBooking> tripBookings;
+            if(_httpContextAccessor.HttpContext.User.IsInRole("TripSupervisor") || _httpContextAccessor.HttpContext.User.IsInRole("Admin")){
+                tripBookings = await _repo.GetAllAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                var userIdClaim = _httpContextAccessor.HttpContext.User.Claims
+                .FirstOrDefault(c => c.Type == "UserId" ||
+                                     c.Type == "sub" ||
+                                     c.Type == ClaimTypes.NameIdentifier)?.Value;
+                tripBookings = await _repo.GetAllByPredicateAsync(tb => tb.Booking.CustomerId == userIdClaim).ConfigureAwait(false);
+            }
             _logger.LogDebug("{Count} trip bookings retrieved.", tripBookings?.Count() ?? 0);
             if(tripBookings is not null)
                 foreach(var tb in tripBookings){
