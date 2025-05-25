@@ -8,15 +8,18 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
-using Infrastructure.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
+
+
+
+using System;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Infrastructure.Authentication;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 
@@ -79,6 +82,8 @@ builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
 builder.Services.AddScoped<ITripPlanService, TripPlanService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<ITripBookingService, TripBookingService>();
+builder.Services.AddScoped<ITagService, TagService>();
+
 
 
 // Automapper
