@@ -43,6 +43,18 @@ namespace TourismAgency.Controllers
                 message = "Tag has been successfully updated!"
             });
         }
+
+        [HttpDelete("DeleteTag/{id}")]
+        public async Task<IActionResult> DeleteTag(int id)
+        {
+            var result = await _tagService.DeleteTagAsync(id);
+
+            if (!result)
+                return NotFound(new { message = "Tag not found!" });
+
+            return Ok(new { message = "Tag has been successfully deleted!" });
+        }
+
          
 
     }
