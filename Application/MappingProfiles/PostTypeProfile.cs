@@ -9,6 +9,7 @@ namespace Application.MappingProfiles
         public PostTypeProfile()
         {
             CreateMap<PostType, CreatePostTypeDTO>().ReverseMap();
+            CreateMap<PostType, UpdatePostTypeDTO>().ReverseMap();
             CreateMap<PostType, PostTypeDto>().ReverseMap();
         }
     }

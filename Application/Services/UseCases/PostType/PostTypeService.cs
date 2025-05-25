@@ -30,6 +30,25 @@ namespace Application.Services.UseCases
 
             return _mapper.Map<PostTypeDto>(postType);
         }
+
+        public async Task<PostTypeDto> UpdatePostTypeAsync(UpdatePostTypeDTO postTypeDto)
+        {
+            if (string.IsNullOrWhiteSpace(postTypeDto.Title))
+                throw new Exception("Post type title cannot be empty!");
+            if (string.IsNullOrWhiteSpace(postTypeDto.Description))
+                throw new Exception("Post type description cannot be empty!");
+
+            var existingPostType = await _postTypeRepository.GetByIdAsync(postTypeDto.Id);
+            if (existingPostType == null)
+                throw new Exception("Post type not found!");
+
+            _mapper.Map(postTypeDto, existingPostType);
+
+            _postTypeRepository.Update(existingPostType);
+            await _postTypeRepository.SaveAsync();
+
+            return _mapper.Map<PostTypeDto>(existingPostType);
+        }
     }
 }
 
