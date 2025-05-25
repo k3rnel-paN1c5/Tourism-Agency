@@ -1,3 +1,4 @@
+using System;
 using Domain.IRepositories;
 using Domain.Entities;
 using Application.IServices.Auth;
@@ -8,10 +9,6 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
-
-
-
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.Authentication;
