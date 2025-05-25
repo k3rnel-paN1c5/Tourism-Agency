@@ -26,37 +26,43 @@ namespace Application.Services.UseCases
             await _tagRepository.AddAsync(tag);
             await _tagRepository.SaveAsync();
 
-            return _mapper.Map<TagDto>(tag); // إرجاع البيانات الكاملة بعد الإدراج
+            return _mapper.Map<TagDto>(tag); 
         }
         public async Task<TagDto> UpdateTagAsync(UpdateTagDTO tagDto)
         {
-            // التحقق من صحة الإدخال
             if (string.IsNullOrWhiteSpace(tagDto.Name))
                 throw new Exception("Tag name cannot be empty!");
 
-            // استرجاع العلامة من قاعدة البيانات
             var existingTag = await _tagRepository.GetByIdAsync(tagDto.Id);
             if (existingTag == null)
                 throw new Exception("Tag not found!");
 
-            // التحقق من عدم وجود اسم مكرر
             var duplicateTag = (await _tagRepository.GetAllAsync())
                      .FirstOrDefault(t => t.Name == tagDto.Name && t.Id != tagDto.Id);
 
             if (duplicateTag != null)
                 throw new Exception("Tag name already exists!");
 
-            // تحديث القيم باستخدام `Mapper`
             _mapper.Map(tagDto, existingTag);
 
-            // حفظ التحديثات
             _tagRepository.Update(existingTag);
             await _tagRepository.SaveAsync();
 
-            // إعادة البيانات بعد التحديث
             return _mapper.Map<TagDto>(existingTag);
-        
+
         }
+        public async Task<bool> DeleteTagAsync(int tagId)
+        {
+            var existingTag = await _tagRepository.GetByIdAsync(tagId);
+            if (existingTag == null)
+             throw new Exception("Tag not found!");
+
+            _tagRepository.Delete(existingTag);
+            await _tagRepository.SaveAsync();
+
+            return true; 
+        }
+
             
     }
 }

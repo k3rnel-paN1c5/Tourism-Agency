@@ -6,6 +6,7 @@ namespace Application.IServices.UseCases
     {
         Task<TagDto> CreateTagAsync(CreateTagDTO tagDto);
         Task<TagDto> UpdateTagAsync(UpdateTagDTO tagDto);
+        Task<bool> DeleteTagAsync(int tagId);
     }
 }
 
