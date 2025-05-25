@@ -29,6 +29,21 @@ namespace TourismAgency.Controllers
                 message = "Post type has been successfully created!"
             }, result);
         }
+
+        [HttpPut("UpdatePostType/{id}")]
+        public async Task<IActionResult> UpdatePostType(int id, [FromBody] UpdatePostTypeDTO postTypeDto)
+        {
+            if (postTypeDto == null || postTypeDto.Id != id)
+                return BadRequest(new { message = "Invalid data provided!" });
+
+            var result = await _postTypeService.UpdatePostTypeAsync(postTypeDto);
+
+            return Ok(new
+            {
+                id = result.Id,
+                message = "Post type has been successfully updated!"
+            });
+        }
     }
 }
 
