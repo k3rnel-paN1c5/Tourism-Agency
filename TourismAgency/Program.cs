@@ -25,13 +25,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddDbContext<TourismAgencyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Identity")));
 
-// Add services to the container.
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 // Controllers and Views
 
 
@@ -198,8 +201,11 @@ app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseCors("AllowFrontend");
+
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 

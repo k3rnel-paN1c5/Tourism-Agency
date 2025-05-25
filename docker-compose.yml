@@ -21,6 +21,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__Default=Server=tourismdb,1433;Database=TourismAgencyDB;User=sa;Password=YourPassword123!;TrustServerCertificate=True;
       - ConnectionStrings__Identity=Server=tourismdb,1433;Database=TourismIdentity;User=sa;Password=YourPassword123!;TrustServerCertificate=True;
+      - Cors__AllowedOrigins=http://tourismclient:5173,http://localhost:5173
 
   tourismdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -32,6 +33,21 @@ services:
       - "1433:1433"
     volumes:
       - tourismVolume:/var/opt/mssql
+  tourismclient:
+    build:
+      context: ./TourismAgencyClient
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./TourismAgencyClient:/usr/src/app
+      - app_node_modules:/usr/src/app/node_modules 
+    environment:
+      - VITE_API_URL=http://localhost:5050
+    depends_on:
+      - tourismwebapp
+
 
 volumes:
   tourismVolume:
+  app_node_modules:
