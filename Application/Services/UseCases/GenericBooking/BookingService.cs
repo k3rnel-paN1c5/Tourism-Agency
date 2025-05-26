@@ -33,23 +33,7 @@ public class BookingService : IBookingService
         ArgumentNullException.ThrowIfNull(dto);
         try
         {
-            var httpContext = _httpContextAccessor.HttpContext
-                ?? throw new InvalidOperationException("HTTP context is unavailable.");
-
-            if (!httpContext.User.Identity!.IsAuthenticated)
-                throw new UnauthorizedAccessException("User is not authenticated.");
-
-            var userIdClaim = httpContext.User.Claims
-                .FirstOrDefault(c => c.Type == "UserId" ||
-                                     c.Type == "sub" ||
-                                     c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userIdClaim))
-            {
-                var claimsList = httpContext.User.Claims.Select(c => new { c.Type, c.Value });
-                _logger.LogWarning("Missing UserId claim. Available claims: {@Claims}", claimsList);
-                throw new UnauthorizedAccessException("User ID claim not found.");
-            }
+        
 
 
             // Validate dates and passengers

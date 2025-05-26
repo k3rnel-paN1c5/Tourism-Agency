@@ -117,9 +117,13 @@ public class TripBookingService : ITripBookingService
                .FirstOrDefault(c => c.Type == "UserId" ||
                                     c.Type == "sub" ||
                                     c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            var tripBookings = await _repo.GetAllByPredicateAsync(tb => tb.Booking.CustomerId == userIdClaim).ConfigureAwait(false);
-
+            var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+            IEnumerable<TripBooking> tripBookings;
+            if (role == "Customer")
+                tripBookings = await _repo.GetAllByPredicateAsync(tb => tb.Booking.CustomerId == userIdClaim).ConfigureAwait(false);
+            else
+                tripBookings = await _repo.GetAllAsync().ConfigureAwait(false); 
+            
             _logger.LogDebug("{Count} trip bookings retrieved.", tripBookings?.Count() ?? 0);
             if (tripBookings is not null)
                 foreach (var tb in tripBookings)
