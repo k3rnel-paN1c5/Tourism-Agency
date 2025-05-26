@@ -27,9 +27,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+         policy.WithOrigins("http://localhost:5173") // Your frontend URL
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+        // policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
+        //       .AllowAnyMethod()
+        //       .AllowAnyHeader();
     });
 });
 // Controllers and Views

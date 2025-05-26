@@ -14,10 +14,17 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await authService.login(email, password, rememberMe);
-      navigate('/dashboard');
+      const response = await authService.login(email, password, rememberMe);
+      if (response.token) {
+        localStorage.setItem('token', response.token);
+        navigate('/dashboard');
+      } else {
+        throw new Error('No token received from server');
+      }
     } catch (error) {
-      alert('Login failed: ' + (error.response?.data?.message || 'Unknown error'));
+      alert('Login failed: ' + (error.response?.data?.message || error.message || 'Unknown error'));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -49,6 +56,7 @@ export default function Login() {
           required
           className="auth-input"
           placeholder="••••••••"
+          autoComplete="on"
         />
       </div>
       
@@ -78,7 +86,7 @@ export default function Login() {
       
       <button type="button" className="social-button apple">
         <svg viewBox="0 0 24 24" className="social-icon">
-          <path d="../assets/hiast.ico"/>
+          {/* <path d="../assets/hiast.ico"/> */}
         </svg>
         Sign in with E-class
       </button>

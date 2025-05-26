@@ -1,170 +1,59 @@
-/* pages/Customer/Dashboard.css */
 .dashboard-container {
-  padding: 2rem;
   min-height: 100vh;
+  padding: 2rem;
   background: #0d1117;
-  color: #ffffff;
-  animation: fadeInUp 0.5s ease-out;
-  max-width: 1400px;
-  margin: 0 auto;
+  color: white;
 }
 
 .dashboard-header {
-  margin-bottom: 2rem;
   text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dashboard-header h1 {
+  color: #4da6ff;
   font-size: 2.5rem;
-  color: #ffffff;
-  margin-bottom: 0.5rem;
-}
-
-.dashboard-header p {
-  color: #8892a4;
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-}
-
-.logout-button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #4da6ff, #3399ff);
-  color: white;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-}
-
-.logout-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(77, 166, 255, 0.3);
-}
-
-.booking-actions {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  margin-bottom: 3rem;
-}
-
-.action-button {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2.5rem;
-  border-radius: 12px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  min-width: 250px;
-  font-size: 1.1rem;
-}
-
-.action-button.trip {
-  background: linear-gradient(135deg, #4da6ff, #3399ff);
-  color: white;
-}
-
-.action-button.car {
-  background: linear-gradient(135deg, #ff4d4d, #ff3333);
-  color: white;
-}
-
-.action-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-.button-icon {
-  font-size: 1.4rem;
-}
-
-.bookings-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
-  padding: 0 1rem;
-}
-
-.booking-section {
-  background: linear-gradient(145deg, #121b2c, #0f172a);
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  height: fit-content;
-}
-
-.booking-section h2 {
-  font-size: 1.8rem;
-  color: #ffffff;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.booking-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.booking-card {
-  background: #161e2e;
-  border-radius: 12px;
-  padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: transform 0.3s ease;
-}
-
-.booking-card:hover {
-  transform: translateY(-2px);
-}
-
-.booking-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 1rem;
 }
 
-.booking-header h3 {
-  font-size: 1.2rem;
-  color: #ffffff;
+.dashboard-header p {
+  color: #a0aec0;
+  font-size: 1.1rem;
   margin: 0;
 }
 
-.status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
+.dashboard-content {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.status.active {
-  background: rgba(77, 166, 255, 0.2);
-  color: #4da6ff;
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #4da6ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
 }
 
-.booking-details {
-  color: #8892a4;
+.error-message {
+  text-align: center;
+  color: #F44336;
+  padding: 2rem;
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 2rem auto;
+  max-width: 600px;
 }
 
-.booking-details p {
-  margin: 0.5rem 0;
-}
-
-.booking-details strong {
-  color: #ffffff;
-}
-
-@keyframes fadeInUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 

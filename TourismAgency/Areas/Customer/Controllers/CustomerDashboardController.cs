@@ -1,5 +1,5 @@
 using Application.DTOs.TripBooking;
-using Application.DTOs.TripBooking;
+using Application.DTOs.CarBooking;
 using Application.IServices.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
