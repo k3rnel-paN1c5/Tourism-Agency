@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import authService from '../../services/authService';
-import TripBookingList from '../../components/TripBookingList';
-import CarBookingList from '../../components/CarBookingList';
+import DashboardHeader from '../../components/DashboardHeader'
+import TripBookingSection from '../../components/TripBookingSection';
+import CarBookingSection from '../../components/CarBookingSection';
 import bookingService from '../../services/bookingService';
 import './Dashboard.css';
 
@@ -31,6 +32,13 @@ export default function Dashboard() {
     const fetchBookings = async () => {
       try {
         setLoading(true);
+        const token = localStorage.getItem('token');
+        console.log('Token exists:', !!token);
+
+        if (!token) {
+          setError('No authentication token found. Please login again.');
+          return;
+        }
         const [tripData, carData] = await Promise.all([
           bookingService.getTripBookings(),
           bookingService.getCarBookings()
@@ -47,6 +55,7 @@ export default function Dashboard() {
     };
 
     fetchBookings();
+    console.log(tripBookings);
   }, []);
 
   if (loading) {
@@ -58,30 +67,12 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1>Welcome, {user?.firstName || 'User'}</h1>
-        <button onClick={handleLogout} className="logout-button">
-          Logout
-        </button>
-      </div>
-      
-      <div className="dashboard-content">
-        <div className="bookings-section">
-          <div className="section-header">
-            <h2>Your Trip Bookings</h2>
-            <button className="add-button">Book New Trip</button>
-          </div>
-          <TripBookingList bookings={tripBookings} />
-        </div>
+     <div className="dashboard-container">
+      <div className="dashboard-wrapper">
+        <DashboardHeader title="Customer Dashboard" subtitle="Manage your trip and car bookings" />
 
-        <div className="bookings-section">
-          <div className="section-header">
-            <h2>Your Car Bookings</h2>
-            <button className="add-button">Book New Car</button>
-          </div>
-          <CarBookingList bookings={carBookings} />
-        </div>
+        <TripBookingSection bookings={tripBookings} />
+        <CarBookingSection bookings={carBookings} />
       </div>
     </div>
   );

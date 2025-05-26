@@ -1,25 +1,33 @@
-import React from 'react';
-import './BookingCard.css';
+import './BookingCard.css'
 
-export default function BookingCard({ 
-  title, 
-  status, 
-  details, 
-  type = 'trip' // 'trip' or 'car'
-}) {
+const BookingCard = ({ title, details, status }) => {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Confirmed":
+        return "booking-status-confirmed";
+      case "Pending":
+        return "booking-status-pending";
+      case "Canceled":
+        return "booking-status-canceled";
+      default:
+        return "booking-status-default";
+    }
+  };
+
   return (
-    <div className={`booking-card ${type}`}>
-      <div className="booking-header">
-        <h3>{title}</h3>
-        <span className={`status ${status.toLowerCase()}`}>{status}</span>
+    <div className="booking-card">
+      <div className="booking-card-header">
+        <h3 className="booking-card-title">{title}</h3>
+        <span className={`booking-status ${getStatusColor(status)}`}>{status}</span>
       </div>
-      <div className="booking-details">
+      <ul className="booking-details">
         {Object.entries(details).map(([key, value]) => (
-          <p key={key}>
-            <strong>{key}:</strong> {value}
-          </p>
+          <li key={key} className="booking-detail-item">
+            <strong>{key}:</strong> {value || "N/A"}
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
-} 
+};
+export default BookingCard;

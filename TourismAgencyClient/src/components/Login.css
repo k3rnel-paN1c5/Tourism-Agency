@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 2rem;
   animation: fadeInUp 0.5s ease-out;
-  max-width: 600px;
+  max-width: 10000px;
   margin: 0 auto;
 }
 

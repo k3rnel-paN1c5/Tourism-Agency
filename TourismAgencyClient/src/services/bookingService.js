@@ -5,7 +5,7 @@ const bookingService = {
   getTripBookings: async () => {
     try {
       const response = await apiClient.get('/api/Customer/CustomerDashboard/TripBooking');
-      return response.data;
+      return response.data; 
     } catch (error) {
       console.error('Error fetching trip bookings:', error);
       throw error;

@@ -1,66 +1,61 @@
 .booking-card {
-  background: #161e2e;
-  border-radius: 12px;
-  padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: transform 0.3s ease;
+  background: #121b2c;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #2a3447;
 }
 
 .booking-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(77, 166, 255, 0.2);
 }
 
-.booking-card.trip {
-  border-left: 4px solid #4da6ff;
-}
-
-.booking-card.car {
-  border-left: 4px solid #ff4d4d;
-}
-
-.booking-header {
+.booking-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
   margin-bottom: 1rem;
 }
 
-.booking-header h3 {
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin: 0;
+.booking-card-title {
+  font-size: 1.5rem;
+  color: white;
 }
 
-.status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
+.booking-status {
+  padding: 0.3rem 0.8rem;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
+  border-radius: 9999px;
 }
 
-.status.active {
-  background: rgba(77, 166, 255, 0.2);
-  color: #4da6ff;
+.booking-status-confirmed {
+  background-color: #dcfce7;
+  color: #166534;
 }
 
-.status.completed {
-  background: rgba(46, 213, 115, 0.2);
-  color: #2ed573;
+.booking-status-pending {
+  background-color: #fef9c3;
+  color: #854d0e;
 }
 
-.status.cancelled {
-  background: rgba(255, 71, 87, 0.2);
-  color: #ff4757;
+.booking-status-canceled {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.booking-status-default {
+  background-color: #f3f4f6;
+  color: #4b5563;
 }
 
 .booking-details {
-  color: #8892a4;
+  font-size: 0.9rem;
+  color: #aaa;
 }
 
-.booking-details p {
-  margin: 0.5rem 0;
+.booking-detail-item {
+  line-height: 1.5;
 }
-
-.booking-details strong {
-  color: #ffffff;
-} 
