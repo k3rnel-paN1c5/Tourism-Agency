@@ -163,7 +163,6 @@ public class BookingService : IBookingService
             throw;
         }
     }
-    [Authorize(Roles="Admin,TripSupervior,CarSupervisor")]
     public async Task ConfirmBookingAsync(int id)
     {
         try
