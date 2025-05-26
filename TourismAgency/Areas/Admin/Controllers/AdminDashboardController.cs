@@ -25,11 +25,36 @@ namespace TourismAgency.Areas.Admin.Controllers
         public async Task<IActionResult> RegisterEmp([FromBody] EmployeeRegisterDTO dto)
         {
             if(!ModelState.IsValid)
-                return BadRequest(ModelState);
-            var result = await _empAuthService.RegisterAsync(dto);
-            if(result.Succeeded)
-                return Ok(new { message = "Registration Completed successfully." });
-            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                var result = await _empAuthService.RegisterAsync(dto);
+                if (result.Succeeded)
+                    return Ok(new { message = "Registration Completed successfully.", Status = "Success" });
+                return BadRequest(new
+                {
+                    Error = "Employee registration failed",
+                    Details = result.Errors.Select(e => e.Description)
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while registering employee",
+                    Details = ex.Message
+                });
+            }
+            
+           
         }
     }
 }

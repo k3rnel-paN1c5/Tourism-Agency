@@ -1,12 +1,14 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
   animation: fadeInUp 0.5s ease-out;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .auth-form h2 {
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   color: #ffffff;
   text-align: center;
   margin-bottom: 0.5rem;
@@ -15,24 +17,24 @@
 .subtitle {
   text-align: center;
   color: #8892a4;
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
 }
 
 .grid-cols-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 .input-label {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: #8892a4;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -40,12 +42,12 @@
 
 .auth-input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.25rem;
   border: none;
   border-radius: 12px;
   background: #161e2e;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 1.1rem;
   transition: all 0.3s ease;
 }
 
@@ -61,17 +63,18 @@
 
 .auth-button {
   width: 100%;
-  padding: 0.75rem;
+  padding: 1rem;
   border-radius: 12px;
   background: linear-gradient(135deg, #4da6ff, #3399ff);
   color: white;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
   position: relative;
+  margin-top: 1rem;
 }
 
 .auth-button:hover {
@@ -84,8 +87,8 @@
 }
 
 .spinner {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border: 2px solid #fff;
   border-top: 2px solid transparent;
   border-radius: 50%;
@@ -143,7 +146,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeInUp {

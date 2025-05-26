@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Security.Claims;
 using Application.DTOs.Booking;
 using Application.DTOs.TripBooking;
 using Application.IServices.UseCases;
@@ -8,21 +9,26 @@ using Domain.Entities;
 using Domain.IRepositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace Application.Services.UseCases;
 
 public class TripBookingService : ITripBookingService
 {
-    readonly IRepository<TripBooking ,int> _repo;
+    readonly IRepository<TripBooking, int> _repo;
     readonly IBookingService _bookingService;
     readonly ITripPlanService _tripPlanService;
     readonly IMapper _mapper;
     private readonly ILogger<TripBookingService> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
     public TripBookingService(
+
         IRepository<TripBooking ,int> repository, 
         IBookingService bookingService, 
         ITripPlanService tripPlanService, 
-        IMapper mapper, ILogger<TripBookingService> logger
+        IMapper mapper, ILogger<TripBookingService> logger, 
+        IHttpContextAccessor httpContextAccessor
         )
     {
         _repo = repository;
@@ -30,6 +36,7 @@ public class TripBookingService : ITripBookingService
         _tripPlanService = tripPlanService;
         _mapper = mapper;
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
     public async Task<GetTripBookingDTO> CreateTripBookingAsync(CreateTripBookingDTO dto)
     {
@@ -103,10 +110,20 @@ public class TripBookingService : ITripBookingService
     {
         try
         {
-            var tripBookings = await _repo.GetAllAsync().ConfigureAwait(false);
+            var httpContext = _httpContextAccessor.HttpContext
+               ?? throw new InvalidOperationException("HTTP context is unavailable.");
+
+            var userIdClaim = httpContext.User.Claims
+               .FirstOrDefault(c => c.Type == "UserId" ||
+                                    c.Type == "sub" ||
+                                    c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var tripBookings = await _repo.GetAllByPredicateAsync(tb => tb.Booking.CustomerId == userIdClaim).ConfigureAwait(false);
+
             _logger.LogDebug("{Count} trip bookings retrieved.", tripBookings?.Count() ?? 0);
-            if(tripBookings is not null)
-                foreach(var tb in tripBookings){
+            if (tripBookings is not null)
+                foreach (var tb in tripBookings)
+                {
                     tb.Booking = _mapper.Map<Booking>(await _bookingService.GetBookingByIdAsync(tb.BookingId));
                 }
             return _mapper.Map<IEnumerable<GetTripBookingDTO>>(tripBookings);
@@ -176,6 +193,18 @@ public class TripBookingService : ITripBookingService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while updating trip booking with ID {Id}.", dto.Id);
+            throw;
+        }
+    }
+    public async Task ConfirmTripBookingAsync(int id)
+    {
+        try
+        {
+            await _bookingService.ConfirmBookingAsync(id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while Confirming trip booking with ID {Id}.", id);
             throw;
         }
     }
