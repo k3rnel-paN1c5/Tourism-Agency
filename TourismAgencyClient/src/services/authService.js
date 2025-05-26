@@ -5,13 +5,16 @@ const login = async (email, password, rememberMe) => {
     email,
     password,
     rememberMe,
-  });
-  console.log(response.data.token);
-  if (response.data.token !== null) {
-    localStorage.setItem('token', response.data.token);
-    return response.data;
+  },
+  {
+    headers : {
+    'Content-Type': 'application/json',
   }
-  throw new Error('No token received from server');
+  });
+  if (response.data.token) {
+    localStorage.setItem('token', response.data.token);
+  }
+  return response.data;
 };
 
 const register = async (
@@ -33,25 +36,27 @@ const register = async (
     phoneNumber,
     whatsapp,
     country,
-  });
-  
-  if (response.data.Token) {
-    localStorage.setItem('token', response.data.Token);
-    return response.data;
-  }
-  throw new Error('No token received from server');
+  }, 
+  {
+    headers : {
+    'Content-Type': 'application/json',
+  }});
+  return response.data;
 };
 
 const logout = async () => {
   try {
     await apiClient.post('/api/customer/logout');
-  } catch (error) {
-    console.error('Logout failed:', error);
-  } finally {
     // Clear all auth-related data
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     // Redirect to login page
+    window.location.href = '/login';
+  } catch (error) {
+    console.error('Logout failed:', error);
+    // Even if the API call fails, clear local storage and redirect
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     window.location.href = '/login';
   }
 };

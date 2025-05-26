@@ -1,89 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import authService from '../../services/authService';
 import TripBookingList from '../../components/TripBookingList';
 import CarBookingList from '../../components/CarBookingList';
-import apiClient from '../../services/apiService';
+import bookingService from '../../services/bookingService';
 import './Dashboard.css';
 
 export default function Dashboard() {
+  const [user, setUser] = useState(null);
   const [tripBookings, setTripBookings] = useState([]);
   const [carBookings, setCarBookings] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        setIsLoading(true);
-        // Check if user is authenticated
-        const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
-
-        // Fetch trip bookings
-        try {
-          const tripResponse = await apiClient.get('/api/customer/customerdashboard/tripbooking');
-          setTripBookings(tripResponse.data);
-        } catch (tripError) {
-          console.error('Error fetching trip bookings:', tripError);
-          setTripBookings([]);
-        }
-
-        // Fetch car bookings
-        try {
-          const carResponse = await apiClient.get('/api/customer/customerdashboard/carbooking');
-          setCarBookings(carResponse.data);
-        } catch (carError) {
-          console.error('Error fetching car bookings:', carError);
-          setCarBookings([]);
-        }
-
+        setLoading(true);
+        const [tripData, carData] = await Promise.all([
+          bookingService.getTripBookings(),
+          bookingService.getCarBookings()
+        ]);
+        setTripBookings(tripData);
+        setCarBookings(carData);
         setError(null);
-      } catch (err) {
-        console.error('Dashboard error:', err);
-        if (err.response?.status === 401) {
-          localStorage.removeItem('token');
-          navigate('/login');
-        } else {
-          setError('Failed to fetch bookings. Please try again later.');
-        }
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+        setError('Failed to load bookings. Please try again later.');
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     fetchBookings();
-  }, [navigate]);
+  }, []);
 
-  if (isLoading) {
-    return (
-      <div className="dashboard-container">
-        <div className="loading-spinner"></div>
-      </div>
-    );
+  if (loading) {
+    return <div className="loading">Loading...</div>;
   }
 
   if (error) {
-    return (
-      <div className="dashboard-container">
-        <div className="error-message">{error}</div>
-      </div>
-    );
+    return <div className="error">{error}</div>;
   }
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Welcome to Your Dashboard</h1>
-        <p>View and manage your bookings</p>
+        <h1>Welcome, {user?.firstName || 'User'}</h1>
+        <button onClick={handleLogout} className="logout-button">
+          Logout
+        </button>
       </div>
-
+      
       <div className="dashboard-content">
-        <TripBookingList bookings={tripBookings} />
-        <CarBookingList bookings={carBookings} />
+        <div className="bookings-section">
+          <div className="section-header">
+            <h2>Your Trip Bookings</h2>
+            <button className="add-button">Book New Trip</button>
+          </div>
+          <TripBookingList bookings={tripBookings} />
+        </div>
+
+        <div className="bookings-section">
+          <div className="section-header">
+            <h2>Your Car Bookings</h2>
+            <button className="add-button">Book New Car</button>
+          </div>
+          <CarBookingList bookings={carBookings} />
+        </div>
       </div>
     </div>
   );
