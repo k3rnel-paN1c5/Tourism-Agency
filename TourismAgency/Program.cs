@@ -17,6 +17,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
+
 
 
 
@@ -168,6 +172,19 @@ builder.Services.AddSwaggerGen(c =>
         return false;
     });
 });
+
+/////////////////        DEBUG       ///////////////////////////
+///
+/*
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
+*/
+//////////////////////////////////////////
+
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
