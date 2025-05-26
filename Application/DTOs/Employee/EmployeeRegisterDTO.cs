@@ -4,7 +4,7 @@ namespace Application.DTOs.Employee;
 public class EmployeeRegisterDTO
 {
     public enum TRoles {
-        BookingSupervisor,
+        CarSupervisor,
         TripSupervisor,
         Manager
     }

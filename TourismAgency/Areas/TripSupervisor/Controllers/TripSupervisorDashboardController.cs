@@ -19,17 +19,23 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
         private readonly ITripService _tripServ;
         private readonly ITripPlanService _tripPlanServ;
         private readonly ITripPlanCarService _carServ;
+        private readonly ITripBookingService _tripBookingServ;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public TripSupervisorDashboardController(
-            IRegionService regionService, 
-            ITripService tripService, 
+            IRegionService regionService,
+            ITripService tripService,
             ITripPlanService tripPlanServ,
-            ITripPlanCarService carServ
+            ITripPlanCarService carServ,
+            ITripBookingService tripBookingServ,
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _regionServ = regionService;
             _tripServ = tripService;
-            _tripPlanServ =  tripPlanServ;
+            _tripPlanServ = tripPlanServ;
             _carServ = carServ;
+            _tripBookingServ = tripBookingServ;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet] // No route parameter
@@ -37,7 +43,12 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
         {
             return Ok(new { Message = "Welcome to the Trip Supervisor Dashboard" });
         }
-
+        //* Trip Bookings *//
+        [HttpPut("AcceptTripBooking/{id}")]
+        public async Task<IActionResult> ConfirmTripBooking(int id){
+            await _tripBookingServ.ConfirmTripBookingAsync(id);
+            return Ok();
+        }
         //* Regions *//
 
         [HttpGet("Regions")]

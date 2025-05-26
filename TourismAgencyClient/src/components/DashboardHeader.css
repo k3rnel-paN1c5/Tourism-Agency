@@ -1,0 +1,15 @@
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: white;
+}
+
+.dashboard-subtitle {
+  color: #8892a4;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
