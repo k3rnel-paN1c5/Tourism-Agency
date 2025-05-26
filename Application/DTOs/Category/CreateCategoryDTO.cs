@@ -11,7 +11,8 @@ namespace Application.DTOs.Category
     {
         [Required(ErrorMessage = "Name cannot be empty")]
         [StringLength(100)]
-        public string? Title;
+        [Display(Name = "Category Name")]
+        public string? Title { get; set; }
 
     }
 }

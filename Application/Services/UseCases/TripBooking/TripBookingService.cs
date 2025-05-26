@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Security.Claims;
 using Application.DTOs.Booking;
 using Application.DTOs.TripBooking;
 using Application.IServices.UseCases;
@@ -18,11 +19,14 @@ public class TripBookingService : ITripBookingService
     readonly ITripPlanService _tripPlanService;
     readonly IMapper _mapper;
     private readonly ILogger<TripBookingService> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
     public TripBookingService(
         IRepository<TripBooking ,int> repository, 
         IBookingService bookingService, 
         ITripPlanService tripPlanService, 
-        IMapper mapper, ILogger<TripBookingService> logger
+        IMapper mapper, ILogger<TripBookingService> logger, 
+        IHttpContextAccessor httpContextAccessor
         )
     {
         _repo = repository;
@@ -30,6 +34,7 @@ public class TripBookingService : ITripBookingService
         _tripPlanService = tripPlanService;
         _mapper = mapper;
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
     public async Task<GetTripBookingDTO> CreateTripBookingAsync(CreateTripBookingDTO dto)
     {
@@ -103,7 +108,15 @@ public class TripBookingService : ITripBookingService
     {
         try
         {
-            var tripBookings = await _repo.GetAllAsync().ConfigureAwait(false);
+            var httpContext = _httpContextAccessor.HttpContext
+               ?? throw new InvalidOperationException("HTTP context is unavailable.");
+
+            var userIdClaim = httpContext.User.Claims
+               .FirstOrDefault(c => c.Type == "UserId" ||
+                                    c.Type == "sub" ||
+                                    c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var tripBookings = await _repo.GetAllByPredicateAsync(tb => tb.Booking.CustomerId == userIdClaim).ConfigureAwait(false);
             _logger.LogDebug("{Count} trip bookings retrieved.", tripBookings?.Count() ?? 0);
             if(tripBookings is not null)
                 foreach(var tb in tripBookings){

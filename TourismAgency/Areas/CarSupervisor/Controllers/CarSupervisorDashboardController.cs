@@ -32,7 +32,7 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
 
         //* Category *//
         [HttpGet("category")]
-        public async Task<IActionResult> GetCategorys()
+        public async Task<IActionResult> GetCategories()
         {
             var result = await _categoryService.GetAllCategoriesAsync();
             return Ok(result);
@@ -51,7 +51,9 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
                 return BadRequest(ModelState);
             var newCat = await _categoryService.CreateCategoryAsync(dto);
             return CreatedAtAction(nameof(GetCategoryById), new { id = newCat.Id }, newCat);
+
         }
+
 
         //* Cars *//
 

@@ -1,4 +1,5 @@
 using Application.DTOs.TripBooking;
+using Application.DTOs.CarBooking;
 using Application.IServices.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,11 @@ namespace TourismAgency.Areas.Customer.Controllers
     public class CustomerDashboardController : ControllerBase
     {
         private readonly ITripBookingService _tripBookingService;
-        public CustomerDashboardController(ITripBookingService tripBookingService)
+        private readonly ICarBookingService _carBookingService;
+        public CustomerDashboardController(ITripBookingService tripBookingService, ICarBookingService carBookingService)
         {
             _tripBookingService = tripBookingService;
+            _carBookingService = carBookingService;
         }
 
         [HttpGet] // No route parameter
@@ -69,6 +72,67 @@ namespace TourismAgency.Areas.Customer.Controllers
                 return Ok(dto);
             }
             catch(Exception ex){
+                return BadRequest(ex);
+            }
+        }
+
+        // * CarBookings* //
+
+        [HttpGet("CarBooking")]
+        public async Task<IActionResult> GetCarBookings()
+        {
+            try
+            {
+                var result = await _carBookingService.GetAllCarBookingsAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("CarBooking/{id}")]
+        public async Task<IActionResult> GetCarBookingById(int id)
+        {
+            try
+            {
+                var carBooking = await _carBookingService.GetCarBookingByIdAsync(id);
+                if (carBooking == null) return NotFound();
+                return Ok(carBooking);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        [HttpPost("CarBooking")]
+        public async Task<IActionResult> CreateCarBooking([FromBody] CreateCarBookingDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            try
+            {
+                var newCarBooking = await _carBookingService.CreateCarBookingAsync(dto);
+                return CreatedAtAction(nameof(GetCarBookingById), new { id = newCarBooking.Id }, newCarBooking);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        [HttpPut("CarBooking/{id}")]
+        public async Task<IActionResult> UpdateCarBooking(string id, [FromBody] UpdateCarBookingDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            try
+            {
+                await _carBookingService.UpdateCarBookingAsync(dto);
+                return Ok(dto);
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex);
             }
         }
