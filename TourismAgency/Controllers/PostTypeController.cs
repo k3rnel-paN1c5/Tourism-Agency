@@ -44,6 +44,17 @@ namespace TourismAgency.Controllers
                 message = "Post type has been successfully updated!"
             });
         }
+
+        [HttpDelete("DeletePostType/{id}")]
+        public async Task<IActionResult> DeletePostType(int id)
+        {
+            var result = await _postTypeService.DeletePostTypeAsync(id);
+
+            if (!result)
+                return NotFound(new { message = "Post type not found!" });
+
+            return Ok(new { message = "Post type has been successfully deleted!" });
+        }
     }
 }
 
