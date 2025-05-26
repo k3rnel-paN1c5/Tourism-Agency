@@ -80,8 +80,12 @@ namespace Application.Services.UseCases
                                     c.Type == "sub" ||
                                     c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            var carBookings = await _repo.GetAllByPredicateAsync(cb=>cb.Booking.CustomerId==userIdClaim)
-                ?? throw new Exception("no car bookings were foud ");
+            var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+            IEnumerable<CarBooking> carBookings;
+            if (role == "Customer")
+                carBookings = await _repo.GetAllByPredicateAsync(cb => cb.Booking.CustomerId == userIdClaim).ConfigureAwait(false);
+            else
+                carBookings = await _repo.GetAllAsync().ConfigureAwait(false); 
             if (carBookings is not null)
                 foreach (var cb in carBookings)
                 {
