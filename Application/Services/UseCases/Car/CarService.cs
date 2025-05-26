@@ -1,10 +1,9 @@
 ﻿using System;
 using Domain.Entities;
 using Application.DTOs.Car;
-using Application.IServices.UseCases.Car;
+using Application.IServices.UseCases;
 using AutoMapper;
 using Domain.IRepositories;
-using Application.IServices.UseCases.Category;
 
 
 
@@ -57,11 +56,11 @@ namespace Application.Services.UseCases
 
         public async Task DeleteCarAsync(int id)
         {
-            _repo.DeleteByIdAsync(id);
+            await _repo.DeleteByIdAsync(id);
             await _repo.SaveAsync();
         }
 
-        public async Task<IEnumerable<GetCarDTO>> GetAllTripAsync()
+        public async Task<IEnumerable<GetCarDTO>> GetAllCarsAsync()
         {
             var cars= await _repo.GetAllAsync();
             return _mapper.Map<IEnumerable<GetCarDTO>>(cars);
@@ -82,6 +81,10 @@ namespace Application.Services.UseCases
             return _mapper.Map<IEnumerable<GetCarDTO>>(cars);
 
         }
-                
+
+        public Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
+        {
+            return GetAllCarsAsync();
+        }
     }
 }

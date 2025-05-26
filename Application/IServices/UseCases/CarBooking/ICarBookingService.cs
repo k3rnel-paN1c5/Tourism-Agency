@@ -3,7 +3,7 @@ using Application.DTOs.CarBooking;
 using System;
 
 
-namespace Application.IServices.UseCases.CarBooking
+namespace Application.IServices.UseCases
 {
     public interface ICarBookingService
     {

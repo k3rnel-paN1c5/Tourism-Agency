@@ -5,7 +5,7 @@ namespace Infrastructure.DataSeeders{
     public static class IdentitySeed
     {
         public static async Task SeedRolesAndAdmin(UserManager<User> userManager, RoleManager<IdentityRole> roleManager){
-            string[] roleNames = { "Admin", "TripSupervisor", "BookingSupervisor", "Customer"};
+            string[] roleNames = { "Admin", "Manager", "TripSupervisor", "BookingSupervisor", "Customer"};
             foreach (var roleName in roleNames)
             {
                 if (!await roleManager.RoleExistsAsync(roleName))

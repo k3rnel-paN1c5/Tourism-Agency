@@ -1,24 +1,32 @@
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Trip;
 
 public class CreateTripDTO
 {
-    [Required(ErrorMessage = "Trip name cannot be empty")]
-    [StringLength(50)]
+    [Required(ErrorMessage = "{0} is required")]
+    [StringLength(50, ErrorMessage = "{0} cannot exceed 50 characters.")]
+    [Display(Name = "Trip Name")]
     public string? Name { get; set; }
-    [Required(ErrorMessage = "Slug cannot be empty")]
-    [StringLength(100)]
+
+    [StringLength(100, ErrorMessage = "{0} cannot exceed 100 characters.")]
+    [Display(Name = "Trip Slug")]
     public string? Slug { get; set; }
 
-    [Required(ErrorMessage = "Availabilty status cannot be empty")]
+    [Required]
+    [DefaultValue(value:true)]
+    [Display(Name = "Available")]
     public bool IsAvailable { get; set; }
 
-    [Required(ErrorMessage = "Description cannot be empty")]
+    [Required(ErrorMessage = "{0} is required")]
+    [Display(Name = "Description")]
     public string? Description { get; set; }
 
     [Required]
+    [DefaultValue(value:false)]
+    [Display(Name = "Private Trip")]
     public bool IsPrivate { get; set; }
 
 }

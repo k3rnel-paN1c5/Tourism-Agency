@@ -33,9 +33,6 @@ namespace Application.DTOs.CarBooking
         [Display(Name = "Dropoff location")]
         public string? DropOffLocation { get; set; }
 
-        [Required]
-        public string? CustomerId { get; set; }
-        public string? EmployeeId { get; set; }
 
         [Required]
         [DefaultValue(value: false)]

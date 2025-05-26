@@ -5,9 +5,9 @@ namespace Application.IServices.UseCases;
 public interface ITripPlanCarService
 {
     Task<GetTripPlanCarDTO> CreateTripPlanCarAsync(CreateTripPlanCarDTO dto);
-    Task UpdateTripPlanAsync(UpdateTripPlanCarDTO dto);
-    Task DeleteTripPlanAsync(int id);
-    Task<IEnumerable<GetTripPlanCarDTO>> GetAllTripsAsync();
-    Task<GetTripPlanCarDTO> GetTripByIdAsync(int id);
+    Task UpdateTripPlanCarAsync(UpdateTripPlanCarDTO dto);
+    Task DeleteTripPlanCarAsync(int id);
+    Task<IEnumerable<GetTripPlanCarDTO>> GetAllTripPlanCarsAsync();
+    Task<GetTripPlanCarDTO> GetTripPlanCarByIdAsync(int id);
 
 }

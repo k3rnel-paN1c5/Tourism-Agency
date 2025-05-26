@@ -1,5 +1,5 @@
 using Application.DTOs.Post;
-using Application.IServices.UseCases.Post;
+using Application.IServices.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TourismAgency.Controllers

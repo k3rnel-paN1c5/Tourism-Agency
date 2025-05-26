@@ -3,99 +3,79 @@ using Application.IServices.Auth;
 using Application.DTOs.Employee;
 using Application.DTOs.User;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Authentication;
+using System.Security.Claims;
 
 
 namespace TourismAgency.Controllers
 {
-    public class EmployeeAuthController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EmployeeAuthController : ControllerBase
     {
         private readonly IEmployeeAuthService _authService;
-        public EmployeeAuthController(IEmployeeAuthService authService)
+         private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        public EmployeeAuthController(IEmployeeAuthService authService,  IJwtTokenGenerator jwtTokenGenerator)
         {
             _authService = authService;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
-        // GET: /EmployeeAuth/Register
-        [HttpGet]
-        public IActionResult Register()
-        {
-            ViewBag.Roles = new SelectList(
-            Enum.GetValues(typeof(EmployeeRegisterDTO.TRoles)).Cast<EmployeeRegisterDTO.TRoles>());
-
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(EmployeeRegisterDTO dto)
+        [HttpPost("register")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Register([FromBody] EmployeeRegisterDTO dto)
         {
             if (!ModelState.IsValid)
-            {    
-                ViewBag.Roles = new SelectList(Enum.GetValues(typeof(EmployeeRegisterDTO.TRoles)).Cast<EmployeeRegisterDTO.TRoles>());
-                return View(dto);
-            }
+                return BadRequest(ModelState);
 
             var result = await _authService.RegisterAsync(new EmployeeRegisterDTO
             {
                 Email = dto.Email,
                 Password = dto.Password,
-
             });
 
             if (result.Succeeded)
-            {
-                // Automatically log in the user after registration
-                await _authService.LoginAsync(new LoginDTO
-                {
-                    Email = dto.Email,
-                    Password = dto.Password,
-                    RememberMe = false
-                });
+                return Ok(new { message = "Registration and login successful." });
 
-                return RedirectToAction("Index", "Home");
-            }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-            return View(dto);
+            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
         }
+        // POST: api/EmployeeAuth/login
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto, [FromQuery] string? returnUrl = null)
+        {
+             if (User.Identity?.IsAuthenticated == true)
+                return BadRequest(new { error = "Already logged in. Please logout first." }); 
 
-        // GET: /EmployeeAuth/Login
-        [HttpGet]
-        public IActionResult Login(string? returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginDTO dto, string? returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (!ModelState.IsValid) return View(dto);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var result = await _authService.LoginAsync(dto);
+
             if (result.Succeeded)
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var role = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
+                var token = _jwtTokenGenerator.GenerateToken(userId!, dto.Email!, role!);
+           
+                return Ok(new
                 {
-                    return Redirect(returnUrl);
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                    Token = token,
+                    message = "Login successful.",
+                    redirectUrl = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
+                        ? returnUrl
+                        : "/home"
+                });
+            }
 
-            ModelState.AddModelError("", "Invalid login attempt.");
-            return View(dto);
+            return Unauthorized(new { error = "Invalid login attempt." });
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // POST: api/EmployeeAuth/logout
+        [HttpPost("logout")]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _authService.LogoutAsync();
-            return RedirectToAction("Login");
+            return Ok(new { message = "Logout successful." });
         }
-
     }
 }

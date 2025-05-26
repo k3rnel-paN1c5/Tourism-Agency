@@ -11,7 +11,7 @@ namespace Domain.IRepositories
         public Task AddAsync(T entity);
         public void Update(T entity);
         public void Delete(T entity);
-        public void DeleteByIdAsync(TKey id);
+        public Task DeleteByIdAsync(TKey id);
         public Task SaveAsync();
     }
 }
