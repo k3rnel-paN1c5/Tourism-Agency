@@ -9,11 +9,13 @@ namespace Application.Services.UseCases
     public class PostTypeService : IPostTypeService
     {
         private readonly IRepository<PostType, int> _postTypeRepository;
+        private readonly IRepository<Post, int> _postRepository;
         private readonly IMapper _mapper;
 
-        public PostTypeService(IRepository<PostType, int> postTypeRepository, IMapper mapper)
+        public PostTypeService(IRepository<PostType, int> postTypeRepository, IRepository<Post, int> postRepository,  IMapper mapper)
         {
             _postTypeRepository = postTypeRepository;
+            _postRepository = postRepository;
             _mapper = mapper;
         }
 
@@ -49,6 +51,34 @@ namespace Application.Services.UseCases
 
             return _mapper.Map<PostTypeDto>(existingPostType);
         }
+
+        public async Task<bool> DeletePostTypeAsync(int postTypeId)
+        {
+            var existingPostType = await _postTypeRepository.GetByIdAsync(postTypeId);
+            if (existingPostType == null)
+                throw new Exception("Post type not found!");
+
+            var defaultPostType = (await _postTypeRepository.GetAllAsync())
+                .FirstOrDefault(pt => pt.Title == "Normal Post");
+            if (defaultPostType == null)
+                throw new Exception("Default post type not found!");
+
+            var postsToUpdate = (await _postRepository.GetAllAsync())
+                .Where(p => p.PostTypeId == postTypeId)
+                    .ToList();
+            foreach (var post in postsToUpdate)
+            {
+                post.PostTypeId = defaultPostType.Id;
+                _postRepository.Update(post);
+            } 
+            await _postRepository.SaveAsync();
+
+            _postTypeRepository.Delete(existingPostType);
+            await _postTypeRepository.SaveAsync();
+
+            return true;
+        }
+
     }
 }
 
