@@ -1,0 +1,15 @@
+.dashboard-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-size: 1.875rem;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.section-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}

@@ -1,0 +1,56 @@
+
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(145deg, #0d1117, #121b2c);
+}
+
+.not-found-card {
+  text-align: center;
+  padding: 3rem;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 400px;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.error-code {
+  font-size: 5rem;
+  color: #4da6ff;
+  margin-bottom: 1rem;
+}
+
+.error-title {
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: #8892a4;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.back-to-login {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4da6ff, #3399ff);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.back-to-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(77, 166, 255, 0.3);
+}

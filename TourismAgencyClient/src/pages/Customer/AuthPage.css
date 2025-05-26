@@ -1,0 +1,153 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+  background: #0d1117;
+}
+
+.auth-card {
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 1500px;
+  padding: 3rem;
+  z-index: 1;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.logo {
+  width: 80px;
+  height: 20px;
+  background: linear-gradient(135deg, #4da6ff, #3399ff);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 8px 20px rgba(77, 166, 255, 0.3);
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+.logo-container h1 {
+  font-size: 2.5rem;
+  color: #4da6ff;
+  letter-spacing: 1px;
+}
+
+.toggle-container {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.toggle-button {
+  background: none;
+  color: #4da6ff;
+  margin-left: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.toggle-button:hover {
+  text-decoration: underline;
+  color: #6bbaff;
+}
+
+.background-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(100px);
+  animation: float 15s infinite ease-in-out;
+}
+
+.circle-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #4da6ff 0%, transparent 70%);
+  top: -200px;
+  left: -200px;
+  animation-delay: 0s;
+}
+
+.circle-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #3399ff 0%, transparent 70%);
+  bottom: -200px;
+  right: -200px;
+  animation-delay: 3s;
+}
+
+.blob-1, .blob-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #4da6ff 0%, transparent 70%);
+  border-radius: 60% 40% 30% 70%;
+  filter: blur(80px);
+  opacity: 0.15;
+}
+
+.blob-1 {
+  top: 30%;
+  left: 60%;
+  animation-delay: 6s;
+}
+
+.blob-2 {
+  top: 70%;
+  left: 20%;
+  animation-delay: 9s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(50px, 30px) scale(1.1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

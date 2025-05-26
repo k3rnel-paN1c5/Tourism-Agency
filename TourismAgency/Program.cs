@@ -1,3 +1,4 @@
+using System;
 using Domain.IRepositories;
 using Domain.Entities;
 using Application.IServices.Auth;
@@ -8,11 +9,13 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Infrastructure.Authentication;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -23,18 +26,17 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policyBuilder =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policyBuilder
-            .WithOrigins("http://localhost:5173") // Your frontend URL
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials(); // Optional, if you send cookies/auth headers
+        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
-
 // Controllers and Views
 
 
@@ -82,6 +84,8 @@ builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();
 builder.Services.AddScoped<ITripPlanService, TripPlanService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<ITripBookingService, TripBookingService>();
+builder.Services.AddScoped<ITagService, TagService>();
+
 
 
 // Automapper
@@ -212,22 +216,9 @@ app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.Use(async (context, next) =>
-{
-    if (context.Request.Method == "OPTIONS")
-    {
-        context.Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:5173");
-        context.Response.Headers.Add("Access-Control-Allow-Headers", "*");
-        context.Response.Headers.Add("Access-Control-Allow-Methods", "*");
-        context.Response.StatusCode = 200;
-        return;
-    }
-
-    await next(context);
-});
+app.UseCors("AllowFrontend");
 
 app.UseRouting();
-app.UseCors("AllowAll"); 
 
 app.UseAuthentication();
 app.UseAuthorization();

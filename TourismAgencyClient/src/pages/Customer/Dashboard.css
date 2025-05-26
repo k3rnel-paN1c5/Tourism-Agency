@@ -1,0 +1,10 @@
+.dashboard-container {
+  background-color: #0d1117;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.dashboard-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
