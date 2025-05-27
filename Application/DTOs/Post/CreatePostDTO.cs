@@ -8,7 +8,6 @@ public class CreatePostDTO
         public string Body { get; set; } = string.Empty;
         public string Summary { get; set; } = string.Empty;
         public int PostTypeId { get; set; }
-        public string EmployeeId { get; set; } = string.Empty;
 }
 }
 
