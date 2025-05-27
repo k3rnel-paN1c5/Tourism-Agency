@@ -16,12 +16,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-<<<<<<< HEAD
-=======
-
-using Microsoft.AspNetCore.Mvc;
->>>>>>> 591a05f (Bug Fix)
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 
 
 
@@ -145,7 +141,7 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.Http,
+        Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
