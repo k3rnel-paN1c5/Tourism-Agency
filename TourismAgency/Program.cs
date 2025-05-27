@@ -17,8 +17,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 using Microsoft.AspNetCore.Mvc;
+
+
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 
 
 
@@ -84,6 +88,8 @@ builder.Services.AddScoped<ITripPlanService, TripPlanService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<ITripBookingService, TripBookingService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IPostTypeService, PostTypeService>();
+
 
 
 

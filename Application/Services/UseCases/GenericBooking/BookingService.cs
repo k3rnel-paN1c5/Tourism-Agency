@@ -55,7 +55,6 @@ public class BookingService : IBookingService
                 throw new ArgumentException("Number of passengers must be greater than zero.");
 
             var bookingEntity = _mapper.Map<Booking>(dto);
-            bookingEntity.CustomerId = userIdClaim; //todo: do it in mapping profil
             bookingEntity.Status = BookingStatus.Pending;
             await _repo.AddAsync(bookingEntity).ConfigureAwait(false);
             await _repo.SaveAsync().ConfigureAwait(false);

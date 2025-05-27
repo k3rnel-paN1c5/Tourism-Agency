@@ -2,6 +2,8 @@
 using AutoMapper;
 using Domain.Entities;
 using Application.DTOs.Post;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 
 namespace Application.MappingProfiles
@@ -10,6 +12,7 @@ namespace Application.MappingProfiles
     {
         public PostProfile()
         {
+
             // Mapping CreatePostDTO to Post
             // Mapping CreatePostDTO to Post
             CreateMap<CreatePostDTO, Post>();
@@ -19,8 +22,8 @@ namespace Application.MappingProfiles
             CreateMap<Post, GetPostDTO>();
 
             // Mapping UpdatePostDTO to Post
-            CreateMap<UpdatePostDTO, Post>(); 
-            
+            CreateMap<UpdatePostDTO, Post>();
+
 
         }
     }

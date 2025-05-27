@@ -4,6 +4,8 @@ using Application.IServices.UseCases;
 using AutoMapper;
 using Domain.IRepositories;
 using Application.Utilities;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Application.Services.UseCases
 {
@@ -12,28 +14,33 @@ namespace Application.Services.UseCases
         private readonly IRepository<Domain.Entities.Post, int> _postRepository;
         private readonly IRepository<Domain.Entities.Employee, string> _employeeRepository;
         private readonly IMapper _mapper;
+        private IHttpContextAccessor _httpContextAccessor;
 
 
 
-        public PostService(IRepository<Domain.Entities.Post, int> postRepository, IRepository<Domain.Entities.Employee, string> employeeRepository, IMapper mapper)
+        public PostService(IRepository<Domain.Entities.Post, int> postRepository, IRepository<Domain.Entities.Employee, string> employeeRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _postRepository = postRepository;
             _employeeRepository = employeeRepository;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<GetPostDTO> CreatePostAsync(CreatePostDTO dto)
         {
-            //  Check if the employee exists before creating the post
-            var employeeExists = await _employeeRepository.GetByIdAsync(dto.EmployeeId);
-            if (employeeExists == null)
-            {
-                throw new Exception("Invalid employeeId! The employee does not exist.");
-            }
+
+            
+            var httpContext = _httpContextAccessor.HttpContext
+                ?? throw new InvalidOperationException("HTTP context is unavailable.");
+
+            var userIdClaim = httpContext.User.Claims
+               .FirstOrDefault(c => c.Type == "UserId" ||
+                                    c.Type == "sub" ||
+                                    c.Type == ClaimTypes.NameIdentifier)?.Value;
 
             // Convert CreatePostDTO to Post using Mapper
             var post = _mapper.Map<Domain.Entities.Post>(dto);
-
+            post.EmployeeId = userIdClaim;
 
             post.Slug = SlugHelper.GenerateSlug(dto.Title); // Manually generate Slug
             post.PublishDate = DateTime.UtcNow;  // Automatically set publish date
