@@ -17,8 +17,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
 

@@ -24,12 +24,7 @@ namespace Application.Services.UseCases
 
         public async Task<GetPostDTO> CreatePostAsync(CreatePostDTO dto)
         {
-            //  Check if the employee exists before creating the post
-            var employeeExists = await _employeeRepository.GetByIdAsync(dto.EmployeeId);
-            if (employeeExists == null)
-            {
-                throw new Exception("Invalid employeeId! The employee does not exist.");
-            }
+
 
             // Convert CreatePostDTO to Post using Mapper
             var post = _mapper.Map<Domain.Entities.Post>(dto);
