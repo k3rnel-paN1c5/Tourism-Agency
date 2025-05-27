@@ -56,6 +56,7 @@ public class BookingService : IBookingService
 
             var bookingEntity = _mapper.Map<Booking>(dto);
             bookingEntity.Status = BookingStatus.Pending;
+            bookingEntity.CustomerId = userIdClaim; 
             await _repo.AddAsync(bookingEntity).ConfigureAwait(false);
             await _repo.SaveAsync().ConfigureAwait(false);
             var newPayment = new CreatePaymentDTO
