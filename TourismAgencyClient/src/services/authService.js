@@ -45,12 +45,28 @@ const register = async (
 };
 
 const logout = async () => {
-  await apiClient.post('/api/customer/logout');
-  localStorage.removeItem('token');
+  try {
+    await apiClient.post('/api/customer/logout');
+    // Clear all auth-related data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    // Redirect to login page
+    window.location.href = '/login';
+  } catch (error) {
+    console.error('Logout failed:', error);
+    // Even if the API call fails, clear local storage and redirect
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  }
 };
 
 const getCurrentUser = () => {
   return localStorage.getItem('token');
+};
+
+const isAuthenticated = () => {
+  return !!localStorage.getItem('token');
 };
 
 export default {
@@ -58,4 +74,5 @@ export default {
   register,
   logout,
   getCurrentUser,
+  isAuthenticated,
 };

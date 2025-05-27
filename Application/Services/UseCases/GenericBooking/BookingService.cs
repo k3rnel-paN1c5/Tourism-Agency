@@ -5,6 +5,7 @@ using Application.DTOs.Payment;
 using Application.IServices.UseCases;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.IRepositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -32,23 +33,7 @@ public class BookingService : IBookingService
         ArgumentNullException.ThrowIfNull(dto);
         try
         {
-            var httpContext = _httpContextAccessor.HttpContext
-                ?? throw new InvalidOperationException("HTTP context is unavailable.");
-
-            if (!httpContext.User.Identity!.IsAuthenticated)
-                throw new UnauthorizedAccessException("User is not authenticated.");
-
-            var userIdClaim = httpContext.User.Claims
-                .FirstOrDefault(c => c.Type == "UserId" ||
-                                     c.Type == "sub" ||
-                                     c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userIdClaim))
-            {
-                var claimsList = httpContext.User.Claims.Select(c => new { c.Type, c.Value });
-                _logger.LogWarning("Missing UserId claim. Available claims: {@Claims}", claimsList);
-                throw new UnauthorizedAccessException("User ID claim not found.");
-            }
+        
 
 
             // Validate dates and passengers
@@ -62,10 +47,7 @@ public class BookingService : IBookingService
                 throw new ArgumentException("Number of passengers must be greater than zero.");
 
             var bookingEntity = _mapper.Map<Booking>(dto);
-            bookingEntity.CustomerId = userIdClaim; //todo: do it in mapping profile
-            _logger.LogInformation(userIdClaim);
-            // bookingEntity.EmployeeId = "09544eaa-7671-42a2-bfe3-ddfff5690d88"; //! this should change once an employee  accept 
-            bookingEntity.Status = Domain.Enums.BookingStatus.Pending;
+            bookingEntity.Status = BookingStatus.Pending;
             await _repo.AddAsync(bookingEntity).ConfigureAwait(false);
             await _repo.SaveAsync().ConfigureAwait(false);
             var newPayment = new CreatePaymentDTO
@@ -161,6 +143,45 @@ public class BookingService : IBookingService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while updating booking with ID {Id}.", dto.Id);
+            throw;
+        }
+    }
+    public async Task ConfirmBookingAsync(int id)
+    {
+        try
+        {
+            var httpContext = _httpContextAccessor.HttpContext
+                ?? throw new InvalidOperationException("HTTP context is unavailable.");
+
+            if (!httpContext.User.Identity!.IsAuthenticated)
+                throw new UnauthorizedAccessException("User is not authenticated.");
+
+            var userIdClaim = httpContext.User.Claims
+                .FirstOrDefault(c => c.Type == "UserId" ||
+                                     c.Type == "sub" ||
+                                     c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                var claimsList = httpContext.User.Claims.Select(c => new { c.Type, c.Value });
+                _logger.LogWarning("Missing UserId claim. Available claims: {@Claims}", claimsList);
+                throw new UnauthorizedAccessException("User ID claim not found.");
+            }
+
+            var booking = await _repo.GetByIdAsync(id);
+            if (booking!.Status == BookingStatus.Pending)
+            {
+                booking.Status = BookingStatus.Confirmed;
+                booking.EmployeeId = userIdClaim;
+                _repo.Update(booking);
+                await _repo.SaveAsync();
+                return;
+            }
+            throw new Exception($"can't confirm a {booking.Status} booking");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while confirming booking with ID {Id}.", id);
             throw;
         }
     }

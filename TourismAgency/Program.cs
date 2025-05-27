@@ -1,3 +1,4 @@
+using System;
 using Domain.IRepositories;
 using Domain.Entities;
 using Application.IServices.Auth;
@@ -8,10 +9,6 @@ using Application.MappingProfiles;
 using Infrastructure.Contexts;
 using Infrastructure.DataSeeders;
 using Infrastructure.Repositories;
-
-
-
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.Authentication;
@@ -20,6 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
+
 
 
 
@@ -32,7 +31,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 // Controllers and Views
@@ -172,6 +172,19 @@ builder.Services.AddSwaggerGen(c =>
         return false;
     });
 });
+
+/////////////////        DEBUG       ///////////////////////////
+///
+/*
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
+*/
+//////////////////////////////////////////
+
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

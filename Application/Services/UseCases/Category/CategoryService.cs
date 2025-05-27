@@ -22,6 +22,7 @@ namespace Application.Services.UseCases
                 throw new ValidationException("Category with this title already exists.");
             
             Category category = _mapper.Map<Category>(dto);
+
             await _categoryRepo.AddAsync(category);
             await _categoryRepo.SaveAsync();
 
