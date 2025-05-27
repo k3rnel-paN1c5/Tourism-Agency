@@ -9,7 +9,6 @@ using Domain.Entities;
 using Domain.IRepositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace Application.Services.UseCases;
 
@@ -120,7 +119,7 @@ public class TripBookingService : ITripBookingService
             var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
             IEnumerable<TripBooking> tripBookings;
             if (role == "Customer")
-                tripBookings = await _repo.GetAllByPredicateAsync(tb => tb.Booking.CustomerId == userIdClaim).ConfigureAwait(false);
+                tripBookings = await _repo.GetAllByPredicateAsync(tb => tb.Booking!.CustomerId == userIdClaim).ConfigureAwait(false);
             else
                 tripBookings = await _repo.GetAllAsync().ConfigureAwait(false); 
             

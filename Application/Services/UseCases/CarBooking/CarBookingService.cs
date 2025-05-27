@@ -83,7 +83,7 @@ namespace Application.Services.UseCases
             var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
             IEnumerable<CarBooking> carBookings;
             if (role == "Customer")
-                carBookings = await _repo.GetAllByPredicateAsync(cb => cb.Booking.CustomerId == userIdClaim).ConfigureAwait(false);
+                carBookings = await _repo.GetAllByPredicateAsync(cb => cb.Booking!.CustomerId == userIdClaim).ConfigureAwait(false);
             else
                 carBookings = await _repo.GetAllAsync().ConfigureAwait(false); 
             if (carBookings is not null)
