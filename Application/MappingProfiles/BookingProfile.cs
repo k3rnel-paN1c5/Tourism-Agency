@@ -11,17 +11,11 @@ namespace Application.MappingProfiles;
 
 public class BookingProfile : Profile
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public BookingProfile(IHttpContextAccessor httpContextAccessor)
-    {
-        _httpContextAccessor = httpContextAccessor;
 
-        var userId = _httpContextAccessor
-                    .HttpContext
-                    .User.Claims
-                    .FirstOrDefault(c => c.Type == "UserId" ||
-                                     c.Type == "sub" ||
-                                     c.Type == ClaimTypes.NameIdentifier)?.Value;
+    public BookingProfile()
+    {
+
+
         // Map from Entity -> Get DTO
         CreateMap<Booking, GetBookingDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -40,7 +34,7 @@ public class BookingProfile : Profile
             .ForMember(dest => dest.BookingType, opt => opt.Ignore()) // Or set manually if needed
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => BookingStatus.Pending)) // Default value
             .ForMember(dest => dest.NumOfPassengers, opt => opt.MapFrom(src => src.NumOfPassengers))
-            .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => userId)) 
+            .ForMember(dest => dest.CustomerId, opt => opt.Ignore()) 
             .ForMember(dest => dest.EmployeeId, opt => opt.Ignore()) //  assigned later
             .ForMember(dest => dest.CarBooking, opt => opt.Ignore())
             .ForMember(dest => dest.TripBooking, opt => opt.Ignore())

@@ -13,10 +13,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.Authentication;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+<<<<<<< HEAD
+=======
+
+using Microsoft.AspNetCore.Mvc;
+>>>>>>> 591a05f (Bug Fix)
 using System.Text.Json.Serialization;
 
 

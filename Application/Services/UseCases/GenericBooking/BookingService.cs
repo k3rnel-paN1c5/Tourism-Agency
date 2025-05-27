@@ -32,7 +32,15 @@ public class BookingService : IBookingService
     {
         ArgumentNullException.ThrowIfNull(dto);
         try
-        {
+        {   
+            var httpContext = _httpContextAccessor.HttpContext
+                ?? throw new InvalidOperationException("HTTP context is unavailable.");
+
+            var userIdClaim = httpContext.User.Claims
+               .FirstOrDefault(c => c.Type == "UserId" ||
+                                    c.Type == "sub" ||
+                                    c.Type == ClaimTypes.NameIdentifier)?.Value;
+
         
 
 
