@@ -4,12 +4,14 @@ using Application.IServices.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Infrastructure.Authentication;
 
 namespace TourismAgency.Areas.Customer.Controllers
 {
     [Area("Customer")]
     [ApiController]
-    // [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[area]/[controller]")]
     public class CustomerDashboardController : ControllerBase
     {
