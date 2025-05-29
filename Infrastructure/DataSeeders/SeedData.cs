@@ -1,22 +1,33 @@
-
 using Domain.Entities;
 namespace Infrastructure.DataSeeders;
+
+/// <summary>
+/// Provides static methods for seeding initial data for various entities into the database.
+/// </summary>
 public static class SeedData
 {
+    /// <summary>
+    /// Retrieves a predefined list of car categories.
+    /// </summary>
+    /// <returns>A list of <see cref="Category"/> entities.</returns>
     public static List<Category> GetCategories()
     {
-        return new List<Category>
-        {
+        return
+        [
             new Category {Id = 1, Title = "Sedan"},
             new Category {Id = 2, Title = "SUV" },
             new Category {Id = 3, Title = "Sports"}
-        };
+        ];
     }
-
+    
+    /// <summary>
+    /// Retrieves a predefined list of cars.
+    /// </summary>
+    /// <returns>A list of <see cref="Car"/> entities.</returns>
     public static List<Car> GetCars()
     {
-        return new List<Car>
-        {
+        return
+        [
             new Car
             {
                 Id = 1,
@@ -53,60 +64,6 @@ public static class SeedData
                 Mbw = 3.00m,
                 CategoryId = 3 // Sports
             }
-        };
-    }
-    public static List<Customer> GetCustomers()
-    {
-        return new List<Customer>
-        {
-            new Customer
-            {
-                UserId = "user1", // Unique identifier (e.g., corresponds to ASP.NET Identity UserId)
-                FirstName = "John",
-                LastName = "Doe",
-                PhoneNumber = "+1234567890",
-                Whatsapp = "+1234567890",
-                Country = "USA"
-            },
-            new Customer
-            {
-                UserId = "user2",
-                FirstName = "Jane",
-                LastName = "Smith",
-                PhoneNumber = "+0987654321",
-                Whatsapp = "+0987654321",
-                Country = "Canada"
-            },new Customer
-            {
-                UserId = "user3",
-                FirstName = "Alice",
-                LastName = "Johnson",
-                PhoneNumber = "+1122334455",
-                Whatsapp = "+1122334455",
-                Country = "UK"
-            }
-        };
-
-    }
-    public static List<Employee> GetEmployees()
-    {
-        return new List<Employee>
-        {
-            new Employee
-            {
-                UserId = "emp1", // Unique identifier (e.g., corresponds to ASP.NET Identity UserId)
-                HireDate = new DateTime(2020, 5, 1) // Hired on May 1, 2020
-            },
-            new Employee
-            {
-                UserId = "emp2",
-                HireDate = new DateTime(2018, 8, 15) // Hired on August 15, 2018
-            },
-            new Employee
-            {
-                UserId = "emp3",
-                HireDate = new DateTime(2022, 3, 10) // Hired on March 10, 2022
-            }
-        };
+        ];
     }
 }
