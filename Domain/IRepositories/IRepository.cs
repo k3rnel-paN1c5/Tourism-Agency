@@ -20,8 +20,8 @@ public interface IRepository<T, TKey> where T : class
     /// </summary>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains an enumerable collection of entities that satisfy the predicate.</returns>
-    public async Task<IEnumerable<T>> GetAllByPredicateAsync(Expression<Func<T, bool>> predicate);
-    
+    public Task<IEnumerable<T>> GetAllByPredicateAsync(Expression<Func<T, bool>> predicate);
+
     /// <summary>
     /// Retrieves an entity by its unique identifier asynchronously.
     /// </summary>

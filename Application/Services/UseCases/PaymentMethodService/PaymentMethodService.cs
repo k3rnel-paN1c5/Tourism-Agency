@@ -117,7 +117,7 @@ namespace Application.Services.UseCases
             {
                 Id = paymentMethod.Id,
                 Method = paymentMethod.Method!,
-                Icon = paymentMethod.Icon
+                Icon = paymentMethod.Icon!
             };
         }
     }
