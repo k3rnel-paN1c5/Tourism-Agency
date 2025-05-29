@@ -14,11 +14,16 @@ public interface IRepository<T, TKey> where T : class
     /// </summary>
     /// <returns>A task that represents the asynchronous operation. The task result contains an enumerable collection of all entities.</returns>
     public Task<IEnumerable<T>> GetAllAsync();
+
     /// <summary>
     /// Retrieves all entities that satisfy a specified predicate asynchronously.
     /// </summary>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains an enumerable collection of entities that satisfy the predicate.</returns>
+    public async Task<IEnumerable<T>> GetAllByPredicateAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).ToListAsync();
+    }
     /// <summary>
     /// Retrieves an entity by its unique identifier asynchronously.
     /// </summary>
