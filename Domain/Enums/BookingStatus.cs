@@ -1,12 +1,32 @@
 namespace Domain.Enums;
 
+/// <summary>
+/// Defines the possible statuses for a booking.
+/// </summary>
 public enum BookingStatus
 {
-    Pending,//waiting to get accepted by an employee
+    /// <summary>
+    /// The booking is pending and waiting to be accepted by an employee.
+    /// </summary>
+    Pending,
+    /// <summary>
+    /// The booking has been denied.
+    /// </summary>
     Denied,
-    Confirmed,//accepted but not started yet
+    /// <summary>
+    /// The booking has been confirmed but has not started yet.
+    /// </summary>
+    Confirmed,
+    /// <summary>
+    /// The booking is currently in progress.
+    /// </summary>
     InProgress,
-    Completed,// or Ended
+    /// <summary>
+    /// The booking has been completed or ended.
+    /// </summary>
+    Completed,
+    /// <summary>
+    /// The booking has been cancelled.
+    /// </summary>
     Cancelled
-
 }
