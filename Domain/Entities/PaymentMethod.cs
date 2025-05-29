@@ -1,27 +1,40 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+/// <summary>
+/// Represents a payment method available (e.g., Credit Card, PayPal).
+/// </summary>
+public partial class PaymentMethod
 {
-    public partial class PaymentMethod
-    {
-        public PaymentMethod()
-        {
-            PaymentTransactions = new HashSet<PaymentTransaction>();
-        }
 
-        [Key]
-        [Column("id")]
-        public int Id { get; set; }
+    /// <summary>
+    /// Unique identifier for the payment method.
+    /// </summary>
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        [Required]
-        [Column("method", TypeName = "nvarchar(50)")]
-        public string? Method { get; set; }
+    /// <summary>
+    /// Name of the payment method.
+    /// </summary>
+    [Required]
+    [Column("method", TypeName = "nvarchar(50)")]
+    public string? Method { get; set; }
 
-        [Column("icon", TypeName = "nvarchar(50)")]
-        public string Icon { get; set; } = string.Empty;
+    /// <summary>
+    /// Icon representing the payment method.
+    /// </summary>
+    [Column("icon", TypeName = "nvarchar(50)")]
+    public string? Icon { get; set; }
 
-        // Navigation Properties
-        public virtual ICollection<PaymentTransaction> PaymentTransactions { get; set; }
-    }
+
+    // Navigation Properties
+    
+    /// <summary>
+    /// Collection of payment transactions that used this method.
+    /// </summary>
+    public virtual ICollection<PaymentTransaction>? PaymentTransactions { get; set; }
 }
+

@@ -1,30 +1,49 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+/// <summary>
+/// Represents a many-to-many relationship between a trip plan and a car, including the price for that car in the specific plan.
+/// </summary>
+public partial class TripPlanCar
 {
-    public partial class TripPlanCar
-    {
-        [Key]
-        [Column("id")]
-        public int Id { get; set; }
+    /// <summary>
+    /// Unique identifier for the trip plan car entry.
+    /// </summary>
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        [Required]
-        [Column("tripPlanId")]
-        [ForeignKey("TripPlan")]
-        public int TripPlanId { get; set; }
+    /// <summary>
+    /// Foreign key for the associated trip plan.
+    /// </summary>
+    [Required]
+    [Column("tripPlanId")]
+    [ForeignKey("TripPlan")]
+    public int TripPlanId { get; set; }
 
-        [Required]
-        [Column("carId")]
-        [ForeignKey("Car")]
-        public int CarId { get; set; }
+    /// <summary>
+    /// Foreign key for the associated car.
+    /// </summary>
+    [Required]
+    [Column("carId")]
+    [ForeignKey("Car")]
+    public int CarId { get; set; }
 
-        [Required]
-        [Column("price", TypeName = "decimal(16,2)")]
-        public decimal Price { get; set; }
+    /// <summary>
+    /// Price of the car for this specific trip plan.
+    /// </summary>
+    [Required]
+    [Column("price", TypeName = "decimal(16,2)")]
+    public decimal Price { get; set; }
 
-        // Navigation Properties
-        public Car? Car { get; set; }
-        public TripPlan? TripPlan { get; set; }
-    }
+    /// <summary>
+    /// Navigation property to the Car.
+    /// </summary>
+    public Car? Car { get; set; }
+
+    /// <summary>
+    /// Navigation property to the TripPlan.
+    /// </summary>
+    public TripPlan? TripPlan { get; set; }
 }

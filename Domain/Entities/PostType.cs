@@ -1,29 +1,40 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+/// <summary>
+/// Represents a category or type for blog posts.
+/// </summary>
+public partial class PostType
 {
-    public partial class PostType
-    {
-        public PostType()
-        {
-            Posts = new HashSet<Post>();
-        }
-        [Key]
-        [Column("id")]
-        public int Id { get; set; }
+    /// <summary>
+    /// Unique identifier for the post type.
+    /// </summary>
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        [Required]
-        [Column("title", TypeName = "nvarchar(50)")]
-        public string Title { get; set; } = string.Empty;
+    /// <summary>
+    /// Title or name of the post type.
+    /// </summary>
+    [Required]
+    [Column("title", TypeName = "nvarchar(50)")]
+    public string? Title { get; set; }
 
-        [Column("description", TypeName = "nvarchar(200)")]
-        public string Description { get; set; } = string.Empty;
+    /// <summary>
+    /// A description of the post type.
+    /// </summary>
+    [Column("description", TypeName = "nvarchar(200)")]
+    public string? Description { get; set; }
 
-        // Navigation Properties
-        public ICollection<Post> Posts { get; set; }
 
+    // Navigation Properties
 
+    /// <summary>
+    /// Collection of posts belonging to this type.
+    /// </summary>
+    public ICollection<Post>? Posts { get; set; }
 
-    }
 }
+

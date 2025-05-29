@@ -1,33 +1,56 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+/// <summary>
+/// Represents a customer of the tourism agency.
+/// </summary>
+public partial class Customer
 {
-    public partial class Customer
-    {
-        public Customer()
-        {
-            Bookings = new HashSet<Booking>();
-        }
-        [Key, Column("id", TypeName = "nvarchar(450)")]
-        public string? UserId { get; set; }
+    /// <summary>
+    /// Unique user ID of the customer, which also serves as the primary key.
+    /// </summary>
+    [Key, Column("id", TypeName = "nvarchar(450)")]
+    public string? UserId { get; set; }
 
-        [Required]
-        [Column("firstName")]
-        public string FirstName { get; set; } = string.Empty;
+    /// <summary>
+    /// First name of the customer.
+    /// </summary>
+    [Required]
+    [Column("firstName")]
+    public string? FirstName { get; set; }
 
-        [Required, Column("lastName")]
-        public string LastName { get; set; } = string.Empty;
+    /// <summary>
+    /// Last name of the customer.
+    /// </summary>
+    [Required, Column("lastName")]
+    public string? LastName { get; set; }
 
-        [Required, Column("phoneNumber", TypeName = "char(12)")]
-        public string PhoneNumber { get; set; } = string.Empty;
+    /// <summary>
+    /// Phone number of the customer.
+    /// </summary>
+    [Required, Column("phoneNumber", TypeName = "char(12)")]
+    public string? PhoneNumber { get; set; }
 
-        [Column("whatsapp", TypeName = "char(14)")]
-        public string Whatsapp { get; set; } = string.Empty;
+    /// <summary>
+    /// WhatsApp number of the customer.
+    /// </summary>
+    [Column("whatsapp", TypeName = "char(14)")]
+    public string? Whatsapp { get; set; }
 
-        [Column("Country")]
-        public string Country { get; set; } = string.Empty;
+    /// <summary>
+    /// Country of residence for the customer.
+    /// </summary>
+    [Column("Country")]
+    public string? Country { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
-    }
+
+    //  Navigation Properties
+    
+    /// <summary>
+    /// Collection of bookings made by this customer.
+    /// </summary>
+    public ICollection<Booking>? Bookings { get; set; }
 }
+
