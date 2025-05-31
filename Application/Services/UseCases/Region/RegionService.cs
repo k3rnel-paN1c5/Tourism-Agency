@@ -83,7 +83,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error while retrieving region with id: {RegionID}, {ErrorMessage}", id, ex.Message);
+            _logger.LogError("Error while retrieving region with id: {RegionID}. Error: {ErrorMessage}", id, ex.Message);
             return null!;
         }
     }
@@ -101,7 +101,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error while retrieving all regions: {ErrorMessage}", ex.Message);
+            _logger.LogError("Error while retrieving all regions. Error: {ErrorMessage}", ex.Message);
             return null!;
         }
     }
