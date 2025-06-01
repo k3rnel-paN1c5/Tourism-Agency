@@ -13,8 +13,6 @@ namespace Application.IServices.UseCases
         Task<IEnumerable<GetCarDTO>> GetAllCarsAsync();
         Task<GetCarDTO> GetCarByIdAsync(int id);
         Task<IEnumerable<GetCarDTO>> GetCarsByCategoryAsync(int categoryId);
-        
-        //add later
         Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate);
         
 

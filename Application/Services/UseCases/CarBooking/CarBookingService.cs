@@ -117,5 +117,26 @@ namespace Application.Services.UseCases
             await _repo.AddAsync(carBooking);
             await _repo.SaveAsync();
         }
+        public async Task<IEnumerable<GetCarBookingDTO>> GetCarBookingsByDateIntervalAsync(DateTime startDate, DateTime endDate)
+        {
+            if (startDate >= endDate)
+            {
+                throw new ArgumentException("Start date must be before end date.");
+            }
+
+            var carBookings = await _repo.GetAllByPredicateAsync(cb =>
+                cb.Booking != null && 
+                cb.Booking.EndDate > startDate &&
+                cb.Booking.StartDate < endDate   
+            );
+            if (carBookings is not null)
+            {
+                foreach (var cb in carBookings)
+                {
+                    cb.Booking = _mapper.Map<Booking>(await _bookingService.GetBookingByIdAsync(cb.BookingId));
+                }
+            }
+            return _mapper.Map<IEnumerable<GetCarBookingDTO>>(carBookings);
+        }
     }
 }
