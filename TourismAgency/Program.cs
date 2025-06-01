@@ -19,6 +19,8 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
+using System.Reflection;
+using Microsoft.Extensions.Options;
 
 
 
@@ -172,19 +174,12 @@ builder.Services.AddSwaggerGen(c =>
         }
         return false;
     });
+
+    //var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    //c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    
 });
 
-/////////////////        DEBUG       ///////////////////////////
-///
-/*
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-        options.JsonSerializerOptions.WriteIndented = true;
-    });
-*/
-//////////////////////////////////////////
 
 builder.Services.AddHttpContextAccessor();
 
