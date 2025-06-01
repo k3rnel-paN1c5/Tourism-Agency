@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Application.DTOs.Trip;
 
 namespace Application.IServices.UseCases;

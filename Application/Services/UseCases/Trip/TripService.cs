@@ -36,9 +36,9 @@ public class TripService : ITripService
     {
         _logger.LogInformation("Attempting to create trip: {TripName}", createTripDto.Name);
 
-        if (createTripDto == null)
+        if (createTripDto is null)
         {
-            _logger.LogError("CreateRegionAsync: Input DTO is null.");
+            _logger.LogError("CreateTripAsync: Input DTO is null.");
             throw new ArgumentNullException(nameof(createTripDto), "Trip creation DTO cannot be null.");
         }
         try
@@ -61,7 +61,7 @@ public class TripService : ITripService
                 || t.Slug!.Equals(createTripDto.Slug, StringComparison.CurrentCultureIgnoreCase))
                 .ConfigureAwait(false);
 
-            if (existingTrip != null)
+            if (existingTrip is not null)
             {
                 _logger.LogWarning("A trip with the same name or slug already exists. Creation failed.");
                 throw new ValidationException("Trip name or slug must be unique.");
@@ -89,10 +89,10 @@ public class TripService : ITripService
         try
         {
             var trip = await _tripRepository.GetByIdAsync(id).ConfigureAwait(false);
-            if (trip == null)
+            if (trip is null)
             {
                 _logger.LogWarning("Trip with ID {TripId} was not found.", id);
-                throw new ArgumentException($"Trip with ID {id} was not found.");
+                throw new KeyNotFoundException($"Trip with ID {id} was not found.");
             }
 
             _logger.LogInformation("Trip '{Name}' (ID: {Id}) retrieved successfully.", trip.Name, id);
@@ -101,61 +101,6 @@ public class TripService : ITripService
         catch (Exception ex)
         {
             _logger.LogError("Error occurred while retrieving trip with ID {Id}. Error: {Message}", id, ex.Message);
-            throw;
-        }
-    }
-
-    /// <inheritdoc />
-    public async Task UpdateTripAsync(UpdateTripDTO updateTripDto)
-    {
-        _logger.LogInformation("Attempting to update trip with ID: {TripId}", updateTripDto.Id);
-
-        if (updateTripDto == null)
-        {
-            _logger.LogError("UpdateTripAsync: Input DTO is null for trip ID {TripId}.", updateTripDto?.Id);
-            throw new ArgumentNullException(nameof(updateTripDto), "Trip update DTO cannot be null.");
-        }
-
-        try
-        {
-            var existingTrip = await _tripRepository.GetByIdAsync(updateTripDto.Id).ConfigureAwait(false);
-            if (existingTrip is null)
-            {
-                _logger.LogWarning("Trip with ID {TripId} was not found for update.", updateTripDto.Id);
-                throw new ArgumentException($"Trip with ID {updateTripDto.Id} was not found.");
-            }
-
-            // Auto-generate slug if empty or normalize provided slug
-            if (string.IsNullOrWhiteSpace(updateTripDto.Slug))
-            {
-                updateTripDto.Slug = SlugHelper.GenerateSlug(updateTripDto.Name);
-                _logger.LogDebug("Auto-generated slug for trip '{TripName}' during update: {TripSlug}", updateTripDto.Name, updateTripDto.Slug);
-            }
-            else
-            {
-                updateTripDto.Slug = SlugHelper.GenerateSlug(updateTripDto.Slug);
-                _logger.LogDebug("Normalized provided slug for trip '{TripName}' during update: {TripSlug}", updateTripDto.Name, updateTripDto.Slug);
-            }
-
-            if (!string.Equals(updateTripDto.Slug, existingTrip.Slug, StringComparison.OrdinalIgnoreCase))
-            {
-                var tripWithSameSlug = await _tripRepository.GetAllByPredicateAsync(t => t.Slug!.Equals(updateTripDto.Slug, StringComparison.CurrentCultureIgnoreCase) && t.Id != updateTripDto.Id).ConfigureAwait(false);
-                if (tripWithSameSlug != null)
-                {
-                    _logger.LogWarning("A trip with slug '{Slug}' already exists. Update failed for trip ID {TripId}.", updateTripDto.Slug, updateTripDto.Id);
-                    throw new ValidationException($"Trip with slug '{updateTripDto.Slug}' already exists.");
-                }
-            }
-
-            existingTrip = _mapper.Map<Trip>(updateTripDto);
-            _tripRepository.Update(existingTrip);
-            await _tripRepository.SaveAsync().ConfigureAwait(false);
-
-            _logger.LogInformation("Trip '{Name}' (ID: {Id}) updated successfully.", existingTrip.Name, existingTrip.Id);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error occurred while updating trip with ID {Id}. Error: {Message}", updateTripDto.Id, ex.Message);
             throw;
         }
     }
@@ -174,6 +119,61 @@ public class TripService : ITripService
         catch (Exception ex)
         {
             _logger.LogError("Error occurred while retrieving all trips. Error: {Message}", ex.Message);
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task UpdateTripAsync(UpdateTripDTO updateTripDto)
+    {
+        _logger.LogInformation("Attempting to update trip with ID: {TripId}", updateTripDto.Id);
+
+        if (updateTripDto is null)
+        {
+            _logger.LogError("UpdateTripAsync: Input DTO is null for trip ID {TripId}.", updateTripDto?.Id);
+            throw new ArgumentNullException(nameof(updateTripDto), "Trip update DTO cannot be null.");
+        }
+
+        try
+        {
+            var existingTrip = await _tripRepository.GetByIdAsync(updateTripDto.Id).ConfigureAwait(false);
+            if (existingTrip is null)
+            {
+                _logger.LogWarning("Trip with ID {TripId} was not found for update.", updateTripDto.Id);
+                throw new KeyNotFoundException($"Trip with ID {updateTripDto.Id} was not found.");
+            }
+
+            // Auto-generate slug if empty or normalize provided slug
+            if (string.IsNullOrWhiteSpace(updateTripDto.Slug))
+            {
+                updateTripDto.Slug = SlugHelper.GenerateSlug(updateTripDto.Name);
+                _logger.LogDebug("Auto-generated slug for trip '{TripName}' during update: {TripSlug}", updateTripDto.Name, updateTripDto.Slug);
+            }
+            else
+            {
+                updateTripDto.Slug = SlugHelper.GenerateSlug(updateTripDto.Slug);
+                _logger.LogDebug("Normalized provided slug for trip '{TripName}' during update: {TripSlug}", updateTripDto.Name, updateTripDto.Slug);
+            }
+
+            if (!string.Equals(updateTripDto.Slug, existingTrip.Slug, StringComparison.OrdinalIgnoreCase))
+            {
+                var tripWithSameSlug = await _tripRepository.GetByPredicateAsync(t => t.Slug!.Equals(updateTripDto.Slug, StringComparison.CurrentCultureIgnoreCase) && t.Id != updateTripDto.Id).ConfigureAwait(false);
+                if (tripWithSameSlug is not null)
+                {
+                    _logger.LogWarning("A trip with slug '{Slug}' already exists. Update failed for trip ID {TripId}.", updateTripDto.Slug, updateTripDto.Id);
+                    throw new ValidationException($"Trip with slug '{updateTripDto.Slug}' already exists.");
+                }
+            }
+
+            existingTrip = _mapper.Map<Trip>(updateTripDto);
+            _tripRepository.Update(existingTrip);
+            await _tripRepository.SaveAsync().ConfigureAwait(false);
+
+            _logger.LogInformation("Trip '{Name}' (ID: {Id}) updated successfully.", existingTrip.Name, existingTrip.Id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error occurred while updating trip with ID {Id}. Error: {Message}", updateTripDto.Id, ex.Message);
             throw;
         }
     }
@@ -206,7 +206,7 @@ public class TripService : ITripService
             if (trip == null)
             {
                 _logger.LogWarning("Trip with ID {TripId} was not found for deletion.", id);
-                throw new ArgumentException($"Trip with ID {id} was not found.");
+                throw new KeyNotFoundException($"Trip with ID {id} was not found.");
             }
 
             _tripRepository.Delete(trip);
