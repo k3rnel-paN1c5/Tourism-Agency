@@ -50,6 +50,7 @@ public class BookingProfile : Profile
             .ForMember(dest => dest.TripBooking, opt => opt.Ignore())
             .ForMember(dest => dest.Payment, opt => opt.Ignore());
 
+<<<<<<< HEAD
         CreateMap<Booking, CreatePaymentDTO>()
             .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.AmountDue,
