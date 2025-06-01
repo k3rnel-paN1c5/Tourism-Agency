@@ -34,13 +34,12 @@ public class TripService : ITripService
     /// <inheritdoc />
     public async Task<GetTripDTO> CreateTripAsync(CreateTripDTO createTripDto)
     {
-        _logger.LogInformation("Attempting to create trip: {TripName}", createTripDto.Name);
-
         if (createTripDto is null)
         {
             _logger.LogError("CreateTripAsync: Input DTO is null.");
             throw new ArgumentNullException(nameof(createTripDto), "Trip creation DTO cannot be null.");
         }
+        _logger.LogInformation("Attempting to create trip: {TripName}", createTripDto.Name);
         try
         {
             // Auto-generate slug if not provided
@@ -126,13 +125,12 @@ public class TripService : ITripService
     /// <inheritdoc />
     public async Task UpdateTripAsync(UpdateTripDTO updateTripDto)
     {
-        _logger.LogInformation("Attempting to update trip with ID: {TripId}", updateTripDto.Id);
-
         if (updateTripDto is null)
         {
             _logger.LogError("UpdateTripAsync: Input DTO is null for trip ID {TripId}.", updateTripDto?.Id);
             throw new ArgumentNullException(nameof(updateTripDto), "Trip update DTO cannot be null.");
         }
+        _logger.LogInformation("Attempting to update trip with ID: {TripId}", updateTripDto.Id);
 
         try
         {
@@ -165,7 +163,7 @@ public class TripService : ITripService
                 }
             }
 
-            existingTrip = _mapper.Map<Trip>(updateTripDto);
+            _mapper.Map(updateTripDto, existingTrip);
             _tripRepository.Update(existingTrip);
             await _tripRepository.SaveAsync().ConfigureAwait(false);
 

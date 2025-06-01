@@ -21,6 +21,7 @@ public interface IRegionService
     /// </summary>
     /// <param name="id">The unique identifier of the region.</param>
     /// <returns>A <see cref="GetRegionDTO"/> representing the found region, or null if not found.</returns>
+     /// <exception cref="KeyNotFoundException">Thrown if the region with the specified ID is not found.</exception>
     Task<GetRegionDTO> GetRegionByIdAsync(int id);
 
     /// <summary>

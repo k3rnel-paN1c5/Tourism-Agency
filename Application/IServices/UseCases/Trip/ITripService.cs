@@ -22,7 +22,7 @@ public interface ITripService
     /// </summary>
     /// <param name="id">The unique identifier of the trip.</param>
     /// <returns>A <see cref="GetTripDTO"/> representing the found trip.</returns>
-    /// <exception cref="ArgumentException">Thrown if the trip with the specified ID is not found.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown if the trip with the specified ID is not found.</exception>
     Task<GetTripDTO> GetTripByIdAsync(int id);
 
     /// <summary>
@@ -43,7 +43,7 @@ public interface ITripService
     /// <param name="updateTripDto">The DTO containing updated information for the trip.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="updateTripDto"/> is null.</exception>
-    /// <exception cref="ArgumentException">Thrown if the trip with the specified ID is not found.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown if the trip with the specified ID is not found.</exception>
     /// <exception cref="ValidationException">Thrown if another trip with the updated slug already exists.</exception>
     Task UpdateTripAsync(UpdateTripDTO updateTripDto);
 
@@ -52,6 +52,6 @@ public interface ITripService
     /// </summary>
     /// <param name="id">The unique identifier of the trip to delete.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    /// <exception cref="ArgumentException">Thrown if the trip with the specified ID is not found.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown if the trip with the specified ID is not found.</exception>
     Task DeleteTripAsync(int id);
 }

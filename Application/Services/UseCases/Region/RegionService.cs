@@ -133,7 +133,7 @@ public class RegionService : IRegionService
                     throw new InvalidOperationException($"Another region with name '{updateRegionDto.Name}' already exists.");
                 }
             }
-            existingRegion = _mapper.Map<Region>(updateRegionDto); // Update existing entity
+            _mapper.Map(updateRegionDto, existingRegion);
             _regionRepository.Update(existingRegion);
             await _regionRepository.SaveAsync().ConfigureAwait(false);
 
