@@ -21,6 +21,7 @@ public interface IRegionService
     /// </summary>
     /// <param name="id">The unique identifier of the region.</param>
     /// <returns>A <see cref="GetRegionDTO"/> representing the found region, or null if not found.</returns>
+     /// <exception cref="KeyNotFoundException">Thrown if the region with the specified ID is not found.</exception>
     Task<GetRegionDTO> GetRegionByIdAsync(int id);
 
     /// <summary>
@@ -33,7 +34,7 @@ public interface IRegionService
     /// Updates an existing region asynchronously.
     /// </summary>
     /// <param name="updateRegionDto">The DTO containing updated information for the region.</param>
-    /// <returns>A <see cref="GetRegionDTO"/> representing the updated region.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="updateRegionDto"/> is null.</exception>
     /// <exception cref="KeyNotFoundException">Thrown if the region with the specified ID is not found.</exception>
     /// <exception cref="InvalidOperationException">Thrown if another region with the updated name already exists.</exception>
@@ -43,7 +44,7 @@ public interface IRegionService
     /// Deletes a region by its unique identifier asynchronously.
     /// </summary>
     /// <param name="id">The unique identifier of the region to delete.</param>
-    /// <returns>A boolean indicating whether the deletion was successful.</returns>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     /// <exception cref="KeyNotFoundException">Thrown if the region with the specified ID is not found.</exception>
     public Task DeleteRegionAsync(int id);
 }

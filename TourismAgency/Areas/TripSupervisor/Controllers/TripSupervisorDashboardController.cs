@@ -119,6 +119,37 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
             
         }
+        [HttpPut("Region")]
+        public async Task<IActionResult> UpdateRegion(int id, [FromBody] UpdateRegionDTO dto){
+             if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                await _regionServ.UpdateRegionAsync(dto);
+                return Ok(dto);
+            }
+            catch( KeyNotFoundException e)
+            {
+                return NotFound(new { Error = e.Message });
+
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while updating trip with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
 
         //* Trips *//
 
