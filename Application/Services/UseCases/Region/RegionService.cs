@@ -33,6 +33,7 @@ public class RegionService : IRegionService
     /// <inheritdoc />
     public async Task<GetRegionDTO> CreateRegionAsync(CreateRegionDTO createRegionDto)
     {
+        _logger.LogInformation("Attempting to create region: {RegionName}", createRegionDto.Name);
         try
         {
             if (createRegionDto is null)
@@ -41,9 +42,7 @@ public class RegionService : IRegionService
                 throw new ArgumentNullException(nameof(createRegionDto), "Region creation DTO cannot be null.");
             }
 
-            _logger.LogInformation("Attempting to create region: {RegionName}", createRegionDto.Name);
-
-            var existingRegion = await _regionRepository.GetAllByPredicateAsync(r => r.Name!.Equals(createRegionDto.Name)).ConfigureAwait(false);
+            var existingRegion = await _regionRepository.GetByPredicateAsync(r => r.Name!.Equals(createRegionDto.Name)).ConfigureAwait(false);
             if (existingRegion is not null)
             {
                 _logger.LogWarning("Region with name '{RegionName}' already exists. Creation failed.", createRegionDto.Name);
@@ -60,7 +59,7 @@ public class RegionService : IRegionService
         catch (Exception ex)
         {
             _logger.LogError("Error while adding region with Name: {RegionName}, {ErrorMessage}", createRegionDto.Name, ex.Message);
-            return null!;
+            throw;
         }
     }
 
@@ -72,10 +71,10 @@ public class RegionService : IRegionService
         {
             var regionEntity = await _regionRepository.GetByIdAsync(id).ConfigureAwait(false);
 
-            if (regionEntity == null)
+            if (regionEntity is null)
             {
-                _logger.LogInformation("Region with ID: {RegionId} not found.", id);
-                return null!;
+                _logger.LogWarning("Region with ID: {RegionId} not found.", id);
+                throw new KeyNotFoundException($"Region with ID '{id}' not found.");
             }
 
             _logger.LogInformation("Region with ID: {RegionId} retrieved successfully.", id);
@@ -84,7 +83,7 @@ public class RegionService : IRegionService
         catch (Exception ex)
         {
             _logger.LogError("Error while retrieving region with id: {RegionID}. Error: {ErrorMessage}", id, ex.Message);
-            return null!;
+            throw;
         }
     }
 
@@ -102,7 +101,7 @@ public class RegionService : IRegionService
         catch (Exception ex)
         {
             _logger.LogError("Error while retrieving all regions. Error: {ErrorMessage}", ex.Message);
-            return null!;
+            throw;
         }
     }
 
@@ -110,7 +109,7 @@ public class RegionService : IRegionService
     public async Task UpdateRegionAsync(UpdateRegionDTO updateRegionDto)
     {
         _logger.LogInformation("Attempting to update region with ID: {RegionId}", updateRegionDto.Id);
-        if (updateRegionDto == null)
+        if (updateRegionDto is null)
         {
             _logger.LogWarning("UpdateRegionAsync called with null DTO.");
             throw new ArgumentNullException(nameof(updateRegionDto), "Region update DTO cannot be null.");
@@ -134,7 +133,7 @@ public class RegionService : IRegionService
                     throw new InvalidOperationException($"Another region with name '{updateRegionDto.Name}' already exists.");
                 }
             }
-            existingRegion = _mapper.Map<Region>(updateRegionDto); // Update existing entity
+            _mapper.Map(updateRegionDto, existingRegion);
             _regionRepository.Update(existingRegion);
             await _regionRepository.SaveAsync().ConfigureAwait(false);
 

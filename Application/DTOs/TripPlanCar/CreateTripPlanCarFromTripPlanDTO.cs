@@ -6,10 +6,12 @@ namespace Application.DTOs.TripPlanCar;
 
 
 /// <summary>
-/// Data Transfer Object for creating a new Trip Plan Car entry.
+/// Data Transfer Object for creating a Trip Plan Car entry from the Trip Plan service.
+/// The use of this DTO avoid having to deal with the dates twice.
 /// </summary>
-public class CreateTripPlanCarDTO
+public class CreateTripPlanCarFromTripPlanDTO
 {
+
     /// <summary>
     /// Gets or sets the ID of the associated Trip Plan.
     /// This field is required.
@@ -34,16 +36,8 @@ public class CreateTripPlanCarDTO
     [Display(Name = "Price")]
     public decimal Price { get; set; }
 
-
     /// <summary>
-    /// Gets or sets the start date for the car booking within the trip plan.
-    /// This is typically derived from the parent Trip Plan's start date.
+    /// Navigation property to derive the start and end date.
     /// </summary>
-    public DateTime StartDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the end date for the car booking within the trip plan.
-    /// This is typically derived from the parent Trip Plan's end date.
-    /// </summary>
-    public DateTime EndDate { get; set; }
+    public GetTripPlanDTO? TripPlan { get; set; } = null;
 }
