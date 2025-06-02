@@ -2,6 +2,7 @@ using System;
 using AutoMapper;
 using Domain.Entities;
 using Application.DTOs.TripBooking;
+using Application.DTOs.Booking;
 
 namespace Application.MappingProfiles;
 
@@ -28,6 +29,13 @@ public class TripBookingProfile : Profile
                 .ForMember(dest => dest.WithGuide, opt => opt.MapFrom(src => src.WithGuide))
                 .ForMember(dest => dest.TripPlan, opt => opt.Ignore())
                 .ForMember(dest => dest.Booking, opt => opt.Ignore());
+
+        CreateMap<CreateTripBookingDTO, CreateBookingDTO>()
+                .ForMember(dest => dest.BookingType, opt => opt.MapFrom(src => true))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
+                .ForMember(dest => dest.NumOfPassengers, opt => opt.MapFrom(src => src.NumOfPassengers));
+
         // Map from Update DTO -> TripBooking
         CreateMap<UpdateTripBookingDTO, TripBooking>()
             .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))

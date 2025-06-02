@@ -41,12 +41,12 @@ public class TripPlanService : ITripPlanService
         ILogger<TripPlanService> logger
     )
     {
-        _tripPlanRepository = tripPlanRepository;
-        _regionService = regionService;
-        _tripService = tripService;
-        _tripPlanCarService = tripPlanCarService;
-        _mapper = mapper;
-        _logger = logger;
+        _tripPlanRepository = tripPlanRepository ?? throw new ArgumentNullException(nameof(tripPlanRepository));
+        _regionService = regionService ?? throw new ArgumentNullException(nameof(regionService));
+        _tripService = tripService ?? throw new ArgumentNullException(nameof(tripService));
+        _tripPlanCarService = tripPlanCarService ?? throw new ArgumentNullException(nameof(tripPlanCarService));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc />

@@ -5,7 +5,7 @@ namespace Application.IServices.UseCases;
 
 /// <summary>
 /// Defines the contract for Trip-related business logic operations.
-/// </summar
+/// </summary>
 public interface ITripService
 {
     /// <summary>

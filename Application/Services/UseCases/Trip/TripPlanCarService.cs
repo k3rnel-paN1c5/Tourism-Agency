@@ -35,10 +35,10 @@ public class TripPlanCarService : ITripPlanCarService
         ILogger<TripPlanCarService> logger
         )
     {
-        _tripPlanCarRepository = repository;
-        _carService = carService;
-        _mapper = mapper;
-        _logger = logger;
+        _tripPlanCarRepository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _carService = carService ?? throw new ArgumentNullException(nameof(carService));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc />
