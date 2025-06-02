@@ -121,7 +121,7 @@ public class TripPlanService : ITripPlanService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while creating trip plan. Error: {Message}", ex.Message);
+            _logger.LogError(ex, "Error occurred while creating trip plan.");
             throw;
         }
     }
@@ -143,7 +143,7 @@ public class TripPlanService : ITripPlanService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while retrieving trip plan with ID {Id}. Error: {Message}", id, ex.Message);
+            _logger.LogError(ex, "Error occurred while retrieving trip plan with ID {Id}.", id);
             throw;
         }
     }
@@ -161,7 +161,7 @@ public class TripPlanService : ITripPlanService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while retrieving all trip plans. Error: {Message}", ex.Message);
+            _logger.LogError(ex, "Error occurred while retrieving all trip plans.");
             throw;
         }
     }
@@ -223,7 +223,7 @@ public class TripPlanService : ITripPlanService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while updating trip plan with ID {Id}. Error: {Message}", updateTripPlanDto.Id, ex.Message);
+            _logger.LogError(ex, "Error occurred while updating trip plan with ID {Id}.", updateTripPlanDto.Id);
             throw;
         }
 
@@ -249,7 +249,7 @@ public class TripPlanService : ITripPlanService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while deleting Trip Plan with ID {Id}. Error: {Message}", id, ex.Message);
+            _logger.LogError(ex,"Error occurred while deleting Trip Plan with ID {Id}.", id);
             throw;
         }
     }
@@ -279,7 +279,7 @@ public class TripPlanService : ITripPlanService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while adding a car to trip plan '{TripPlanId}'. Error: {Message}", createTripPlanCarDto.TripPlanId, ex.Message);
+            _logger.LogError(ex, "Error occurred while adding a car to trip plan '{TripPlanId}'.", createTripPlanCarDto.TripPlanId);
             throw;
         }
     }
@@ -302,6 +302,11 @@ public class TripPlanService : ITripPlanService
                 _logger.LogError("RemoveCarFromTripPlanAsync: Trip Plan Car with ID {Id} was not found for removal.", id);
                 throw new InvalidOperationException("Deleting a Car from a Trip Plan That does not have cars");
             }
+            if (tripPlan.StartDate > DateTime.UtcNow)
+            {
+                _logger.LogError("RemoveCarFromTripPlanAsync: Can't Remove Car from the trip plan {id}, because it has started.", tripPlan.Id);
+                throw new InvalidOperationException("Deleting a Car from a Trip Plan That does not have cars");
+            }
             var carEntityToRemove = _mapper.Map<TripPlanCar>(tripPlanCar);
             if (!tripPlan.PlanCars.Remove(carEntityToRemove))
             {
@@ -313,7 +318,7 @@ public class TripPlanService : ITripPlanService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while removing trip plan car with id {id}. Error: {Message}", id, ex.Message);
+            _logger.LogError(ex, "Error occurred while removing trip plan car with id {id}.", id);
             throw;
         }
     }
