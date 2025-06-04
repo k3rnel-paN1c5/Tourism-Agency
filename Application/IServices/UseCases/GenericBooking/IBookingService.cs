@@ -17,6 +17,8 @@ public interface IBookingService
     /// <param name="createBookingDto">The DTO containing information for the new  booking.</param>
     /// <returns>A <see cref="GetBookingDTO"/> representing the newly created  booking.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="createBookingDto"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if HTTP Context is unavailable.</exception>
+    /// <exception cref="UnauthorizedAccessException">Thrown if the user is not autheticated.</exception>
     /// <exception cref="ValidationException">Thrown if date/passenger validations fail.</exception>
     public Task<GetBookingDTO> CreateBookingAsync(CreateBookingDTO createBookingDto);
 

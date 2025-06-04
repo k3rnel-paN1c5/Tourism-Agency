@@ -63,31 +63,11 @@ public class TripBookingService : ITripBookingService
         _logger.LogInformation("Attempting to create trip booking for TripPlanId: {TripPlanId}", createTripBookingDto.TripPlanId);
         try
         {
-            // Check if Trip Plan exists
             var tripPlan = await _tripPlanService.GetTripPlanByIdAsync(createTripBookingDto.TripPlanId).ConfigureAwait(false);
             if (tripPlan is null)
             {
                 _logger.LogError("Trip plan with ID {TripPlanId} was not found.", createTripBookingDto.TripPlanId);
                 throw new KeyNotFoundException($"Trip plan with ID {createTripBookingDto.TripPlanId} was not found.");
-            }
-
-            // Validate dates and passengers
-            if (createTripBookingDto.StartDate < DateTime.UtcNow.Date)
-            {
-                _logger.LogWarning("Attempted to create trip booking with a start date in the past: {StartDate}", createTripBookingDto.StartDate);
-                throw new ValidationException("Start Date must be in the future.");
-            }
-
-            if (createTripBookingDto.EndDate <= createTripBookingDto.StartDate)
-            {
-                _logger.LogWarning("Attempted to create trip booking where End Date ({EndDate}) is not after Start Date ({StartDate}).", createTripBookingDto.EndDate, createTripBookingDto.StartDate);
-                throw new ValidationException("End Date must be after Start Date.");
-            }
-
-            if (createTripBookingDto.NumOfPassengers <= 0)
-            {
-                _logger.LogWarning("Attempted to create trip booking with invalid number of passengers: {NumOfPassengers}", createTripBookingDto.NumOfPassengers);
-                throw new ValidationException("Number of passengers must be greater than zero.");
             }
 
             // Create base booking
@@ -97,7 +77,6 @@ public class TripBookingService : ITripBookingService
             var createdBooking = await _bookingService.CreateBookingAsync(bookingDto).ConfigureAwait(false);
 
 
-            // Map and save trip booking
             var tripBookingEntity = _mapper.Map<TripBooking>(createTripBookingDto);
             tripBookingEntity.BookingId = createdBooking.Id; // Link to booking
 
@@ -222,7 +201,7 @@ public class TripBookingService : ITripBookingService
     {
         try
         {
-            await _bookingService.ConfirmBookingAsync(id).ConfigureAwait(false);
+            await _bookingService.CancelBookingAsync(id).ConfigureAwait(false);
             _logger.LogInformation("Trip booking '{Id}' confirmed successfully.", id);
         }
         catch (Exception ex)

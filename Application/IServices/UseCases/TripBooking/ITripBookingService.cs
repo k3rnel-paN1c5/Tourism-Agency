@@ -14,6 +14,7 @@ public interface ITripBookingService
     /// <param name="createTripBookingDto">The DTO containing information for the new trip booking.</param>
     /// <returns>A <see cref="GetTripBookingDTO"/> representing the newly created trip booking.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="createTripBookingDto"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the current user is not authenticated.</exception>
     /// <exception cref="KeyNotFoundException">Thrown if the trip plan is not found.</exception>
     /// <exception cref="ValidationException">Thrown if date/passenger validations fail.</exception>
     public Task<GetTripBookingDTO> CreateTripBookingAsync(CreateTripBookingDTO createTripBookingDto);

@@ -4,6 +4,9 @@ using Domain.Enums;
 
 namespace Application.DTOs.TripBooking;
 
+/// <summary>
+/// Data Transfer Object for retrieving Trip Booking details.
+/// </summary>
 public class GetTripBookingDTO
 {
     /// <summary>
