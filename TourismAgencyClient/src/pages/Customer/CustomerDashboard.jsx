@@ -6,7 +6,7 @@ import CarBookingSection from '../../components/CarBookingSection';
 import bookingService from '../../services/bookingService';
 import './Dashboard.css';
 
-export default function Dashboard() {
+export default function CustomerDashboard() {
   const [user, setUser] = useState(null);
   const [tripBookings, setTripBookings] = useState([]);
   const [carBookings, setCarBookings] = useState([]);

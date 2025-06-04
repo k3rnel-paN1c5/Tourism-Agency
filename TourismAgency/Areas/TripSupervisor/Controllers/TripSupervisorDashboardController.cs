@@ -5,6 +5,7 @@ using Application.DTOs.TripPlanCar;
 using Application.IServices.UseCases;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
 {
     [Area("TripSupervisor")]
     [ApiController]
-    [Authorize(Roles = "TripSupervisor,Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "TripSupervisor,Admin")]
     [Route("api/[area]/[controller]")]
     public class TripSupervisorDashboardController : ControllerBase
     {
@@ -91,7 +92,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
        
-        [HttpPost("Region")]
+        [HttpPost("Regions")]
         public async Task<IActionResult> CreateRegion([FromBody] CreateRegionDTO dto){
             if (!ModelState.IsValid)
             {
@@ -119,7 +120,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
             
         }
-        [HttpPut("Region")]
+        [HttpPut("Regions/{id}")]
         public async Task<IActionResult> UpdateRegion(int id, [FromBody] UpdateRegionDTO dto){
              if (!ModelState.IsValid)
             {
@@ -150,11 +151,42 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 });
             }
         }
+        [HttpDelete("Regions/{id}")]
+        public async Task<IActionResult> DeleteRegion(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                await _regionServ.DeleteRegionAsync(id);
+                return Ok($"Deleted A trip with id {id}");
+            }
+            catch( KeyNotFoundException e)
+            {
+                return NotFound(new { Error = e.Message });
 
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while Deleting trip with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
         //* Trips *//
 
         [HttpGet("Trips")]
-        public async Task<IActionResult> GetTrip(){
+        public async Task<IActionResult> GetTrips(){
 
             try
             {
@@ -171,7 +203,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
 
-        [HttpGet("Trip/{id}")]
+        [HttpGet("Trips/{id}")]
         public async Task<IActionResult> GetTripById(int id)
         {
             try
@@ -190,8 +222,25 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
             
         }
+        [HttpGet("AvailableTrips")]
+        public async Task<IActionResult> GetAvailableTrips(){
+
+            try
+            {
+                var result = await _tripServ.GetAvailablePublicTripsAsync();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while retrieving Available and public trips",
+                    Details = e.Message
+                });
+            }
+        }
         
-        [HttpPost("Trip")]
+        [HttpPost("Trips")]
         public async Task<IActionResult> CreateTrip([FromBody] CreateTripDTO dto){
             if (!ModelState.IsValid)
             {
@@ -219,7 +268,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             
         }
         
-        [HttpPut("Trip/{id}")]
+        [HttpPut("Trips/{id}")]
         public async Task<IActionResult> UpdateTrip(int id, [FromBody] UpdateTripDTO dto){
             if (!ModelState.IsValid)
             {
@@ -246,6 +295,39 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 return StatusCode(500, new
                 {
                     Error = $"An error occurred while updating trip with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        [HttpDelete("Trips/{id}")]
+        public async Task<IActionResult> DeleteTrip(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                await _tripServ.DeleteTripAsync(id);
+                return Ok($"Deleted A trip with id {id}");
+            }
+            catch( KeyNotFoundException e)
+            {
+                return NotFound(new { Error = e.Message });
+
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while Deleting trip with ID {id}",
                     Details = ex.Message
                 });
             }

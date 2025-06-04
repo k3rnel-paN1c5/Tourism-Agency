@@ -1,0 +1,97 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 600px; /* Adjusted max-width */
+  z-index: 1001;
+  animation: slideInUp 0.4s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #2a3447;
+}
+
+.modal-header h2 {
+  color: #4da6ff;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #8892a4;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #ffffff;
+}
+
+.modal-body {
+  color: #e0e0e0;
+}
+
+/* Reusing some form styles from Login.css / Register.css */
+.modal-body .auth-form { /* Scoping to modal if needed */
+  gap: 1.5rem; /* Slightly reduced gap for modals */
+}
+
+.modal-body .input-group {
+  gap: 0.5rem;
+}
+
+.modal-body .input-label {
+  font-size: 0.9rem;
+  color: #8892a4;
+}
+
+.modal-body .auth-input { /* Assuming .auth-input is general enough */
+  padding: 0.9rem 1.1rem;
+  font-size: 1rem;
+  background: #161e2e;
+}
+
+.modal-body .auth-input:focus {
+  background: #1c2536;
+  box-shadow: 0 0 0 2px rgba(77, 166, 255, 0.2);
+}
+
+.modal-body .auth-button { /* Assuming .auth-button is general enough */
+  margin-top: 1.5rem;
+  font-size: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
