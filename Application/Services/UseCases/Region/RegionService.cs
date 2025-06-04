@@ -23,7 +23,10 @@ public class RegionService : IRegionService
     /// <param name="regionRepository">The repository for Region entities.</param>
     /// <param name="mapper">The AutoMapper instance for DTO-entity mapping.</param>
     /// <param name="logger">The logger for this service.</param>
-    public RegionService(IRepository<Region, int> regionRepository, IMapper mapper, ILogger<RegionService> logger)
+    public RegionService(
+        IRepository<Region, int> regionRepository,
+        IMapper mapper,
+        ILogger<RegionService> logger)
     {
         _regionRepository = regionRepository ?? throw new ArgumentNullException(nameof(regionRepository));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -58,7 +61,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error while adding region with Name: {RegionName}, {ErrorMessage}", createRegionDto.Name, ex.Message);
+            _logger.LogError(ex, "Error while adding region with Name: {RegionName}", createRegionDto.Name);
             throw;
         }
     }
@@ -82,7 +85,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error while retrieving region with id: {RegionID}. Error: {ErrorMessage}", id, ex.Message);
+            _logger.LogError(ex, "Error while retrieving region with id: {RegionID}.", id);
             throw;
         }
     }
@@ -100,7 +103,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error while retrieving all regions. Error: {ErrorMessage}", ex.Message);
+            _logger.LogError(ex, "Error while retrieving all regions");
             throw;
         }
     }
@@ -141,7 +144,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while updating region with ID {Id}. Error: {Message}", updateRegionDto.Id, ex.Message);
+            _logger.LogError(ex, "Error occurred while updating region with ID {Id}.", updateRegionDto.Id);
             throw;
         }
     }
@@ -165,7 +168,7 @@ public class RegionService : IRegionService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while deleting region with ID {Id}. Error: {errorMessage}", id, ex.Message);
+            _logger.LogError(ex, "Error occurred while deleting region with ID {Id}.", id);
             throw;
         }
     }

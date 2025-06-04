@@ -35,10 +35,10 @@ public class TripPlanCarService : ITripPlanCarService
         ILogger<TripPlanCarService> logger
         )
     {
-        _tripPlanCarRepository = repository;
-        _carService = carService;
-        _mapper = mapper;
-        _logger = logger;
+        _tripPlanCarRepository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _carService = carService ?? throw new ArgumentNullException(nameof(carService));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <inheritdoc />
@@ -76,7 +76,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while creating a trip plan car. Error: {Message}", ex.Message);
+            _logger.LogError(ex, "Error occurred while creating a trip plan car.");
             throw;
         }
     }
@@ -98,7 +98,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while retrieving trip plan car with ID {Id}. Error: {Message}", id, ex.Message  );
+            _logger.LogError(ex, "Error occurred while retrieving trip plan car with ID {Id}.", id);
             throw;
         }
     }
@@ -116,7 +116,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while retrieving all trip plan cars. Error: {Message}", ex.Message);
+            _logger.LogError(ex, "Error occurred while retrieving all trip plan cars.");
             throw;
         }
     }
@@ -148,7 +148,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while updating trip plan car with ID {Id}. Message: {ErrorMessage}", updateTripPlanCarDto.Id, ex.Message);
+            _logger.LogError(ex, "Error occurred while updating trip plan car with ID {Id}.", updateTripPlanCarDto.Id);
             throw;
         }
     }
@@ -173,7 +173,7 @@ public class TripPlanCarService : ITripPlanCarService
         }
         catch (Exception ex)
         {
-           _logger.LogError("Error occurred while deleting trip plan car with ID {Id}. Message: {ErrorMessage}", id, ex.Message);
+           _logger.LogError(ex, "Error occurred while deleting trip plan car with ID {Id}.", id);
             throw;
         }
     }

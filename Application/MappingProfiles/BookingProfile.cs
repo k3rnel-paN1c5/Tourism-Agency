@@ -3,9 +3,11 @@ using AutoMapper;
 using Domain.Entities;
 using Application.DTOs.TripBooking;
 using Application.DTOs.Booking;
+using Application.DTOs.Payment;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Domain.Enums;
+using Application.Utilities;
 
 namespace Application.MappingProfiles;
 
@@ -39,6 +41,13 @@ public class BookingProfile : Profile
             .ForMember(dest => dest.CarBooking, opt => opt.Ignore())
             .ForMember(dest => dest.TripBooking, opt => opt.Ignore())
             .ForMember(dest => dest.Payment, opt => opt.Ignore());
+
+        CreateMap<Booking, CreatePaymentDTO>()
+            .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.AmountDue,
+                opt => opt.MapFrom(src => src.BookingType ?
+                    TripBookingAmountDueCalculator.CalculateAmountDue((decimal)6.0, src.NumOfPassengers):
+                    CarBookingAmountDueCalculator.CalculateAmountDue(src.StartDate, src.EndDate, src.CarBooking!.Car!.Ppd, src.CarBooking.Car.Ppd)));
 
         CreateMap<UpdateBookingDTO, Booking>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
