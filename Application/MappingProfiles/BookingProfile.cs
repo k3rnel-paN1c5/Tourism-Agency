@@ -15,8 +15,16 @@ namespace Application.MappingProfiles;
 /// AutoMapper profile for mapping between Booking entities and Booking DTOs.
 /// Defines mappings for retrieving, creating, and updating booking information.
 /// </summary>
+/// <summary>
+/// AutoMapper profile for mapping between Booking entities and Booking DTOs.
+/// Defines mappings for retrieving, creating, and updating booking information.
+/// </summary>
 public class BookingProfile : Profile
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BookingProfile"/> class.
+    /// Configures the mapping rules for Booking related objects.
+    /// </summary>
     /// <summary>
     /// Initializes a new instance of the <see cref="BookingProfile"/> class.
     /// Configures the mapping rules for Booking related objects.
@@ -24,6 +32,8 @@ public class BookingProfile : Profile
     public BookingProfile()
     {
 
+        // Map from Booking Entity to GetBookingDTO
+        // This mapping is used when retrieving booking data to be sent to the client.
         // Map from Booking Entity to GetBookingDTO
         // This mapping is used when retrieving booking data to be sent to the client.
         CreateMap<Booking, GetBookingDTO>()
@@ -39,6 +49,8 @@ public class BookingProfile : Profile
 
         // Map from CreateBookingDTO to Booking Entity
         // This mapping is used when creating a new booking from client-provided data.
+        // Map from CreateBookingDTO to Booking Entity
+        // This mapping is used when creating a new booking from client-provided data.
         CreateMap<CreateBookingDTO, Booking>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.BookingType, opt => opt.Ignore()) // Or set manually if needed
@@ -50,7 +62,6 @@ public class BookingProfile : Profile
             .ForMember(dest => dest.TripBooking, opt => opt.Ignore())
             .ForMember(dest => dest.Payment, opt => opt.Ignore());
 
-<<<<<<< HEAD
         CreateMap<Booking, CreatePaymentDTO>()
             .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.AmountDue,
