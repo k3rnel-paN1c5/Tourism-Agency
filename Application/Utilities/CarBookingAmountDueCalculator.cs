@@ -36,6 +36,16 @@ namespace Application.Utilities
         /// <param name="ppd">The price per day for the car.</param>
         /// <param name="pph">The price per hour for the car.</param>
         /// <returns>The total decimal amount due for the car booking.</returns>
+
+        /// <summary>
+        /// Calculates the total amount due for a car booking based on its duration and pricing.
+        /// The calculation prioritizes full days and then adds remaining hours.
+        /// </summary>
+        /// <param name="startDate">The start date and time of the car booking.</param>
+        /// <param name="endDate">The end date and time of the car booking.</param>
+        /// <param name="ppd">The price per day for the car.</param>
+        /// <param name="pph">The price per hour for the car.</param>
+        /// <returns>The total decimal amount due for the car booking.</returns>
         public decimal CalculateAmountDue( DateTime startDate,DateTime endDate, decimal ppd, decimal pph)
 >>>>>>> eb412ad (Docs for mapping profiles related to car booking)
         {
@@ -51,7 +61,9 @@ namespace Application.Utilities
 >>>>>>> eb412ad (Docs for mapping profiles related to car booking)
             {
                 // Get the number of full days.
+                // Get the number of full days.
                 var days = (int)duration.TotalDays;
+                // Add the cost for full days.
                 // Add the cost for full days.
                 AmountDue += days * ppd;
 <<<<<<< HEAD
@@ -61,6 +73,7 @@ namespace Application.Utilities
                 hours = hours - days * 24;
 >>>>>>> eb412ad (Docs for mapping profiles related to car booking)
             }
+            // Add the cost for any remaining partial hours (rounded down to the nearest whole hour).
             // Add the cost for any remaining partial hours (rounded down to the nearest whole hour).
             AmountDue += ((int)hours) * pph;
             return AmountDue;

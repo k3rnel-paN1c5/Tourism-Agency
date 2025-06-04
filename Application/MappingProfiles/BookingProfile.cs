@@ -51,6 +51,7 @@ public class BookingProfile : Profile
             .ForMember(dest => dest.Payment, opt => opt.Ignore());
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         CreateMap<Booking, CreatePaymentDTO>()
             .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.AmountDue,
@@ -62,6 +63,10 @@ public class BookingProfile : Profile
         // Map from UpdateBookingDTO to Booking Entity
         // This mapping is used when updating an existing booking with client-provided data.
 >>>>>>> eb412ad (Docs for mapping profiles related to car booking)
+=======
+        // Map from UpdateBookingDTO to Booking Entity
+        // This mapping is used when updating an existing booking with client-provided data.
+>>>>>>> 1e9651ec6c7aa2de51c3e5e9770434009cf49178
         CreateMap<UpdateBookingDTO, Booking>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
