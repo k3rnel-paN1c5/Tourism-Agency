@@ -3,7 +3,7 @@ import './DataTable.css';
 
 const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLabel = "Create New" }) => {
   if (!Array.isArray(data)) {
-    return <p>No data available or data is not in the expected format.</p>;
+    return <p>No data available.</p>;
   }
   return (
     <div className="data-table-container">

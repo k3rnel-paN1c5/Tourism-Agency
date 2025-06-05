@@ -161,18 +161,15 @@ export default function TripSupervisorDashboard() {
   const tripColumns = [
     { header: 'ID', key: 'id' },
     { header: 'Name', key: 'name' },
-    { header: 'Region', key: 'regionName' }, // Assuming you map regionId to regionName when fetching/displaying
-    { header: 'Start Date', key: 'startDateFormatted' }, // Assuming you format dates
-    { header: 'End Date', key: 'endDateFormatted' },
-    { header: 'Price', key: 'price' },
-    { header: 'Status', key: 'status' },
+    { header: 'Slug', key: 'slug' },
+    { header: 'Description', key: 'description' },
+    { header: 'Available', key: 'isAvailable' },
+    { header: 'Private Trip', key: 'isPrivate' },
   ];
   
   // Helper to format dates and map region names for trips display
   const processedTrips = trips.map(trip => ({
     ...trip,
-    startDateFormatted: trip.startDate ? new Date(trip.startDate).toLocaleDateString() : 'N/A',
-    endDateFormatted: trip.endDate ? new Date(trip.endDate).toLocaleDateString() : 'N/A',
     regionName: regions.find(r => r.id === trip.regionId)?.name || 'Unknown',
   }));
 
