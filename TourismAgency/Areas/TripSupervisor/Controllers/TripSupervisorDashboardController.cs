@@ -13,7 +13,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
 {
     [Area("TripSupervisor")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "TripSupervisor,Admin")]
+    [Authorize(Roles = "TripSupervisor,Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[area]/[controller]")]
     public class TripSupervisorDashboardController : ControllerBase
     {
