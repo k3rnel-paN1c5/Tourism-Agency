@@ -15,8 +15,10 @@ namespace Application.Utilities
     /// </summary>
     public class  CarBookingAmountDueCalculator
     {
+
         /// <summary>
-        /// Calculates the total amount due for a car booking based on per-day and per-hour rates.
+        /// Calculates the total amount due for a car booking based on its duration and pricing.
+        /// The calculation prioritizes full days and then adds remaining hours.
         /// </summary>
         /// <param name="startDate">The start date and time of the car booking.</param>
         /// <param name="endDate">The end date and time of the car booking.</param>
