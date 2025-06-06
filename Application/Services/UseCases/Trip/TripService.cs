@@ -24,7 +24,10 @@ public class TripService : ITripService
     /// <param name="mapper">The AutoMapper instance for DTO-entity mapping.</param>
     /// <param name="tripRepository">The repository for Trip entities.</param>
     /// <param name="logger">The logger for this service.</param>
-    public TripService(IMapper mapper, IRepository<Trip, int> tripRepository, ILogger<TripService> logger)
+    public TripService(
+        IRepository<Trip, int> tripRepository,
+        IMapper mapper,
+        ILogger<TripService> logger)
     {
         _tripRepository = tripRepository ?? throw new ArgumentNullException(nameof(tripRepository));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -76,7 +79,7 @@ public class TripService : ITripService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while creating a trip. Error: {Message}", ex.Message);
+            _logger.LogError(ex, "Error occurred while creating a trip.");
             throw;
         }
     }
@@ -99,7 +102,7 @@ public class TripService : ITripService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while retrieving trip with ID {Id}. Error: {Message}", id, ex.Message);
+            _logger.LogError(ex, "Error occurred while retrieving trip with ID {Id}.", id);
             throw;
         }
     }
@@ -117,7 +120,7 @@ public class TripService : ITripService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while retrieving all trips. Error: {Message}", ex.Message);
+            _logger.LogError(ex, "Error occurred while retrieving all trips.");
             throw;
         }
     }
@@ -171,7 +174,7 @@ public class TripService : ITripService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while updating trip with ID {Id}. Error: {Message}", updateTripDto.Id, ex.Message);
+            _logger.LogError(ex, "Error occurred while updating trip with ID {Id}.", updateTripDto.Id);
             throw;
         }
     }
@@ -189,7 +192,7 @@ public class TripService : ITripService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while retrieving all available trips. Error: {Message}", ex.Message);
+            _logger.LogError(ex, "Error occurred while retrieving all available trips.");
             throw;
         }
     }
@@ -214,7 +217,7 @@ public class TripService : ITripService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error occurred while deleting trip with ID {Id}. Error: {Message}", id, ex.Message);
+            _logger.LogError(ex, "Error occurred while deleting trip with ID {Id}.", id);
             throw;
         }
     }

@@ -3,9 +3,11 @@ using AutoMapper;
 using Domain.Entities;
 using Application.DTOs.TripBooking;
 using Application.DTOs.Booking;
+using Application.DTOs.Payment;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Domain.Enums;
+using Application.Utilities;
 
 namespace Application.MappingProfiles;
 
@@ -36,7 +38,7 @@ public class BookingProfile : Profile
             .ReverseMap();
 
         // Map from CreateBookingDTO to Booking Entity
-        // This mapping is used when creating a new booking from client-provided data.
+        // This mapping is used when creating a new booking from client-provided data.s
         CreateMap<CreateBookingDTO, Booking>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.BookingType, opt => opt.Ignore()) // Or set manually if needed
@@ -47,6 +49,13 @@ public class BookingProfile : Profile
             .ForMember(dest => dest.CarBooking, opt => opt.Ignore())
             .ForMember(dest => dest.TripBooking, opt => opt.Ignore())
             .ForMember(dest => dest.Payment, opt => opt.Ignore());
+
+        CreateMap<Booking, CreatePaymentDTO>()
+            .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.AmountDue,
+                opt => opt.MapFrom(src => src.BookingType ?
+                    TripBookingAmountDueCalculator.CalculateAmountDue((decimal)6.0, src.NumOfPassengers):
+                    CarBookingAmountDueCalculator.CalculateAmountDue(src.StartDate, src.EndDate, src.CarBooking!.Car!.Ppd, src.CarBooking.Car.Ppd)));
 
         // Map from UpdateBookingDTO to Booking Entity
         // This mapping is used when updating an existing booking with client-provided data.

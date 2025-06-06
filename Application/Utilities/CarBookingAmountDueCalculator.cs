@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Application.Utilities
 {
     /// <summary>
@@ -22,7 +23,7 @@ namespace Application.Utilities
         /// <param name="ppd">The price per day for the car.</param>
         /// <param name="pph">The price per hour for the car.</param>
         /// <returns>The total decimal amount due for the car booking.</returns>
-        public decimal CalculateAmountDue( DateTime startDate,DateTime endDate, decimal ppd, decimal pph)
+        public static decimal CalculateAmountDue( DateTime startDate,DateTime endDate, decimal ppd, decimal pph)
         {
             var duration = endDate - startDate;
             var hours = duration.TotalHours;
@@ -36,14 +37,12 @@ namespace Application.Utilities
                 // Add the cost for full days.
                 AmountDue += days * ppd;
                 // Subtract the hours accounted for by full days from the total hours.
-                hours = hours - days * 24;
+                hours -= days * 24;
             }
             // Add the cost for any remaining partial hours (rounded down to the nearest whole hour).
             AmountDue += ((int)hours) * pph;
             return AmountDue;
 
-                                  
-        
         }
     }
 }
