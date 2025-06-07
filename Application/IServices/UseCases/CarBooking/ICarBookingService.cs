@@ -12,5 +12,6 @@ namespace Application.IServices.UseCases
         Task DeleteCarBookingAsync(int id);
         Task<IEnumerable<GetCarBookingDTO>> GetAllCarBookingsAsync();
         Task<GetCarBookingDTO> GetCarBookingByIdAsync(int id);
+        Task<IEnumerable<GetCarBookingDTO>> GetCarBookingsByDateIntervalAsync(DateTime startDate, DateTime endDate);
     }
 }

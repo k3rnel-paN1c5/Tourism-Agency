@@ -1,21 +1,20 @@
-﻿using System;
-using Domain.Entities;
-using Application.DTOs.Car;
+﻿using Application.DTOs.Car;
 using Application.IServices.UseCases;
 using AutoMapper;
+using Domain.Entities;
 using Domain.IRepositories;
 
 
 
 namespace Application.Services.UseCases
 {
-    public class CarService: ICarService
+    public class CarService : ICarService
     {
         private readonly IRepository<Car, int> _repo;
         private readonly IMapper _mapper;
         private readonly ICategoryService _categoryService;
 
-        public CarService(IMapper mapper ,IRepository<Car, int> repo , ICategoryService categoryService)
+        public CarService(IMapper mapper, IRepository<Car, int> repo, ICategoryService categoryService)
         {
 
             _mapper = mapper;
@@ -29,9 +28,9 @@ namespace Application.Services.UseCases
                 ?? throw new Exception($"Category {dto.CategoryId} was not found");
 
             var car = _mapper.Map<Car>(dto);
-            
-            car.Category=_mapper.Map<Category>(category); //remove later if found unnecessary 
-            
+
+            car.Category = _mapper.Map<Category>(category); //remove later if found unnecessary 
+
 
             await _repo.AddAsync(car);
             await _repo.SaveAsync();
@@ -47,7 +46,7 @@ namespace Application.Services.UseCases
 
             var car = _mapper.Map<Car>(dto);
             car.Category = _mapper.Map<Category>(category);
-             _repo.Update(car);
+            _repo.Update(car);
             await _repo.SaveAsync();
 
 
@@ -62,14 +61,14 @@ namespace Application.Services.UseCases
 
         public async Task<IEnumerable<GetCarDTO>> GetAllCarsAsync()
         {
-            var cars= await _repo.GetAllAsync();
+            var cars = await _repo.GetAllAsync();
             return _mapper.Map<IEnumerable<GetCarDTO>>(cars);
 
         }
 
         public async Task<GetCarDTO> GetCarByIdAsync(int id)
         {
-            var car= await _repo.GetByIdAsync(id)
+            var car = await _repo.GetByIdAsync(id)
                 ?? throw new Exception($"Category {id} was not found");
             return _mapper.Map<GetCarDTO>(car);
         }
@@ -82,9 +81,20 @@ namespace Application.Services.UseCases
 
         }
 
-        public Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
         {
-            return GetAllCarsAsync();
+            var availableCars = await _repo.GetAllByPredicateAsync(car =>
+            
+            !car.CarBookings.Any(cb =>
+            cb.Booking.StartDate < endDate &&
+            cb.Booking.EndDate > startDate)
+            &&
+      
+            !car.TripPlanCars.Any(tpc =>
+            tpc.TripPlan.StartDate < endDate &&
+            tpc.TripPlan.EndDate > startDate));
+
+            return _mapper.Map<IEnumerable<GetCarDTO>>(availableCars);
         }
     }
 }
