@@ -30,7 +30,7 @@ namespace Application.MappingProfiles
                 .ForMember(dest => dest.AmountPaid, opt => opt.MapFrom(_ => 0))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(_ => PaymentStatus.Pending))
                 .ForMember(dest => dest.PaymentDate, opt => opt.Ignore())
-                .ForMember(dest => dest.Notes, opt => opt.Ignore());
+                .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => string.Empty));
 
             // Map from UpdatePaymentStatusDTO -> Payment
             CreateMap<UpdatePaymentStatusDTO, Payment>()

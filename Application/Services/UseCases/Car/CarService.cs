@@ -13,17 +13,13 @@ namespace Application.Services.UseCases
         private readonly IRepository<Car, int> _repo;
         private readonly IMapper _mapper;
         private readonly ICategoryService _categoryService;
-        private readonly ICarBookingService _carBookingService;
-        private readonly ITripPlanService _tripPlanService;
 
-        public CarService(IMapper mapper, IRepository<Car, int> repo, ICategoryService categoryService, ICarBookingService carBookingService, ITripPlanService tripPlanService)
+        public CarService(IMapper mapper, IRepository<Car, int> repo, ICategoryService categoryService)
         {
 
             _mapper = mapper;
             _repo = repo;
             _categoryService = categoryService;
-            _carBookingService = carBookingService;
-            _tripPlanService = tripPlanService;
         }
 
         public async Task<GetCarDTO> CreateCarAsync(CreateCarDTO dto)
@@ -87,31 +83,16 @@ namespace Application.Services.UseCases
 
         public async Task<IEnumerable<GetCarDTO>> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
         {
-            if (startDate >= endDate)
-            {
-                throw new ArgumentException("Start date must be before end date.");
-            }
-
-            var allCars = await _repo.GetAllAsync();
-            var bookedCarIds = new HashSet<int>();
-
-            var CarBookings = await _carBookingService.GetCarBookingsByDateIntervalAsync(startDate, endDate);
-            foreach (var b in CarBookings)
-            {
-                bookedCarIds.Add(b.CarId);
-            }
-            var TripPlans = await _tripPlanService.GetTripPlansByDateIntervalAsync(startDate, endDate);
-            foreach (var tp in TripPlans)
-            {
-                if (tp.TripPlanCars != null)
-                {
-                    foreach (var tpc in tp.TripPlanCars)
-                    {
-                        bookedCarIds.Add(tpc.CarId);
-                    }
-                }
-            }
-            var availableCars = allCars.Where(car => !bookedCarIds.Contains(car.Id));
+            var availableCars = await _repo.GetAllByPredicateAsync(car =>
+            
+            !car.CarBookings.Any(cb =>
+            cb.Booking.StartDate < endDate &&
+            cb.Booking.EndDate > startDate)
+            &&
+      
+            !car.TripPlanCars.Any(tpc =>
+            tpc.TripPlan.StartDate < endDate &&
+            tpc.TripPlan.EndDate > startDate));
 
             return _mapper.Map<IEnumerable<GetCarDTO>>(availableCars);
         }
