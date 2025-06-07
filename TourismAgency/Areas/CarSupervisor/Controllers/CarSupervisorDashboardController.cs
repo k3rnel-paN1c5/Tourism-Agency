@@ -166,8 +166,26 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
             }
         }
 
+        [HttpGet("AvailableCars")]
+        public async Task<IActionResult> GetAvailableCarsAsync(DateTime startDate,DateTime endDate)
+        {
+            try
+            {
+                var result = await _carService.GetAvailableCarsAsync(startDate , endDate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "Failed to retrieve available cars",
+                    Details = ex.Message
+                });
+            }
+        }
+
         //* Cars *//
-        
+
         [HttpGet("carbooking")]
         public async Task<IActionResult> GetCarBookings()
         {

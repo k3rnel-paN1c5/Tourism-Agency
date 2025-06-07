@@ -56,7 +56,7 @@ namespace Application.DTOs.CarBooking
         /// Gets or sets the ID of the car associated with this booking.
         /// </summary>
         [Display(Name = "Car")]
-        public string? CarId { get; set; }
+        public int CarId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the car booking includes a driver.

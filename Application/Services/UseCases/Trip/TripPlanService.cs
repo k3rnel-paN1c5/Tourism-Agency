@@ -8,6 +8,7 @@ using Application.DTOs.TripPlanCar;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 using System.Xml;
+using Application.DTOs.CarBooking;
 
 namespace Application.Services.UseCases;
 
@@ -322,4 +323,22 @@ public class TripPlanService : ITripPlanService
             throw;
         }
     }
+
+    public async Task<IEnumerable<GetTripPlanDTO>> GetTripPlansByDateIntervalAsync(DateTime startDate, DateTime endDate)
+    {
+        if (startDate >= endDate)
+        {
+            throw new ArgumentException("Start date must be before end date.");
+        }
+
+        var tripPlans = await _tripPlanRepository.GetAllByPredicateAsync(tp =>
+            
+            tp.EndDate > startDate &&
+            tp.StartDate < endDate
+        );
+        return _mapper.Map<IEnumerable<GetTripPlanDTO>>(tripPlans);
+    }
+
+
+
 }

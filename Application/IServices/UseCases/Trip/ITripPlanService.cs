@@ -69,4 +69,6 @@ public interface ITripPlanService
     /// <exception cref="KeyNotFoundException">Thrown if the trip plan car with the specified ID is not found.</exception>
     /// <exception cref="InvalidOperationException">Thrown if the trip plan car does not belong to a valid trip plan or if the trip plan has no cars to remove.</exception>
     Task RemoveCarFromTripPlanAsync(int id);
+
+    Task<IEnumerable<GetTripPlanDTO>> GetTripPlansByDateIntervalAsync(DateTime startDate, DateTime endDate);
 }
