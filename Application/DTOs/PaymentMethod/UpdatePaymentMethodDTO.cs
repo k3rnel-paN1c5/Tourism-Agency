@@ -11,7 +11,8 @@ namespace DTO.PaymentMethod
     {
         [Required(ErrorMessage = "Payment method ID is required")]
         public int Id { get; set; }
-        public string? Method { get; set; }
-        public string? Icon { get; set; }
+        public string Method { get; set; } = string.Empty;
+        public string Icon { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
     }
 }
