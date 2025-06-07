@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 namespace Application.IServices.UseCases
 {
     public interface IPaymentMethodService
-    {
-        Task<ReturnPaymentMethodDTO> CreatePaymentMethodAsync(CreatePaymentMethodDTO paymentMethodDto);
-        Task<ReturnPaymentMethodDTO> GetPaymentMethodByIdAsync(int id);
-        Task<IEnumerable<ReturnPaymentMethodDTO>> GetAllPaymentMethodsAsync();
-        Task<ReturnPaymentMethodDTO> UpdatePaymentMethodAsync(UpdatePaymentMethodDTO paymentMethodDto);
-        Task<bool> DeletePaymentMethodAsync(int id);
-    }
+{
+    Task<IEnumerable<ReturnPaymentMethodDTO>> GetAllPaymentMethodsAsync();
+    Task<IEnumerable<ReturnPaymentMethodDTO>> GetActivePaymentMethodsAsync();
+    Task<ReturnPaymentMethodDTO> GetPaymentMethodByIdAsync(int id);
+    Task<ReturnPaymentMethodDTO> CreatePaymentMethodAsync(CreatePaymentMethodDTO dto);
+    Task UpdatePaymentMethodAsync(UpdatePaymentMethodDTO dto);
+    Task DeletePaymentMethodAsync(int id);
+}
+
 }

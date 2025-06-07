@@ -29,6 +29,12 @@ public partial class PaymentMethod
     [Column("icon", TypeName = "nvarchar(50)")]
     public string? Icon { get; set; }
 
+    /// <summary>
+    /// Indicates whether the payment method is currently active and available for use.
+    /// </summary>
+    [Column("is_active")]
+    public bool IsActive { get; set; } = true;
+
 
     // Navigation Properties
     
@@ -37,4 +43,3 @@ public partial class PaymentMethod
     /// </summary>
     public virtual ICollection<PaymentTransaction>? PaymentTransactions { get; set; }
 }
-
