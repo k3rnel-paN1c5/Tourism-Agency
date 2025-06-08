@@ -155,7 +155,6 @@ export default function TripSupervisorDashboard() {
   const regionColumns = [
     { header: 'ID', key: 'id' },
     { header: 'Name', key: 'name' },
-    { header: 'Description', key: 'description' },
   ];
 
   const tripColumns = [

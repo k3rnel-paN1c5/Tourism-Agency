@@ -11,19 +11,6 @@ const TripForm = ({ onSubmit, initialData, isLoading }) => {
     isPrivate: false,
   });
 
-  // const [regions, setRegions] = useState([]); // If fetching regions here
-  // useEffect(() => {
-  //   const loadRegions = async () => {
-  //     try {
-  //       const data = await regionService.getRegions();
-  //       setRegions(data || []);
-  //     } catch (error) {
-  //       console.error("Failed to load regions for trip form", error);
-  //     }
-  //   };
-  //   loadRegions();
-  // }, []);
-
 
   useEffect(() => {
     if (initialData) {

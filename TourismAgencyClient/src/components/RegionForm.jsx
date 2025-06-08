@@ -6,7 +6,6 @@ const RegionForm = ({ onSubmit, initialData, isLoading }) => {
   useEffect(() => {
     if (initialData) {
       setName(initialData.name || '');
-      setDescription(initialData.description || '');
     } else {
       setName('');
     }
@@ -26,6 +25,7 @@ const RegionForm = ({ onSubmit, initialData, isLoading }) => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          maxLength="100"
           required
           className="auth-input"
           placeholder="e.g., Coastal Area"

@@ -17,7 +17,7 @@ export default function Login() {
       await authService.login(email, password, rememberMe);
       navigate('/dashboard');
     } catch (error) {
-      isLoading = false;
+      setIsLoading(false);
       alert('Login failed: ' + (error.response?.data?.message || 'Unknown error'));
     }
   };
