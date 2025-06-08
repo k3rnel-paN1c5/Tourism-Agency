@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace DTO.PaymentMethod
 {
-   public class ReturnPaymentMethodDTO
+    public class ReturnPaymentMethodDTO
     {
         public int Id { get; set; }
-        public string Method { get; set; } = string.Empty;  // e.g., "Credit Card", "PayPal", "Bank Transfer"
-        public string Icon { get; set; } = string.Empty;   // Icon URL or CSS class
+        public string Method { get; set; } = string.Empty;
+        public string Icon { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
     }
 }

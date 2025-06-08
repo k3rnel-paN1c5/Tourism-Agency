@@ -44,8 +44,6 @@ namespace Application.Services.UseCases
             }
 
             var paymentMethod = _mapper.Map<PaymentMethod>(paymentMethodDto);
-            paymentMethod.Method = paymentMethodDto.Method.Trim();
-            paymentMethod.Icon = paymentMethodDto.Icon?.Trim() ?? string.Empty;
 
             await _paymentMethodRepository.AddAsync(paymentMethod);
             await _paymentMethodRepository.SaveAsync();
@@ -86,7 +84,6 @@ namespace Application.Services.UseCases
             var paymentMethod = await _paymentMethodRepository.GetByIdAsync(paymentMethodDto.Id);
             if (paymentMethod == null)
             {
-                _logger.LogWarning("Payment method {Id} not found for update", paymentMethodDto.Id);
                 throw new KeyNotFoundException($"Payment method with ID {paymentMethodDto.Id} not found");
             }
 
@@ -101,17 +98,10 @@ namespace Application.Services.UseCases
                 {
                     throw new InvalidOperationException($"Payment method '{paymentMethodDto.Method}' already exists");
                 }
-                paymentMethod.Method = paymentMethodDto.Method.Trim();
             }
 
-            // Update other fields
-            if (!string.IsNullOrEmpty(paymentMethodDto.Icon))
-            {
-                paymentMethod.Icon = paymentMethodDto.Icon.Trim();
-            }
-
-            // Always update IsActive as it's a boolean with a default value
-            paymentMethod.IsActive = paymentMethodDto.IsActive;
+            // Use AutoMapper to update the entity
+            _mapper.Map(paymentMethodDto, paymentMethod);
 
             _paymentMethodRepository.Update(paymentMethod);
             await _paymentMethodRepository.SaveAsync();
@@ -144,13 +134,11 @@ namespace Application.Services.UseCases
             return true;
         }
 
-        //switches the IsActive status of a payment method
         public async Task<ReturnPaymentMethodDTO> TogglePaymentMethodStatusAsync(int id)
         {
             var paymentMethod = await _paymentMethodRepository.GetByIdAsync(id);
             if (paymentMethod == null)
             {
-                _logger.LogWarning("Payment method {Id} not found for status toggle", id);
                 throw new KeyNotFoundException($"Payment method with ID {id} not found");
             }
 
