@@ -6,15 +6,22 @@ namespace Domain.Enums;
 public enum TransactionType
 {
     /// <summary>
-    /// A deposit transaction.
+    /// A deposit/down payment transaction (partial payment).
     /// </summary>
     Deposit,
+    
     /// <summary>
-    /// A final payment transaction.
+    /// A full payment transaction (complete payment).
+    /// </summary>
+    Payment,
+    
+    /// <summary>
+    /// A final payment transaction (remaining balance).
     /// </summary>
     Final,
+    
     /// <summary>
-    /// A refund transaction.
+    /// A refund transaction (money returned to customer).
     /// </summary>
     Refund
 }
