@@ -62,24 +62,6 @@ namespace Application.Services.UseCases
             await _paymentTransactionRepository.AddAsync(transaction);
             await _paymentTransactionRepository.SaveAsync();
 
-            // Update payment amount if this is a payment transaction
-            if (transactionDto.TransactionType == TransactionType.Payment || 
-                transactionDto.TransactionType == TransactionType.Deposit || 
-                transactionDto.TransactionType == TransactionType.Final)
-            {
-                payment.AmountPaid += transactionDto.Amount;
-                if (payment.AmountPaid >= payment.AmountDue)
-                {
-                    payment.Status = PaymentStatus.Paid;
-                }
-                else if (payment.AmountPaid > 0)
-                {
-                    payment.Status = PaymentStatus.PartiallyPaid;
-                }
-                
-                _paymentRepository.Update(payment);
-                await _paymentRepository.SaveAsync();
-            }
 
             _logger.LogInformation("Created payment transaction {TransactionId} for payment {PaymentId}", 
                 transaction.Id, transactionDto.PaymentId);
