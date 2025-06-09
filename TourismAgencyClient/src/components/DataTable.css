@@ -1,3 +1,5 @@
+/* src/components/DataTable.css */
+
 .data-table-container {
   background: linear-gradient(145deg, #121b2c, #0f172a);
   border-radius: 15px;
@@ -67,8 +69,19 @@
   background-color: #161e2e; /* Subtle hover effect */
 }
 
+
+.data-table th:last-child,
+.data-table td:last-child {
+  text-align: center;
+  width: 150px; /* Fixed width for the actions column */
+  white-space: nowrap; /* Prevents content from wrapping */
+}
+
+
+/* Modified to align buttons to the right */
 .actions-cell {
   display: flex;
+  justify-content: flex-end;
   gap: 0.75rem;
 }
 

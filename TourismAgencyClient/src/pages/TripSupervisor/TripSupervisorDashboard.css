@@ -1,76 +1,22 @@
-/* General container styling similar to Customer Dashboard */
-.trip-supervisor-dashboard-container {
-  background-color: #0d1117; /* Consistent background */
-  min-height: 100vh;
-  padding: 2rem;
-  color: #e0e0e0; /* Default text color */
+/* General dashboard container styles */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #0D1117;
 }
 
-/* .dashboard-wrapper is reused from Customer/Dashboard.css for max-width and centering if global */
-/* If not global, define it here: */
-.dashboard-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
+/* Main content area styling */
+.dashboard-main-content {
+    flex-grow: 1;
+    padding: 2rem;
+    overflow-y: auto;
 }
 
-.error-message {
-  color: #ff4d4f; /* Red for errors */
-  background-color: rgba(255, 77, 79, 0.1);
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  border: 1px solid #ff4d4f;
-  text-align: center;
-}
-
-.loading-message {
-  color: #4da6ff; /* Blue for loading */
-  text-align: center;
-  font-size: 1.2rem;
-  padding: 1rem;
-}
-
-/* Styling for the forms within modals will largely come from Modal.css
-   and reused classes like .auth-form, .input-group, etc.
-   We ensure consistency with AuthPage, Login, Register styles.
-*/
-
-/* Styles for the .grid .grid-cols-2 .gap-4 used in TripForm will be picked up
-   if Register.css is loaded globally or those styles are made available.
-   If not, you might need to add them here or to a global CSS file:
-*/
-.grid {
-  display: grid;
-}
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-.gap-4 {
-  gap: 1rem; /* Or 1.5rem as in Register.css */
-}
-
-/* Ensure textareas in forms also get the .auth-input styling */
-textarea.auth-input {
-  min-height: 80px; /* Example height */
-  resize: vertical; /* Allow vertical resize */
-}
-
-select.auth-input {
- appearance: none; /* For custom arrow if desired, or default styling */
- background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
- background-repeat: no-repeat;
- background-position: right .7em top 50%;
- background-size: .65em auto;
- padding-right: 2.5em; /* Make space for arrow */
-}
-
-select.auth-input:required:invalid {
-  color: #5a6478; /* Placeholder color for "Select Region" etc. */
-}
-select.auth-input option[value=""] {
-  color: #5a6478;
-}
-select.auth-input option {
-  color: #ffffff; /* Or your input text color */
-  background-color: #161e2e; /* Dropdown option background */
+/* Grid container for the dashboard blocks */
+.dashboard-blocks {
+    display: grid;
+    /* Creates a responsive grid that adjusts the number of columns based on width */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
 }

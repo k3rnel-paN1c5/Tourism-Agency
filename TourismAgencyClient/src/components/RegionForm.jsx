@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const RegionForm = ({ onSubmit, initialData, isLoading }) => {
+const RegionForm = ({ onSubmit, initialData, isLoading, error }) => {
   const [name, setName] = useState('');
 
   useEffect(() => {
@@ -13,11 +13,19 @@ const RegionForm = ({ onSubmit, initialData, isLoading }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ name });
+    const submissionData = { name };
+    
+
+    if (initialData && initialData.id) {
+      submissionData.id = initialData.id;
+    }
+    
+    onSubmit(submissionData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="auth-form"> 
+     {error && <p className="error-message">{error}</p>}
       <div className="input-group">
         <label htmlFor="regionName" className="input-label">Region Name</label>
         <input

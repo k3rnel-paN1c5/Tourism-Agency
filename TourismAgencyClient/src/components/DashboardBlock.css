@@ -1,0 +1,49 @@
+/* Styling for each navigation block */
+.dashboard-block {
+    background-color: #121B2C;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none; /* Removes underline from links */
+    color: inherit; /* Makes link text color same as parent */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Hover effect for blocks */
+.dashboard-block:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-block h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.75rem;
+    color: #ffffff;
+}
+
+.dashboard-block p {
+    color: #aaaaaa;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Special styling for the empty/placeholder block */
+.dashboard-block.empty {
+    background-color: #121B2C;
+    border: 2px dashed #dee2e6;
+    cursor: default;
+}
+
+.dashboard-block.empty:hover {
+    transform: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-block.empty h2,
+.dashboard-block.empty p {
+    color: #adb5bd;
+}

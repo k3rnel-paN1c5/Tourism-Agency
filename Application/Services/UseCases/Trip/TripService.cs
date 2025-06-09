@@ -59,8 +59,8 @@ public class TripService : ITripService
 
             // Check for duplicate name or slug
             var existingTrip = await _tripRepository.GetByPredicateAsync(t =>
-                    string.Equals(t.Name, createTripDto.Name, StringComparison.CurrentCultureIgnoreCase)
-                || string.Equals(t.Slug, createTripDto.Slug, StringComparison.CurrentCultureIgnoreCase))
+                    t.Name.ToLower().Equals(createTripDto.Name.ToLower())
+                || t.Slug.ToLower().Equals(createTripDto.Slug.ToLower()))
                 .ConfigureAwait(false);
 
             if (existingTrip is not null)
@@ -158,7 +158,7 @@ public class TripService : ITripService
 
             if (!string.Equals(updateTripDto.Slug, existingTrip.Slug, StringComparison.OrdinalIgnoreCase))
             {
-                var tripWithSameSlug = await _tripRepository.GetByPredicateAsync(t => !string.Equals(t.Slug, updateTripDto.Slug, StringComparison.CurrentCultureIgnoreCase) && t.Id != updateTripDto.Id).ConfigureAwait(false);
+                var tripWithSameSlug = await _tripRepository.GetByPredicateAsync(t => t.Slug.ToLower().Equals(updateTripDto.Slug.ToLower()) && t.Id != updateTripDto.Id).ConfigureAwait(false);
                 if (tripWithSameSlug is not null)
                 {
                     _logger.LogWarning("A trip with slug '{Slug}' already exists. Update failed for trip ID {TripId}.", updateTripDto.Slug, updateTripDto.Id);

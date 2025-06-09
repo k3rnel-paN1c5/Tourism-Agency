@@ -4,6 +4,10 @@ import CustomerDashboard from '../pages/Customer/CustomerDashboard';
 import TripSupervisorDashboard from '../pages/TripSupervisor/TripSupervisorDashboard';
 import NotFound from '../pages/NotFound';
 
+import RegionManagementPage from '../pages/TripSupervisor/RegionManagementPage';
+import TripManagementPage from '../pages/TripSupervisor/TripManagementPage';
+import TripPlanManagementPage from '../pages/TripSupervisor/TripPlanManagementPage';
+
 
 export default function AppRoutes() {
   return (
@@ -11,7 +15,12 @@ export default function AppRoutes() {
       <Route path="/login" element={<AuthPage />} />
       <Route path="/register" element={<AuthPage />} />
       <Route path="/dashboard" element={<CustomerDashboard />} />
-      <Route path="/TripDashboard" element={<TripSupervisorDashboard />} />
+
+      <Route path="/trip-dashboard" element={<TripSupervisorDashboard />} />
+      <Route path="/trip-supervisor/regions" element={<RegionManagementPage />} />
+      <Route path="/trip-supervisor/trips" element={<TripManagementPage />} />
+      <Route path="/trip-supervisor/trip-plans" element={<TripPlanManagementPage />} />
+
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

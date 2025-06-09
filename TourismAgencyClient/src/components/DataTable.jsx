@@ -28,8 +28,8 @@ const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLab
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
-              <tr key={item.id}>
+            {data.map((item, i) => (
+              <tr key={i}>
                 {columns.map((col) => (
                   <td key={`${item.id}-${col.key}`}>{item[col.key]}</td>
                 ))}

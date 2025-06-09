@@ -1,0 +1,43 @@
+.error-message-container {
+    background-color: #ffebee; /* Light red background */
+    color: #c62828; /* Dark red text */
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #ef9a9a; /* Lighter red border */
+    margin: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.error-message-container p {
+    margin: 0;
+    font-weight: 500;
+}
+
+.error-clear-button {
+    background: none;
+    border: none;
+    color: #c62828;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.error-clear-button:hover {
+    color: #b71c1c; /* Even darker red on hover */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
