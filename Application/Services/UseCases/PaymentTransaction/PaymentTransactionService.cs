@@ -150,8 +150,7 @@ namespace Application.Services.UseCases
                 throw new KeyNotFoundException($"Payment transaction with ID {transactionDto.Id} not found");
             }
 
-            // Only allow updating reference and notes, not core transaction data
-            transaction.TransactionReference = transactionDto.TransactionReference;
+            // Only allow updating notes, not core transaction data
             transaction.Notes = transactionDto.Notes;
 
             _paymentTransactionRepository.Update(transaction);

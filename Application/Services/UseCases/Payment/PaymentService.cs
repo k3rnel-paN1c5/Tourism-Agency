@@ -7,9 +7,6 @@ using Application.DTOs.PaymentTransaction;
 using Application.Services.Validation;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Application.Services.UseCases
 {
@@ -49,144 +46,21 @@ namespace Application.Services.UseCases
             return _mapper.Map<ReturnPaymentDTO>(payment);
         }
 
-        // NEW: Comprehensive validation method
-        private async Task<(Payment payment, PaymentMethod paymentMethod)> ValidatePaymentAndMethodAsync(
-            int paymentId, 
-            int paymentMethodId, 
-            string operationType = "transaction")
-        {
-            // Validate payment exists
-            var payment = await _paymentRepository.GetByIdAsync(paymentId);
-            if (payment == null)
-            {
-                _logger.LogWarning("Payment {PaymentId} not found for {OperationType}", paymentId, operationType);
-                throw new KeyNotFoundException($"Payment with ID {paymentId} not found");
-            }
-
-            // Validate payment method exists and is active
-            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(paymentMethodId);
-            if (paymentMethod == null)
-            {
-                _logger.LogWarning("Payment method {PaymentMethodId} not found for {OperationType}", paymentMethodId, operationType);
-                throw new KeyNotFoundException($"Payment method with ID {paymentMethodId} not found");
-            }
-
-            if (!paymentMethod.IsActive)
-            {
-                _logger.LogWarning("Inactive payment method {PaymentMethodId} used for {OperationType}", paymentMethodId, operationType);
-                throw new InvalidOperationException($"Payment method '{paymentMethod.Method}' is not active");
-            }
-
-            // Additional payment status validations
-            ValidatePaymentStatusForOperation(payment, operationType);
-
-            return (payment, paymentMethod);
-        }
-
-        // NEW: Payment status validation based on operation type
-        private void ValidatePaymentStatusForOperation(Payment payment, string operationType)
-        {
-            switch (operationType.ToLower())
-            {
-                case "payment":
-                case "deposit":
-                case "final":
-                    if (payment.Status == PaymentStatus.Refunded)
-                    {
-                        throw new InvalidOperationException("Cannot process payment for fully refunded payments");
-                    }
-                    if (payment.Status == PaymentStatus.Paid && operationType != "final")
-                    {
-                        _logger.LogWarning("Attempting to process payment for already paid payment {PaymentId}", payment.Id);
-                        // Could be a warning instead of exception based on business rules
-                    }
-                    break;
-
-                case "refund":
-                    if (payment.Status == PaymentStatus.Pending)
-                    {
-                        throw new InvalidOperationException("Cannot refund pending payments - no payments have been made");
-                    }
-                    if (payment.Status == PaymentStatus.Refunded)
-                    {
-                        throw new InvalidOperationException("Payment is already fully refunded");
-                    }
-                    if (payment.AmountPaid <= 0)
-                    {
-                        throw new InvalidOperationException("Cannot refund - no payments have been made");
-                    }
-                    break;
-
-                default:
-                    // General validation for other operations
-                    break;
-            }
-        }
-
-        // NEW: Additional business rule validations
-        private void ValidateBusinessRules(Payment payment, decimal amount, TransactionType transactionType)
-        {
-            switch (transactionType)
-            {
-                case TransactionType.Payment:
-                    if (amount != payment.AmountDue)
-                    {
-                        throw new InvalidOperationException($"Full payment amount must equal total amount due ({payment.AmountDue:C})");
-                    }
-                    break;
-
-                case TransactionType.Deposit:
-                    var maxDepositAmount = payment.AmountDue * 0.8m; // 80% max deposit rule
-                    if (amount > maxDepositAmount)
-                    {
-                        throw new InvalidOperationException($"Deposit amount cannot exceed {maxDepositAmount:C} (80% of total amount)");
-                    }
-                    if (amount >= payment.AmountDue)
-                    {
-                        throw new InvalidOperationException("Deposit amount should be less than total amount due. Use 'Payment' type for full payment");
-                    }
-                    break;
-
-                case TransactionType.Final:
-                    var remainingBalance = payment.AmountDue - payment.AmountPaid;
-                    if (remainingBalance <= 0)
-                    {
-                        throw new InvalidOperationException("No remaining balance to pay");
-                    }
-                    if (amount != remainingBalance)
-                    {
-                        throw new InvalidOperationException($"Final payment amount must equal remaining balance ({remainingBalance:C})");
-                    }
-                    break;
-
-                case TransactionType.Refund:
-                    if (amount > payment.AmountPaid)
-                    {
-                        throw new InvalidOperationException($"Refund amount cannot exceed paid amount ({payment.AmountPaid:C})");
-                    }
-                    break;
-            }
-
-            // General amount validation
-            if (amount <= 0)
-            {
-                throw new ArgumentException("Transaction amount must be greater than zero");
-            }
-        }
-
-        // Updated ProcessPaymentAsync method
         public async Task<PaymentProcessResultDTO> ProcessPaymentAsync(ProcessPaymentDTO processPaymentDto)
         {
             try
             {
-                // Validate payment and payment method
-                var (payment, paymentMethod) = await ValidatePaymentAndMethodAsync(
-                    processPaymentDto.PaymentId, 
-                    processPaymentDto.PaymentMethodId, 
-                    processPaymentDto.TransactionType.ToString());
+                // Validate payment exists
+                var payment = await _validationService.ValidatePaymentExistsAsync(processPaymentDto.PaymentId);
 
-                // Additional business rule validations
-                ValidateBusinessRules(payment, processPaymentDto.Amount, processPaymentDto.TransactionType);
+                // Validate payment method exists and is active
+                var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(processPaymentDto.PaymentMethodId);
+
+                // Validate payment can receive payment
+                _validationService.ValidatePaymentCanReceivePayment(payment);
+
+                // Validate transaction amount
+                _validationService.ValidateTransactionAmount(processPaymentDto.Amount);
 
                 // Create transaction through PaymentTransactionService
                 var createTransactionDto = new CreatePaymentTransactionDTO
@@ -194,7 +68,7 @@ namespace Application.Services.UseCases
                     PaymentId = processPaymentDto.PaymentId,
                     PaymentMethodId = processPaymentDto.PaymentMethodId,
                     Amount = processPaymentDto.Amount,
-                    TransactionType = processPaymentDto.TransactionType,
+                    TransactionType = TransactionType.Payment,
                     TransactionReference = processPaymentDto.TransactionReference,
                     Notes = processPaymentDto.Notes
                 };
@@ -224,19 +98,21 @@ namespace Application.Services.UseCases
             }
         }
 
-        // Updated ProcessRefundAsync method
         public async Task<PaymentProcessResultDTO> ProcessRefundAsync(ProcessRefundDTO refundDto)
         {
             try
             {
-                // Validate payment and payment method
-                var (payment, paymentMethod) = await ValidatePaymentAndMethodAsync(
-                    refundDto.PaymentId, 
-                    refundDto.PaymentMethodId, 
-                    "refund");
+                // Validate payment exists
+                var payment = await _validationService.ValidatePaymentExistsAsync(refundDto.PaymentId);
 
-                // Additional business rule validations for refund
-                ValidateBusinessRules(payment, refundDto.Amount, TransactionType.Refund);
+                // Validate payment method exists and is active
+                var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(refundDto.PaymentMethodId);
+
+                // Validate payment can be refunded
+                _validationService.ValidatePaymentCanBeRefunded(payment);
+
+                // Validate refund amount
+                _validationService.ValidateRefundAmount(payment, refundDto.Amount);
 
                 // Create refund transaction
                 var createTransactionDto = new CreatePaymentTransactionDTO
@@ -272,7 +148,7 @@ namespace Application.Services.UseCases
                 throw;
             }
         }
-        
+
         private async Task UpdatePaymentStatusAfterTransaction(int paymentId)
         {
             var payment = await _paymentRepository.GetByIdAsync(paymentId);
@@ -309,13 +185,7 @@ namespace Application.Services.UseCases
 
         public async Task<ReturnPaymentDTO> GetPaymentByIdAsync(int paymentId)
         {
-            var payment = await _paymentRepository.GetByIdAsync(paymentId);
-            if (payment == null)
-            {
-                _logger.LogWarning("Payment {PaymentId} not found", paymentId);
-                throw new KeyNotFoundException($"Payment with ID {paymentId} not found");
-            }
-
+            var payment = await _validationService.ValidatePaymentExistsAsync(paymentId);
             return _mapper.Map<ReturnPaymentDTO>(payment);
         }
 
@@ -341,11 +211,7 @@ namespace Application.Services.UseCases
 
         public async Task<PaymentDetailsDTO> GetPaymentDetailsAsync(int paymentId)
         {
-            var payment = await _paymentRepository.GetByIdAsync(paymentId);
-            if (payment == null)
-            {
-                throw new KeyNotFoundException($"Payment with ID {paymentId} not found");
-            }
+            var payment = await _validationService.ValidatePaymentExistsAsync(paymentId);
 
             var paymentDetails = _mapper.Map<PaymentDetailsDTO>(payment);
             
