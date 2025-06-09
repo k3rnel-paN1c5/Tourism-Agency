@@ -23,6 +23,8 @@ public class PostService : IPostService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
     private readonly ILogger<PostService> _logger;
+    private readonly IPostTypeService _postTypeService;
+
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PostService"/> class.
@@ -32,19 +34,24 @@ public class PostService : IPostService
     /// <param name="httpContextAccessor">The accessor for the current HTTP context.</param>
     /// <param name="mapper">The AutoMapper instance for DTO-entity mapping.</param>
     /// <param name="logger">The logger for this service.</param>
+    /// <param name="postTypeService">The service responsible for managing post types.</param>
     public PostService(
         IRepository<Post, int> postRepository,
         IRepository<Employee, string> employeeRepository,
         IHttpContextAccessor httpContextAccessor,
         IMapper mapper,
-        ILogger<PostService> logger)
+        ILogger<PostService> logger,
+        IPostTypeService postTypeService
+        )
     {
         _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
         _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _postTypeService = postTypeService ?? throw new ArgumentNullException(nameof(postTypeService));
     }
+
 
     /// <inheritdoc />
     public async Task<GetPostDTO> CreatePostAsync(CreatePostDTO createPostDto)
@@ -72,6 +79,13 @@ public class PostService : IPostService
             }
 
             _logger.LogInformation("User ID retrieved successfully: {EmployeeId}", userIdClaim);
+
+            var postTypeExists = await _postTypeService.CheckIfPostTypeExistsAsync(createPostDto.PostTypeId).ConfigureAwait(false);
+            if (!postTypeExists)
+            {
+                _logger.LogWarning("Post type with ID {PostTypeId} does not exist. Please create it first.", createPostDto.PostTypeId);
+                throw new InvalidOperationException($"Post type with ID {createPostDto.PostTypeId} does not exist. Please create it first.");
+            }
 
             var postEntity = _mapper.Map<Post>(createPostDto);
             postEntity.EmployeeId = userIdClaim;
@@ -240,7 +254,7 @@ public class PostService : IPostService
     }
 
 
-    
+
     /// <inheritdoc />
     public async Task ApprovePostAsync(int id)
     {
@@ -503,6 +517,7 @@ public class PostService : IPostService
             throw;
         }
     }
+        
 
 
 }

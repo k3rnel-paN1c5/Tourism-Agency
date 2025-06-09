@@ -7,16 +7,20 @@ namespace Application.IServices.UseCases
     /// </summary>
     public interface IPostService
     {
-           
+
+
         /// <summary>
         /// Creates a new post asynchronously.
+        /// Ensures the specified PostType exists before proceeding.
         /// </summary>
         /// <param name="createPostDto">The DTO containing information for the new post.</param>
         /// <returns>A <see cref="GetPostDTO"/> representing the newly created post.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="createPostDto"/> is null.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the HTTP context is unavailable.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown if the user ID is missing from the request.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the specified PostType does not exist.</exception>
         public Task<GetPostDTO> CreatePostAsync(CreatePostDTO createPostDto);
+
 
         /// <summary>
         /// Retrieves a post by its unique identifier asynchronously.
