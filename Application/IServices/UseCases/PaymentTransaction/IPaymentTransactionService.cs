@@ -77,5 +77,19 @@ namespace Application.IServices.UseCases
         /// <param name="paymentId">The ID of the payment.</param>
         /// <returns>The total transaction amount for the payment.</returns>
         Task<decimal> GetTotalTransactionAmountByPaymentAsync(int paymentId);
+
+        /// <summary>
+        /// Deletes a payment transaction asynchronously.
+        /// </summary>
+        /// <param name="transactionId">The ID of the payment transaction to delete.</param>
+        /// <returns>True if the deletion was successful, otherwise false.</returns>
+        Task<bool> DeletePaymentTransactionAsync(int transactionId);
+
+        /// <summary>
+        /// Checks if a payment transaction exists asynchronously.
+        /// </summary>
+        /// <param name="transactionId">The ID of the payment transaction to check.</param>
+        /// <returns>True if the payment transaction exists, otherwise false.</returns>
+        Task<bool> PaymentTransactionExistsAsync(int transactionId);
     }
 }

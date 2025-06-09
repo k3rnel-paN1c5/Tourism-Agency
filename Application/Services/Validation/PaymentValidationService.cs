@@ -1,3 +1,4 @@
+using Application.IServices.Validation;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.IRepositories;
@@ -5,16 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Validation
 {
-    public interface IPaymentValidationService
-    {
-        Task<Payment> ValidatePaymentExistsAsync(int paymentId);
-        Task<PaymentMethod> ValidatePaymentMethodExistsAndActiveAsync(int paymentMethodId);
-        void ValidatePaymentCanReceivePayment(Payment payment);
-        void ValidatePaymentCanBeRefunded(Payment payment);
-        void ValidateTransactionAmount(decimal amount);
-        void ValidateRefundAmount(Payment payment, decimal refundAmount);
-    }
-
+    /// <summary>
+    /// Provides validation services for payment-related operations.
+    /// </summary>
     public class PaymentValidationService : IPaymentValidationService
     {
         private readonly IRepository<Payment, int> _paymentRepository;
