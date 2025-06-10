@@ -1,0 +1,22 @@
+/* General dashboard container styles */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #0D1117;
+}
+
+/* Main content area styling */
+.dashboard-main-content {
+    flex-grow: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+/* Grid container for the dashboard blocks */
+.dashboard-blocks {
+    display: grid;
+    /* Creates a responsive grid that adjusts the number of columns based on width */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
