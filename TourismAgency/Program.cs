@@ -18,6 +18,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
+using Application.Services.Validation;
+using Application.IServices.Validation;
 
 using System.Reflection;
 using Microsoft.Extensions.Options;
@@ -70,6 +72,9 @@ builder.Services.AddIdentity<User, IdentityRole>(
 
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
+// Validation Services
+builder.Services.AddScoped<IPaymentValidationService, PaymentValidationService>();
+
 // Services
 builder.Services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 builder.Services.AddScoped<IEmployeeAuthService, EmployeeAuthService>();
@@ -77,8 +82,12 @@ builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<ICarBookingService, CarBookingService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+
+// Payment Services
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
+builder.Services.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
+
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
 builder.Services.AddScoped<ITripPlanCarService, TripPlanCarService>();

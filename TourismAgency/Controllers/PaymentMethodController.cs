@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Application.IServices.UseCases;
-using DTO.PaymentMethod;
+using Application.DTOs.PaymentMethod;
 
 namespace TourismAgency.Controllers
 {

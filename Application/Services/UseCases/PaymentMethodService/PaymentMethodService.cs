@@ -1,7 +1,7 @@
 using Application.IServices.UseCases;
 using Domain.Entities;
 using Domain.IRepositories;
-using DTO.PaymentMethod;
+using Application.DTOs.PaymentMethod;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;

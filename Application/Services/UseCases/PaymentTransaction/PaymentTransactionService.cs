@@ -1,5 +1,6 @@
 using Application.DTOs.PaymentTransaction;
 using Application.IServices.UseCases;
+using Application.IServices.Validation;
 using Application.Services.Validation;
 using AutoMapper;
 using Domain.Entities;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace Application.Services.UseCases
 {
     public class PaymentTransactionService : IPaymentTransactionService
-    {
+     {
         private readonly IRepository<PaymentTransaction, int> _paymentTransactionRepository;
         private readonly IRepository<PaymentMethod, int> _paymentMethodRepository;
         private readonly IPaymentValidationService _validationService;
@@ -151,7 +152,7 @@ namespace Application.Services.UseCases
             }
 
             // Only allow updating notes, not core transaction data
-            transaction.Notes = transactionDto.Notes;
+            //transaction.Notes = transactionDto.Notes;
 
             _paymentTransactionRepository.Update(transaction);
             await _paymentTransactionRepository.SaveAsync();

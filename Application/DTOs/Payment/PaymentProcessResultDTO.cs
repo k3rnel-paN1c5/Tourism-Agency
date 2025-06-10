@@ -1,3 +1,5 @@
+using Application.DTOs.PaymentTransaction;
+
 namespace Application.DTOs.Payment
 {
     public class PaymentProcessResultDTO

@@ -4,7 +4,7 @@ using Domain.Enums;
 namespace Application.IServices.UseCases
 {
     /// <summary>
-    /// Defines the contract for payment transaction-related business logic operations.
+    /// Interface for payment transaction-related operations.
     /// </summary>
     public interface IPaymentTransactionService
     {
@@ -29,32 +29,32 @@ namespace Application.IServices.UseCases
         Task<ReturnPaymentTransactionDTO> GetPaymentTransactionByIdAsync(int transactionId);
 
         /// <summary>
-        /// Retrieves all payment transactions for a specific payment asynchronously.
+        /// Retrieves all transactions for a specific payment asynchronously.
         /// </summary>
         /// <param name="paymentId">The ID of the payment.</param>
-        /// <returns>A collection of payment transactions for the specified payment.</returns>
+        /// <returns>A collection of transactions for the specified payment.</returns>
         Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByPaymentIdAsync(int paymentId);
 
         /// <summary>
-        /// Retrieves all payment transactions by transaction type asynchronously.
+        /// Retrieves transactions by transaction type asynchronously.
         /// </summary>
         /// <param name="transactionType">The type of transactions to retrieve.</param>
-        /// <returns>A collection of payment transactions of the specified type.</returns>
+        /// <returns>A collection of transactions of the specified type.</returns>
         Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByTypeAsync(TransactionType transactionType);
 
         /// <summary>
-        /// Retrieves all payment transactions for a specific payment method asynchronously.
+        /// Retrieves transactions by payment method asynchronously.
         /// </summary>
         /// <param name="paymentMethodId">The ID of the payment method.</param>
-        /// <returns>A collection of payment transactions for the specified payment method.</returns>
+        /// <returns>A collection of transactions for the specified payment method.</returns>
         Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByPaymentMethodAsync(int paymentMethodId);
 
         /// <summary>
-        /// Retrieves payment transactions within a date range asynchronously.
+        /// Retrieves transactions within a specific date range asynchronously.
         /// </summary>
         /// <param name="startDate">The start date of the range.</param>
         /// <param name="endDate">The end date of the range.</param>
-        /// <returns>A collection of payment transactions within the specified date range.</returns>
+        /// <returns>A collection of transactions within the specified date range.</returns>
         Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByDateRangeAsync(DateTime startDate, DateTime endDate);
 
         /// <summary>
@@ -75,21 +75,7 @@ namespace Application.IServices.UseCases
         /// Calculates the total transaction amount for a specific payment asynchronously.
         /// </summary>
         /// <param name="paymentId">The ID of the payment.</param>
-        /// <returns>The total transaction amount for the payment.</returns>
+        /// <returns>The total transaction amount for the payment (payments minus refunds).</returns>
         Task<decimal> GetTotalTransactionAmountByPaymentAsync(int paymentId);
-
-        /// <summary>
-        /// Deletes a payment transaction asynchronously.
-        /// </summary>
-        /// <param name="transactionId">The ID of the payment transaction to delete.</param>
-        /// <returns>True if the deletion was successful, otherwise false.</returns>
-        Task<bool> DeletePaymentTransactionAsync(int transactionId);
-
-        /// <summary>
-        /// Checks if a payment transaction exists asynchronously.
-        /// </summary>
-        /// <param name="transactionId">The ID of the payment transaction to check.</param>
-        /// <returns>True if the payment transaction exists, otherwise false.</returns>
-        Task<bool> PaymentTransactionExistsAsync(int transactionId);
     }
 }
