@@ -1,6 +1,6 @@
 using AutoMapper;
 using Domain.Entities;
-using DTO.PaymentMethod;
+using Application.DTOs.PaymentMethod;
 
 namespace Application.MappingProfiles
 {

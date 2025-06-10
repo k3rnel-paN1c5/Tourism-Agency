@@ -4,7 +4,7 @@ using Domain.IRepositories;
 using Application.IServices.UseCases;
 using Application.DTOs.Payment;
 using Application.DTOs.PaymentTransaction;
-using Application.Services.Validation;
+using Application.IServices.Validation;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 
@@ -69,7 +69,7 @@ namespace Application.Services.UseCases
                     PaymentMethodId = processPaymentDto.PaymentMethodId,
                     Amount = processPaymentDto.Amount,
                     TransactionType = TransactionType.Payment,
-                    TransactionReference = processPaymentDto.TransactionReference,
+                    //TransactionReference = processPaymentDto.TransactionReference,
                     Notes = processPaymentDto.Notes
                 };
 

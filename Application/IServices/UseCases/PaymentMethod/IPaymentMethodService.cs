@@ -1,15 +1,26 @@
-using Domain.Entities;
 using Application.DTOs.PaymentMethod;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Application.IServices.UseCases
 {
     /// <summary>
-    /// Defines the contract for payment method-related business logic operations.
+    /// Interface for payment method-related operations.
     /// </summary>
     public interface IPaymentMethodService
     {
+        /// <summary>
+        /// Creates a new payment method asynchronously.
+        /// </summary>
+        /// <param name="paymentMethodDto">The payment method creation data.</param>
+        /// <returns>The created payment method information.</returns>
+        Task<ReturnPaymentMethodDTO> CreatePaymentMethodAsync(CreatePaymentMethodDTO paymentMethodDto);
+
+        /// <summary>
+        /// Retrieves a payment method by its ID asynchronously.
+        /// </summary>
+        /// <param name="id">The ID of the payment method to retrieve.</param>
+        /// <returns>The payment method information.</returns>
+        Task<ReturnPaymentMethodDTO> GetPaymentMethodByIdAsync(int id);
+
         /// <summary>
         /// Retrieves all payment methods asynchronously.
         /// </summary>
@@ -23,25 +34,11 @@ namespace Application.IServices.UseCases
         Task<IEnumerable<ReturnPaymentMethodDTO>> GetActivePaymentMethodsAsync();
 
         /// <summary>
-        /// Retrieves a payment method by its ID asynchronously.
+        /// Updates an existing payment method asynchronously.
         /// </summary>
-        /// <param name="id">The ID of the payment method to retrieve.</param>
-        /// <returns>The payment method information.</returns>
-        Task<ReturnPaymentMethodDTO> GetPaymentMethodByIdAsync(int id);
-
-        /// <summary>
-        /// Creates a new payment method asynchronously.
-        /// </summary>
-        /// <param name="dto">The payment method creation data.</param>
-        /// <returns>The created payment method information.</returns>
-        Task<ReturnPaymentMethodDTO> CreatePaymentMethodAsync(CreatePaymentMethodDTO dto);
-
-        /// <summary>
-        /// Updates payment method information asynchronously.
-        /// </summary>
-        /// <param name="dto">The payment method update data.</param>
+        /// <param name="paymentMethodDto">The payment method update data.</param>
         /// <returns>The updated payment method information.</returns>
-        Task<ReturnPaymentMethodDTO> UpdatePaymentMethodAsync(UpdatePaymentMethodDTO dto);
+        Task<ReturnPaymentMethodDTO> UpdatePaymentMethodAsync(UpdatePaymentMethodDTO paymentMethodDto);
 
         /// <summary>
         /// Deletes a payment method asynchronously.
@@ -51,17 +48,10 @@ namespace Application.IServices.UseCases
         Task<bool> DeletePaymentMethodAsync(int id);
 
         /// <summary>
-        /// Toggles the status of a payment method asynchronously.
+        /// Toggles the active status of a payment method asynchronously.
         /// </summary>
         /// <param name="id">The ID of the payment method to toggle.</param>
         /// <returns>The updated payment method information.</returns>
         Task<ReturnPaymentMethodDTO> TogglePaymentMethodStatusAsync(int id);
-
-        /// <summary>
-        /// Checks if a payment method exists asynchronously.
-        /// </summary>
-        /// <param name="id">The ID of the payment method to check.</param>
-        /// <returns>True if the payment method exists, otherwise false.</returns>
-        Task<bool> PaymentMethodExistsAsync(int id);
     }
 }
