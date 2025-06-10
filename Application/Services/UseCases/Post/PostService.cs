@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Application.DTOs.Post;
+using Application.DTOs.Tag;
 using Application.IServices.UseCases;
 using Application.Utilities;
 using AutoMapper;
@@ -18,19 +19,24 @@ namespace Application.Services.UseCases;
 /// </summary>
 public class PostService : IPostService
 {
-    private readonly IRepository<Post, int> _postRepository;
+    private readonly IRepository<Post, int> _postRepository; 
     private readonly IRepository<Employee, string> _employeeRepository;
+    private readonly IRepository<Tag, int> _tagRepository;
+    private readonly IRepository<PostTag, int> _postTagRepository;
+
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
     private readonly ILogger<PostService> _logger;
     private readonly IPostTypeService _postTypeService;
-
+    
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PostService"/> class.
     /// </summary>
     /// <param name="postRepository">The repository for Post entities.</param>
     /// <param name="employeeRepository">The repository for Employee entities.</param>
+    /// <param name="TagRepository">The repository for Tag entities.</param>
+    /// <param name="PostTagRepository">The repository for Tag entities.</param>
     /// <param name="httpContextAccessor">The accessor for the current HTTP context.</param>
     /// <param name="mapper">The AutoMapper instance for DTO-entity mapping.</param>
     /// <param name="logger">The logger for this service.</param>
@@ -38,6 +44,8 @@ public class PostService : IPostService
     public PostService(
         IRepository<Post, int> postRepository,
         IRepository<Employee, string> employeeRepository,
+        IRepository<Tag, int> tagRepository,
+        IRepository<PostTag, int> postTagRepository,
         IHttpContextAccessor httpContextAccessor,
         IMapper mapper,
         ILogger<PostService> logger,
@@ -46,6 +54,8 @@ public class PostService : IPostService
     {
         _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
         _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
+        _tagRepository = tagRepository ?? throw new ArgumentNullException(nameof(tagRepository));
+        _postTagRepository = postTagRepository ?? throw new ArgumentNullException(nameof(postTagRepository));
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -195,7 +205,6 @@ public class PostService : IPostService
         }
     }
 
-
     /// <inheritdoc />
     public async Task SubmitPostAsync(int id)
     {
@@ -252,8 +261,6 @@ public class PostService : IPostService
             throw;
         }
     }
-
-
 
     /// <inheritdoc />
     public async Task ApprovePostAsync(int id)
@@ -436,15 +443,29 @@ public class PostService : IPostService
 
         try
         {
-            var existingPost = await _postRepository.GetByIdAsync(updatePostDto.Id).ConfigureAwait(false);
+            var httpContext = _httpContextAccessor.HttpContext
+                ?? throw new InvalidOperationException("HTTP context is unavailable.");
 
+            var currentUserId = httpContext.User.FindFirst("UserId")?.Value;
+            if (currentUserId is null)
+            {
+                _logger.LogWarning("Unauthorized update attempt for post ID {Id}. No valid user session found.", updatePostDto.Id);
+                throw new UnauthorizedAccessException("User authentication is required to update a post.");
+            }
+
+            var existingPost = await _postRepository.GetByIdAsync(updatePostDto.Id).ConfigureAwait(false);
             if (existingPost is null)
             {
                 _logger.LogWarning("Post with ID {Id} was not found for update.", updatePostDto.Id);
                 throw new KeyNotFoundException($"Post with ID {updatePostDto.Id} was not found.");
             }
 
-            // Validate consistency between Title, Body, and Summary
+            if (!string.Equals(currentUserId, existingPost.EmployeeId, StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning("Unauthorized update attempt for post ID {Id} by user {UserId}.", updatePostDto.Id, currentUserId);
+                throw new UnauthorizedAccessException("You are not authorized to update this post.");
+            }
+
             if (!string.Equals(existingPost.Title, updatePostDto.Title, StringComparison.OrdinalIgnoreCase))
             {
                 _logger.LogWarning("Title changed for post ID {Id}. Ensure that Body and Summary align with the new title.", updatePostDto.Id);
@@ -460,12 +481,11 @@ public class PostService : IPostService
                 _logger.LogWarning("Summary changed for post ID {Id}. Ensure alignment with Body and Title.", updatePostDto.Id);
             }
 
-            // Apply updates to the entity
             _mapper.Map(updatePostDto, existingPost);
             _postRepository.Update(existingPost);
             await _postRepository.SaveAsync().ConfigureAwait(false);
 
-            _logger.LogInformation("Post '{Id}' updated successfully.", updatePostDto.Id);
+            _logger.LogInformation("Post '{Id}' updated successfully by user '{UserId}'.", updatePostDto.Id, currentUserId);
 
             return _mapper.Map<GetPostDTO>(existingPost);
         }
@@ -480,16 +500,17 @@ public class PostService : IPostService
     public async Task DeletePostAsync(int id)
     {
         _logger.LogInformation("Attempting to delete post with ID: {Id}.", id);
+
         try
         {
             var httpContext = _httpContextAccessor.HttpContext
                 ?? throw new InvalidOperationException("HTTP context is unavailable.");
 
-            var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-            if (role != "Admin")
+            var currentUserId = httpContext.User.FindFirst("UserId")?.Value;
+            if (currentUserId is null)
             {
-                _logger.LogWarning("Unauthorized attempt to delete post ID {Id} by a non-admin user.", id);
-                throw new UnauthorizedAccessException("Only administrators can delete posts.");
+                _logger.LogWarning("Unauthorized attempt to delete post ID {Id}. No valid user session found.", id);
+                throw new UnauthorizedAccessException("User authentication is required to delete a post.");
             }
 
             var post = await _postRepository.GetByIdAsync(id).ConfigureAwait(false);
@@ -497,6 +518,12 @@ public class PostService : IPostService
             {
                 _logger.LogWarning("Post with ID {Id} was not found for deletion.", id);
                 throw new KeyNotFoundException($"Post with ID {id} was not found.");
+            }
+
+            if (!string.Equals(currentUserId, post.EmployeeId, StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning("Unauthorized attempt to delete post ID {Id} by user {UserId}.", id, currentUserId);
+                throw new UnauthorizedAccessException("You are not authorized to delete this post.");
             }
 
             if (post.Status != PostStatus.Unpublished)
@@ -509,7 +536,7 @@ public class PostService : IPostService
             _postRepository.Update(post);
             await _postRepository.SaveAsync().ConfigureAwait(false);
 
-            _logger.LogInformation("Post '{Id}' deleted successfully and set to '{Status}'.", id, post.Status);
+            _logger.LogInformation("Post '{Id}' deleted successfully by user '{UserId}' and set to '{Status}'.", id, currentUserId, post.Status);
         }
         catch (Exception ex)
         {
@@ -517,9 +544,85 @@ public class PostService : IPostService
             throw;
         }
     }
-        
+    
+    /// <inheritdoc />
+    public async Task AssignTagToPostAsync(int postId, int tagId)
+    {
+        _logger.LogInformation("Attempting to assign tag '{TagId}' to post '{PostId}'.", tagId, postId);
 
+        try
+        {
+            var post = await _postRepository.GetByIdAsync(postId).ConfigureAwait(false);
+            if (post is null)
+            {
+                _logger.LogWarning("Post with ID {PostId} not found.", postId);
+                throw new KeyNotFoundException($"Post with ID {postId} not found.");
+            }
+
+            var tag = await _tagRepository.GetByIdAsync(tagId).ConfigureAwait(false);
+            if (tag is null)
+            {
+                _logger.LogWarning("Tag with ID {TagId} not found.", tagId);
+                throw new KeyNotFoundException($"Tag with ID {tagId} not found.");
+            }
+
+            var existingRelation = await _postTagRepository.GetByPredicateAsync(pt => pt.PostId == postId && pt.TagId == tagId)
+                .ConfigureAwait(false);
+
+            if (existingRelation is not null)
+            {
+                _logger.LogWarning("Tag '{TagId}' is already assigned to post '{PostId}'.", tagId, postId);
+                throw new InvalidOperationException($"Tag '{tagId}' is already assigned to post '{postId}'.");
+            }
+
+            _logger.LogInformation("Assigning tag '{TagId}' to post '{PostId}' via PostTag.", tagId, postId);
+
+            var postTag = new PostTag { PostId = postId, TagId = tagId };
+            await _postTagRepository.AddAsync(postTag).ConfigureAwait(false);
+            await _postTagRepository.SaveAsync().ConfigureAwait(false);
+
+            _logger.LogInformation("Tag '{TagId}' successfully assigned to post '{PostId}' via PostTag.", tagId, postId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while assigning tag '{TagId}' to post '{PostId}'.", tagId, postId);
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<GetTagDTO>> GetTagsByPostIdAsync(int postId)
+    {
+        _logger.LogInformation("Attempting to retrieve tags for post with ID: {PostId}", postId);
+
+        try
+        {
+            var post = await _postRepository.GetByIdAsync(postId).ConfigureAwait(false);
+            if (post is null)
+            {
+                _logger.LogWarning("Post with ID {PostId} not found.", postId);
+                throw new KeyNotFoundException($"Post with ID {postId} not found.");
+            }
+
+            var postTags = await _postTagRepository.GetAllByPredicateAsync(pt => pt.PostId == postId).ConfigureAwait(false);
+            if (!postTags.Any())
+            {
+                _logger.LogWarning("No tags found for post ID {PostId}.", postId);
+                return Enumerable.Empty<GetTagDTO>();
+            }
+
+            var tagIds = postTags.Select(pt => pt.TagId);
+            var tags = await _tagRepository.GetAllByPredicateAsync(t => tagIds.Contains(t.Id)).ConfigureAwait(false);
+
+            _logger.LogDebug("{Count} tags retrieved for post ID: {PostId}.", tags?.Count() ?? 0, postId);
+
+            return _mapper.Map<IEnumerable<GetTagDTO>>(tags);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while retrieving tags for post ID {PostId}.", postId);
+            throw;
+        }
+    }
 
 }
-
-       
