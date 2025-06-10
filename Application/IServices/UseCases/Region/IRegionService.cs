@@ -1,5 +1,7 @@
 using System;
 using Application.DTOs.Region;
+using Microsoft.EntityFrameworkCore;
+using Domain.Entities;
 namespace Application.IServices.UseCases;
 
 /// <summary>
@@ -46,5 +48,6 @@ public interface IRegionService
     /// <param name="id">The unique identifier of the region to delete.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     /// <exception cref="KeyNotFoundException">Thrown if the region with the specified ID is not found.</exception>
+    /// <exception cref="DbUpdateException">Thrown if the region with the specified ID is used by a <see cref="TripPlan"/> or more.</exception>
     public Task DeleteRegionAsync(int id);
 }

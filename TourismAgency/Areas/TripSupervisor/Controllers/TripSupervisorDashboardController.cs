@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace TourismAgency.Areas.TripSupervisor.Controllers
 {
@@ -140,6 +141,11 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             catch( KeyNotFoundException e)
             {
                 return NotFound(new { Error = e.Message });
+
+            }
+            catch( DbUpdateException e)
+            {
+                return Conflict(new { Error = e.Message });
 
             }
             catch(Exception ex)

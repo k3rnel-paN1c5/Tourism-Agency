@@ -5,6 +5,7 @@ using Application.IServices.UseCases;
 using Application.DTOs.Region;
 using Domain.Entities;
 using Domain.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.UseCases;
 
@@ -160,6 +161,11 @@ public class RegionService : IRegionService
             {
                 _logger.LogWarning("Region with ID: {RegionId} not found for deletion.", id);
                 throw new KeyNotFoundException($"Region with ID '{id}' not found.");
+            }
+            if (region.Plans is not null && region.Plans.Count != 0)
+            {
+                _logger.LogWarning("Can't delete Region with ID: {RegionId} This Region is a foriegn key in tripPlans.", id);
+                throw new DbUpdateException($"Region with ID '{id}' is used by a tripPlan or more.");
             }
             _regionRepository.Delete(region);
             await _regionRepository.SaveAsync().ConfigureAwait(false);
