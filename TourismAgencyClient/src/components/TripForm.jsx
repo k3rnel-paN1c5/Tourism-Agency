@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// Assuming you'll fetch regions for a dropdown/select
-// import regionService from '../services/regionService';
+import ErrorMessage from './ErrorMessage';
 
 const TripForm = ({ onSubmit, initialData, isLoading, error }) => {
   const [formData, setFormData] = useState({
@@ -53,7 +52,7 @@ const TripForm = ({ onSubmit, initialData, isLoading, error }) => {
 
   return (
     <form onSubmit={handleSubmit} className="auth-form">
-      {error && <p className="error-message">{error}</p>}
+      {error && <ErrorMessage message={error} />}
       <div className="input-group">
         <label htmlFor="tripName" className="input-label">Trip Name</label>
         <input id="tripName" type="text" name="name" value={formData.name} onChange={handleChange} required className="auth-input" placeholder="e.g., Mountain Adventure" />

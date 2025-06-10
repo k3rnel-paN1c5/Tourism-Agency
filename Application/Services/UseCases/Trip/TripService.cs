@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.IRepositories;
 using Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Application.Utilities;
 
@@ -209,7 +210,11 @@ public class TripService : ITripService
                 _logger.LogWarning("Trip with ID {TripId} was not found for deletion.", id);
                 throw new KeyNotFoundException($"Trip with ID {id} was not found.");
             }
-
+            if (trip.Plans is not null && trip.Plans.Count > 0)
+            {
+                _logger.LogWarning("Can't delete Trip with ID {TripId} this trip is a foriegn key in tripPlans", id);
+                throw new DbUpdateException($"Trip with ID '{id}' is used by a tripPlan or more.");
+            }
             _tripRepository.Delete(trip);
             await _tripRepository.SaveAsync().ConfigureAwait(false);
 

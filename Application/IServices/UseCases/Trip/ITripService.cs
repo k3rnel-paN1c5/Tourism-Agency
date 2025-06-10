@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Application.DTOs.Trip;
 
 namespace Application.IServices.UseCases;
@@ -53,5 +54,6 @@ public interface ITripService
     /// <param name="id">The unique identifier of the trip to delete.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     /// <exception cref="KeyNotFoundException">Thrown if the trip with the specified ID is not found.</exception>
+    /// <exception cref="DbUpdateException">Thrown if the trip with the specified ID is used by a <see cref="TripPlan"/> or more.</exception>
     Task DeleteTripAsync(int id);
 }

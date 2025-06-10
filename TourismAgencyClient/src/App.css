@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display :wght@400;500;600&display=swap');
 #root {
-  max-width: 1280px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -20,14 +20,3 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-a {
-  color: #4da6ff;
-  text-decoration: none;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  outline: none;
-  font-family: inherit;
-}

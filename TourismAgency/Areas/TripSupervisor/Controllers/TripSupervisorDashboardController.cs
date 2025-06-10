@@ -180,11 +180,16 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 return NotFound(new { Error = e.Message });
 
             }
-            catch(Exception ex)
+            catch( DbUpdateException e)
+            {
+                return Conflict(new { Error = e.Message });
+
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Error = $"An error occurred while Deleting trip with ID {id}",
+                    Error = $"An error occurred while Deleting Region with ID {id}",
                     Details = ex.Message
                 });
             }
@@ -329,7 +334,12 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 return NotFound(new { Error = e.Message });
 
             }
-            catch(Exception ex)
+            catch( DbUpdateException e)
+            {
+                return Conflict(new { Error = e.Message });
+
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -357,7 +367,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
         
-        [HttpGet("TripPlan/{id}")]
+        [HttpGet("TripPlans/{id}")]
         public async Task<IActionResult> GetTripPlanById(int id)
         {   
             try{
@@ -375,7 +385,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
         
-        [HttpPost("TripPlan")]
+        [HttpPost("TripPlans")]
         public async Task<IActionResult> CreateTripPlan([FromBody] CreateTripPlanDTO dto){
             if (!ModelState.IsValid)
             {
@@ -402,7 +412,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
         
-        [HttpPut("TripPlan/{id}")]
+        [HttpPut("TripPlans/{id}")]
         public async Task<IActionResult> UpdateTripPlan(int id, [FromBody] UpdateTripPlanDTO dto){
             if (!ModelState.IsValid)
             {
@@ -428,6 +438,44 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 return StatusCode(500, new
                 {
                     Error = $"An error occurred while updating trip plan with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        [HttpDelete("TripPlans/{id}")]
+        public async Task<IActionResult> DeleteTripPlan(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                await _tripPlanServ.DeleteTripPlanAsync(id);
+                return Ok($"Deleted A trip Plan with id {id}");
+            }
+            catch( KeyNotFoundException e)
+            {
+                return NotFound(new { Error = e.Message });
+
+            }
+            catch( DbUpdateException e)
+            {
+                return Conflict(new { Error = e.Message });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while Deleting trip with ID {id}",
                     Details = ex.Message
                 });
             }
