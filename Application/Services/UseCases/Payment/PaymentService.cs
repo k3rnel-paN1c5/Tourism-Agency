@@ -221,5 +221,85 @@ namespace Application.Services.UseCases
 
             return paymentDetails;
         }
+
+        public async Task<ReturnPaymentDTO> CancelPaymentAsync(int paymentId)
+        {
+            try
+            {
+                var payment = await _validationService.ValidatePaymentExistsAsync(paymentId);
+
+                // Validate that payment can be cancelled
+                if (payment.Status == PaymentStatus.Paid)
+                {
+                    _logger.LogWarning("Attempting to cancel a paid payment {PaymentId}", paymentId);
+                    throw new InvalidOperationException("Cannot cancel a payment that has been paid. Use refund instead.");
+                }
+
+                if (payment.Status == PaymentStatus.Cancelled)
+                {
+                    _logger.LogWarning("Attempting to cancel an already cancelled payment {PaymentId}", paymentId);
+                    throw new InvalidOperationException("Payment is already cancelled.");
+                }
+
+                if (payment.Status == PaymentStatus.Refunded)
+                {
+                    _logger.LogWarning("Attempting to cancel a refunded payment {PaymentId}", paymentId);
+                    throw new InvalidOperationException("Cannot cancel a refunded payment.");
+                }
+
+                // Update payment status to cancelled
+                payment.Status = PaymentStatus.Cancelled;
+                _paymentRepository.Update(payment);
+                await _paymentRepository.SaveAsync();
+
+                _logger.LogInformation("Payment {PaymentId} has been cancelled", paymentId);
+                return _mapper.Map<ReturnPaymentDTO>(payment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cancelling payment {PaymentId}", paymentId);
+                throw;
+            }
+        }
+
+        public async Task<bool> DeletePaymentAsync(int paymentId)
+        {
+            try
+            {
+                var payment = await _validationService.ValidatePaymentExistsAsync(paymentId);
+
+                // Validate that payment can be deleted
+                if (payment.Status == PaymentStatus.Paid)
+                {
+                    _logger.LogWarning("Attempting to delete a paid payment {PaymentId}", paymentId);
+                    throw new InvalidOperationException("Cannot delete a payment that has been paid. Cancel or refund the payment first.");
+                }
+
+                if (payment.Status == PaymentStatus.PartiallyPaid)
+                {
+                    _logger.LogWarning("Attempting to delete a partially paid payment {PaymentId}", paymentId);
+                    throw new InvalidOperationException("Cannot delete a payment that has been partially paid. Refund the payment first.");
+                }
+
+                // Check if there are any transactions associated with this payment
+                var transactions = await _paymentTransactionService.GetTransactionsByPaymentIdAsync(paymentId);
+                if (transactions.Any())
+                {
+                    _logger.LogWarning("Attempting to delete payment {PaymentId} with existing transactions", paymentId);
+                    throw new InvalidOperationException("Cannot delete a payment with existing transactions. Delete transactions first or cancel the payment instead.");
+                }
+
+                await _paymentRepository.DeleteByIdAsync(paymentId);
+                await _paymentRepository.SaveAsync();
+
+                _logger.LogInformation("Payment {PaymentId} has been deleted", paymentId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting payment {PaymentId}", paymentId);
+                throw;
+            }
+        }
     }
 }

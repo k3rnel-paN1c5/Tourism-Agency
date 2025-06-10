@@ -62,5 +62,19 @@ namespace Application.IServices.UseCases
         /// <param name="paymentId">The ID of the payment.</param>
         /// <returns>Detailed payment information with transaction history.</returns>
         Task<PaymentDetailsDTO> GetPaymentDetailsAsync(int paymentId);
+
+        /// <summary>
+        /// Cancels a payment asynchronously.
+        /// </summary>
+        /// <param name="paymentId">The ID of the payment to cancel.</param>
+        /// <returns>The updated payment information.</returns>
+        Task<ReturnPaymentDTO> CancelPaymentAsync(int paymentId);
+
+        /// <summary>
+        /// Deletes a payment asynchronously.
+        /// </summary>
+        /// <param name="paymentId">The ID of the payment to delete.</param>
+        /// <returns>True if the deletion was successful, otherwise false.</returns>
+        Task<bool> DeletePaymentAsync(int paymentId);
     }
 }
