@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import tripService  from '../../services/TripSupervisor/tripService';
+import React, { useState, useEffect, useMemo } from 'react';
+import tripService from '../../services/TripSupervisor/tripService';
 
 import DashboardHeader from '../../components/DashboardHeader';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
+import ErrorMessage from '../../components/ErrorMessage';
 import TripForm from '../../components/TripForm';
-import './ManagementPage.css'; // Shared styles for management pages
+import SearchBar from '../../components/SearchBar';
+import './ManagementPage.css';
 
 /**
  * TripManagementPage component.
@@ -16,31 +18,37 @@ const TripManagementPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTrip, setSelectedTrip] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [formError, setFormError] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [availabilityFilter, setAvailabilityFilter] = useState('all'); // 'all', 'available', 'unavailable'
+    const [privacyFilter, setPrivacyFilter] = useState('all'); // 'all', 'private', 'public'
 
     useEffect(() => {
-        // Load both trips and regions when the component mounts
-        const loadData = async () => {
-            setIsLoading(true);
-            try {
-                const tripsData = await tripService.getTrips();
-                setTrips(tripsData);
-            } catch (error) {
-                console.error("Failed to load data:", error);
-            }
-            setIsLoading(false);
-        };
-        loadData();
+        loadTrips();
     }, []);
-    
+
     const loadTrips = async () => {
-        const data = await tripService.getTrips();
-        setTrips(data);
+        setIsLoading(true);
+        setError(null);
+        setFormError(null);
+        try {
+            const tripsData = await tripService.getTrips();
+            setTrips(tripsData);
+        } catch (error) {
+            setError("Failed to load regions. Please Try again later.")
+            console.error("Failed to load data:", error);
+        }
+        setIsLoading(false);
     };
+
 
     /**
      * Handles opening the modal for creating a new trip.
      */
     const handleCreate = () => {
+        setError(null);
+        setFormError(null);
         setSelectedTrip(null);
         setIsModalOpen(true);
     };
@@ -50,6 +58,8 @@ const TripManagementPage = () => {
      * @param {object} trip - The trip to edit.
      */
     const handleEdit = (trip) => {
+        setError(null);
+        setFormError(null);
         setSelectedTrip(trip);
         setIsModalOpen(true);
     };
@@ -59,14 +69,16 @@ const TripManagementPage = () => {
      * @param {string|number} id - The ID of the trip to delete.
      */
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this trip?')) {
-            try {
-                await tripService.deleteTrip(id);
-                loadTrips(); // Refresh the list
-            } catch (error) {
-                console.error("Failed to delete trip:", error);
-            }
+        setError(null);
+        setFormError(null);
+        try {
+            await tripService.deleteTrip(id);
+            loadTrips(); // Refresh the list
+        } catch (error) {
+            setError("Failed to delete Trip, trip may be used by a trip plan")
+            console.error("Failed to delete trip:", error);
         }
+
     };
 
     /**
@@ -74,6 +86,8 @@ const TripManagementPage = () => {
      * @param {object} tripData - The data of the trip to save.
      */
     const handleSave = async (tripData) => {
+        setError(null);
+        setFormError(null);
         try {
             if (selectedTrip) {
                 await tripService.updateTrip(selectedTrip.id, tripData);
@@ -83,13 +97,35 @@ const TripManagementPage = () => {
             loadTrips(); // Refresh the list
             setIsModalOpen(false);
         } catch (error) {
+            setFormError("Failed to save region. Name already exist");
             console.error("Failed to save trip:", error);
         }
     };
 
+    const filteredTrips = useMemo(() => {
+        if (!searchQuery && availabilityFilter === 'all' && privacyFilter === 'all') {
+            return trips;
+        }
+        return trips.filter(trip =>
+            searchQuery ?
+            trip.name.toLowerCase().includes(searchQuery.toLowerCase()) : true)
+                .filter(trip => {
+                    // Filter by availability
+                    if (availabilityFilter === 'available') return trip.isAvailable;
+                    if (availabilityFilter === 'unavailable') return !trip.isAvailable;
+                    return true; // 'all' returns all trips
+                })
+                .filter(trip => {
+                    // Filter by privacy
+                    if (privacyFilter === 'private') return trip.isPrivate;
+                    if (privacyFilter === 'public') return !trip.isPrivate;
+                    return true; // 'all' returns all trips
+                });
+    }, [trips, searchQuery, availabilityFilter, privacyFilter]);
+
     // Define columns for the DataTable
     const tripColumns = [
-        { header: 'ID', key: 'id' },
+        { header: 'Number', key: 'id' },
         { header: 'Name', key: 'name' },
         { header: 'Description', key: 'description' },
         { header: 'Available', key: 'isAvailable' },
@@ -100,23 +136,53 @@ const TripManagementPage = () => {
         <div className="management-page">
             <DashboardHeader title="Manage Trips" />
             <main className="management-content">
-                <div className="actions-bar">
+                <div className="toolbar">
+                    <SearchBar
+                        onSearch={setSearchQuery}
+                        placeholder="Search by trip name..."
+                    />
+                    <div className="filters">
+                        <div className="filter-group">
+                            <label htmlFor="availability-filter">Availability:</label>
+                            <select id="availability-filter" value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)}>
+                                <option value="all">All</option>
+                                <option value="available">Available</option>
+                                <option value="unavailable">Unavailable</option>
+                            </select>
+                        </div>
+                        <div className="filter-group">
+                            <label htmlFor="privacy-filter">Type:</label>
+                            <select id="privacy-filter" value={privacyFilter} onChange={(e) => setPrivacyFilter(e.target.value)}>
+                                <option value="all">All</option>
+                                <option value="private">Private</option>
+                                <option value="public">Public</option>
+                            </select>
+                        </div>
+                    </div>
                     <button onClick={handleCreate} className="btn-add-new">Add New Trip</button>
                 </div>
+                <ErrorMessage message={error} onClear={() => setError(null)} />
+
                 {isLoading ? (
                     <p>Loading trips...</p>
                 ) : (
                     <DataTable
+                        title="Trips"
                         columns={tripColumns}
-                        data={trips}
+                        data={filteredTrips}
                         onEdit={handleEdit}
                         onDelete={handleDelete}
                     />
                 )}
                 {isModalOpen && (
-                    <Modal onClose={() => setIsModalOpen(false)}>
+                    <Modal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        title={selectedTrip ? "Update Trip" : "Creating a new Trip"}>
+                        <ErrorMessage message={formError} onClear={() => setFormError(null)} />
                         <TripForm
-                            trip={selectedTrip}
+                            onSubmit={handleSave}
+                            initialData={selectedTrip}
                             onSave={handleSave}
                             onCancel={() => setIsModalOpen(false)}
                         />

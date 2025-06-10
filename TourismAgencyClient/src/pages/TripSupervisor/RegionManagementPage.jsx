@@ -70,7 +70,6 @@ const RegionManagementPage = () => {
      * @param {string|number} id - The ID of the region to delete.
      */
     const handleDelete = async (id) => {
-        // A simple confirmation dialog. For a better UX, consider a custom modal confirmation.
         setError(null);
         setFormError(null);
         try {
@@ -116,7 +115,7 @@ const RegionManagementPage = () => {
     }, [regions, searchQuery]);
 
     const regionColumns = [
-        { header: 'ID', key: 'id' },
+        { header: 'Number', key: 'id' },
         { header: 'Name', key: 'name' },
     ];
     
@@ -125,7 +124,7 @@ const RegionManagementPage = () => {
 
             <DashboardHeader title="Manage Regions" />
             <main className="management-content">
-                <div className="actions-bar">
+                <div className="toolbar">
                     <SearchBar 
                         onSearch={setSearchQuery}
                         placeholder="Search by region name..."
@@ -139,6 +138,7 @@ const RegionManagementPage = () => {
                     <p>Loading regions...</p>
                 ) : (
                     <DataTable
+                        title ="Regions"
                         columns={regionColumns}
                         data={filteredRegions}
                         onEdit={handleEdit}
@@ -149,7 +149,7 @@ const RegionManagementPage = () => {
                     <Modal
                         isOpen={isModalOpen}
                         onClose={() => setIsModalOpen(false)}
-                        title="Creating a new region">
+                        title={selectedRegion ? "Update Region":"Creating a new region"}>
                             <ErrorMessage message={formError} onClear={() => setFormError(null)} />
                         <RegionForm
                             onSubmit={handleSave}

@@ -5,6 +5,7 @@ const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLab
   if (!Array.isArray(data)) {
     return <p>No data available.</p>;
   }
+  let cnt = 1;
   return (
     <div className="data-table-container">
       <div className="data-table-header">
@@ -31,7 +32,7 @@ const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLab
             {data.map((item, i) => (
               <tr key={i}>
                 {columns.map((col) => (
-                  <td key={`${item.id}-${col.key}`}>{item[col.key]}</td>
+                  <td key={`${item.id}-${col.key}`}>{item[col.key] === true ? "Yes" : item[col.key] === false ? "No" : col.key == "id" ? cnt++ :item[col.key] }</td>
                 ))}
                 {(onEdit || onDelete) && (
                   <td className="actions-cell">
