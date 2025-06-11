@@ -40,11 +40,12 @@ public interface IPostService
 
     /// <summary>
     /// Submits a post for review asynchronously.
+    /// Only the original creator of the post can submit it.
     /// </summary>
     /// <param name="id">The unique identifier of the post to submit.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the HTTP context is unavailable.</exception>
-    /// <exception cref="UnauthorizedAccessException">Thrown if the user is not an employee or is not the original creator.</exception>
+    /// <exception cref="UnauthorizedAccessException">Thrown if the user is not the original creator of the post.</exception>
     /// <exception cref="KeyNotFoundException">Thrown if the post with the specified ID is not found.</exception>
     /// <exception cref="InvalidOperationException">Thrown if the post is not in the draft state.</exception>
     public Task SubmitPostAsync(int id);
@@ -119,14 +120,17 @@ public interface IPostService
 
     /// <summary>
     /// Assigns a tag to a post asynchronously via PostTag.
+    /// Only the original creator of the post can assign tags.
     /// </summary>
     /// <param name="postId">The unique identifier of the post.</param>
     /// <param name="tagId">The unique identifier of the tag.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the HTTP context is unavailable.</exception>
+    /// <exception cref="UnauthorizedAccessException">Thrown if the user is not the original creator of the post.</exception>
     /// <exception cref="KeyNotFoundException">Thrown if the post or tag with the specified IDs are not found.</exception>
     /// <exception cref="InvalidOperationException">Thrown if the tag is already assigned to the post.</exception>
-    /// <exception cref="Exception">Thrown if an error occurs while assigning the tag.</exception>
     public Task AssignTagToPostAsync(int postId, int tagId);
+
 
     /// <summary>
     /// Retrieves all tags associated with a specific post asynchronously.

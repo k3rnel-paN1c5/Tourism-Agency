@@ -62,7 +62,6 @@ public class PostService : IPostService
         _postTypeService = postTypeService ?? throw new ArgumentNullException(nameof(postTypeService));
     }
 
-
     /// <inheritdoc />
     public async Task<GetPostDTO> CreatePostAsync(CreatePostDTO createPostDto)
     {
@@ -209,25 +208,17 @@ public class PostService : IPostService
     public async Task SubmitPostAsync(int id)
     {
         _logger.LogInformation("Attempting to submit post with ID: {Id}.", id);
+
         try
         {
             var httpContext = _httpContextAccessor.HttpContext
                 ?? throw new InvalidOperationException("HTTP context is unavailable.");
 
-            var userIdClaim = httpContext.User.Claims
-                .FirstOrDefault(c => c.Type == "UserId" || c.Type == "sub" || c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-
-            if (string.IsNullOrEmpty(userIdClaim))
+            var currentUserId = httpContext.User.FindFirst("UserId")?.Value;
+            if (currentUserId is null)
             {
-                _logger.LogWarning("User ID retrieval failed. Submission attempt rejected.");
-                throw new UnauthorizedAccessException("User ID not found in the request.");
-            }
-
-            if (role != "Employee")
-            {
-                _logger.LogWarning("Unauthorized submission attempt for post ID {Id} by a non-employee user.", id);
-                throw new UnauthorizedAccessException("Only employees can submit posts.");
+                _logger.LogWarning("Unauthorized submission attempt for post ID {Id}. No valid user session found.", id);
+                throw new UnauthorizedAccessException("User authentication is required to submit a post.");
             }
 
             var post = await _postRepository.GetByIdAsync(id).ConfigureAwait(false);
@@ -237,10 +228,10 @@ public class PostService : IPostService
                 throw new KeyNotFoundException($"Post with ID {id} was not found.");
             }
 
-            if (post.EmployeeId != userIdClaim)
+            if (!string.Equals(currentUserId, post.EmployeeId, StringComparison.OrdinalIgnoreCase))
             {
-                _logger.LogWarning("User ID {UserId} attempted to submit post {Id}, but they are not the owner.", userIdClaim, id);
-                throw new UnauthorizedAccessException("Only the original creator can submit this post.");
+                _logger.LogWarning("Unauthorized submission attempt for post ID {Id} by user {UserId}.", id, currentUserId);
+                throw new UnauthorizedAccessException("You are not authorized to submit this post.");
             }
 
             if (post.Status != PostStatus.Draft)
@@ -253,7 +244,7 @@ public class PostService : IPostService
             _postRepository.Update(post);
             await _postRepository.SaveAsync().ConfigureAwait(false);
 
-            _logger.LogInformation("Post '{Id}' submitted successfully and set to '{Status}'.", id, post.Status);
+            _logger.LogInformation("Post '{Id}' submitted successfully by user '{UserId}' and set to '{Status}'.", id, currentUserId, post.Status);
         }
         catch (Exception ex)
         {
@@ -544,7 +535,7 @@ public class PostService : IPostService
             throw;
         }
     }
-    
+
     /// <inheritdoc />
     public async Task AssignTagToPostAsync(int postId, int tagId)
     {
@@ -552,11 +543,27 @@ public class PostService : IPostService
 
         try
         {
+            var httpContext = _httpContextAccessor.HttpContext
+                ?? throw new InvalidOperationException("HTTP context is unavailable.");
+
+            var currentUserId = httpContext.User.FindFirst("UserId")?.Value;
+            if (currentUserId is null)
+            {
+                _logger.LogWarning("Unauthorized attempt to assign tag to post ID {PostId}. No valid user session found.", postId);
+                throw new UnauthorizedAccessException("User authentication is required to assign a tag.");
+            }
+
             var post = await _postRepository.GetByIdAsync(postId).ConfigureAwait(false);
             if (post is null)
             {
                 _logger.LogWarning("Post with ID {PostId} not found.", postId);
                 throw new KeyNotFoundException($"Post with ID {postId} not found.");
+            }
+
+            if (!string.Equals(currentUserId, post.EmployeeId, StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning("Unauthorized attempt to assign tag '{TagId}' to post '{PostId}' by user '{UserId}'.", tagId, postId, currentUserId);
+                throw new UnauthorizedAccessException("You are not authorized to assign a tag to this post.");
             }
 
             var tag = await _tagRepository.GetByIdAsync(tagId).ConfigureAwait(false);
