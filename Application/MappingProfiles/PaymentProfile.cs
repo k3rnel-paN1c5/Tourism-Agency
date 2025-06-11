@@ -32,17 +32,6 @@ namespace Application.MappingProfiles
                 .ForMember(dest => dest.PaymentDate, opt => opt.Ignore())
                 .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => string.Empty));
 
-            // Map from UpdatePaymentStatusDTO -> Payment
-            CreateMap<UpdatePaymentStatusDTO, Payment>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PaymentId))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.NewStatus))
-                // Ignore all other properties
-                .ForMember(dest => dest.BookingId, opt => opt.Ignore())
-                .ForMember(dest => dest.AmountDue, opt => opt.Ignore())
-                .ForMember(dest => dest.AmountPaid, opt => opt.Ignore())
-                .ForMember(dest => dest.PaymentDate, opt => opt.Ignore())
-                .ForMember(dest => dest.Notes, opt => opt.Ignore());
-
             // Map from ProcessRefundDTO -> Payment (for refund operations)
             CreateMap<ProcessRefundDTO, Payment>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.PaymentId));

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DTO.PaymentMethod
+namespace Application.DTOs.PaymentMethod
 {
    public class CreatePaymentMethodDTO
     {
@@ -13,5 +13,6 @@ namespace DTO.PaymentMethod
         public string Method { get; set; } = string.Empty;
         [Required]
         public string Icon { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
     }
 }
