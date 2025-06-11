@@ -134,10 +134,6 @@ namespace Application.Services.Validation
             if (payment.Notes?.Contains("REFUND:") == true)
                 throw new InvalidOperationException("Duplicate refund attempt detected");
         
-            // Payment Method Restrictions 
-            if (payment.PaymentMethod?.Method == "BankTransfer")
-                throw new InvalidOperationException(
-                    "Bank transfer refunds require manual processing");
         }
 
     }
