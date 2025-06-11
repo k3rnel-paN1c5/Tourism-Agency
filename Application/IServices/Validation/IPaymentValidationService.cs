@@ -38,20 +38,5 @@ namespace Application.IServices.Validation
         /// <exception cref="InvalidOperationException">Thrown when the payment cannot be refunded.</exception>
         void ValidatePaymentCanBeRefunded(Payment payment);
 
-        /// <summary>
-        /// Validates that a transaction amount is valid.
-        /// </summary>
-        /// <param name="amount">The transaction amount to validate.</param>
-        /// <exception cref="ArgumentException">Thrown when the amount is invalid.</exception>
-        void ValidateTransactionAmount(decimal amount);
-
-        /// <summary>
-        /// Validates that a refund amount is valid for the given payment.
-        /// </summary>
-        /// <param name="payment">The payment to validate against.</param>
-        /// <param name="refundAmount">The refund amount to validate.</param>
-        /// <exception cref="ArgumentException">Thrown when the refund amount is invalid.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the refund amount exceeds the paid amount.</exception>
-        void ValidateRefundAmount(Payment payment, decimal refundAmount);
     }
 }
