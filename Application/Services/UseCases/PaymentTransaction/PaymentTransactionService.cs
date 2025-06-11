@@ -196,27 +196,5 @@ namespace Application.Services.UseCases
             return paymentAmount - refundAmount;
         }
 
-        private async Task PopulatePaymentMethodNamesAsync(IEnumerable<ReturnPaymentTransactionDTO> transactions)
-        {
-            var paymentMethodIds = transactions.Select(t => t.PaymentMethodId).Distinct();
-            var paymentMethods = new Dictionary<int, string>();
-
-            foreach (var id in paymentMethodIds)
-            {
-                var method = await _paymentMethodRepository.GetByIdAsync(id);
-                if (method != null)
-                {
-                    paymentMethods[id] = method.Method ?? string.Empty;
-                }
-            }
-
-            foreach (var transaction in transactions)
-            {
-                if (paymentMethods.TryGetValue(transaction.PaymentMethodId, out var methodName))
-                {
-                    transaction.PaymentMethodName = methodName;
-                }
-            }
-        }
     }
 }
