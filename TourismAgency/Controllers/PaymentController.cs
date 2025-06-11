@@ -21,16 +21,144 @@ namespace TourismAgency.Controllers
             _logger = logger;
         }
 
-        // [HttpPost("CreateP")]
-        // public async Task<ActionResult<ReturnPaymentDTO>> CreatePayment([FromBody] CreatePaymentDTO createPaymentDTO)
-        // {
-        //     var payment = await _paymentService.CreatePaymentAsync(createPaymentDTO);
-        //     return Ok(payment);
-// 
-        // }
+        /// <summary>
+        /// Create a new payment
+        /// </summary>
+        [HttpPost]
+        public async Task<ActionResult<ReturnPaymentDTO>> CreatePayment([FromBody] CreatePaymentDTO createPaymentDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
 
+            try
+            {
+                var payment = await _paymentService.CreatePaymentAsync(createPaymentDTO);
+                return CreatedAtAction(nameof(GetPayment), new { id = payment.Id }, payment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating payment for booking {BookingId}", createPaymentDTO.BookingId);
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while creating the payment",
+                    Details = ex.Message
+                });
+            }
+        }
 
+        /// <summary>
+        /// Process a payment
+        /// </summary>
+        [HttpPost("{id}/process")]
+        public async Task<ActionResult<PaymentProcessResultDTO>> ProcessPayment(int id, [FromBody] ProcessPaymentDTO processPaymentDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            // Ensure the payment ID in the URL matches the DTO
+            if (id != processPaymentDto.PaymentId)
+            {
+                return BadRequest(new { Error = "Payment ID in URL does not match payment ID in request body" });
+            }
+
+            try
+            {
+                var result = await _paymentService.ProcessPaymentAsync(processPaymentDto);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Error = $"Payment with ID {id} not found" });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing payment {PaymentId}", id);
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while processing the payment",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        /// <summary>
+        /// Process a refund
+        /// </summary>
+        [HttpPost("{id}/refunds")]
+        public async Task<ActionResult<PaymentProcessResultDTO>> ProcessRefund(int id, [FromBody] ProcessRefundDTO refundDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            // Ensure the payment ID in the URL matches the DTO
+            if (id != refundDto.PaymentId)
+            {
+                return BadRequest(new { Error = "Payment ID in URL does not match payment ID in request body" });
+            }
+
+            try
+            {
+                var result = await _paymentService.ProcessRefundAsync(refundDto);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Error = $"Payment with ID {id} not found" });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing refund for payment {PaymentId}", id);
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while processing the refund",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        /// <summary>
         /// Get payment details by ID
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<ReturnPaymentDTO>> GetPayment(int id)
         {
@@ -41,18 +169,22 @@ namespace TourismAgency.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound(new { Error = $"Payment with ID {id} not found" });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving payment {PaymentId}", id);
-                return Problem("An error occurred while retrieving payment details.",
-                    statusCode: StatusCodes.Status500InternalServerError);
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while retrieving payment details",
+                    Details = ex.Message
+                });
             }
         }
-        
 
+        /// <summary>
         /// Get payment by booking ID
+        /// </summary>
         [HttpGet("bookings/{bookingId}")]
         public async Task<ActionResult<ReturnPaymentDTO>> GetPaymentByBooking(int bookingId)
         {
@@ -63,84 +195,24 @@ namespace TourismAgency.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound(new { Error = $"Payment for booking ID {bookingId} not found" });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving payment for booking {BookingId}", bookingId);
-                return Problem("An error occurred while retrieving payment details.", 
-                    statusCode: StatusCodes.Status500InternalServerError);
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while retrieving payment details",
+                    Details = ex.Message
+                });
             }
         }
 
-
-        /// Update payment status
-        [HttpPatch("{id}/status")]
-        public async Task<ActionResult<ReturnPaymentDTO>> UpdateStatus(int id,[FromBody] UpdatePaymentStatusDTO statusDto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            try
-            {
-                var payment = await _paymentService.UpdatePaymentStatusAsync(statusDto);
-                return Ok(payment);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating status for payment {PaymentId}", id);
-                return Problem("An error occurred while updating payment status.",
-                    statusCode: StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        
-        /// Process a refund
-        [HttpPost("{id}/refunds")]
-        public async Task<ActionResult<ReturnPaymentDTO>> ProcessRefund([FromBody] ProcessRefundDTO refundDto)
-        {
-            //Task<ReturnPaymentDTO> ProcessRefundAsync(ProcessRefundDTO refundDto)
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            try
-            {
-                var payment = await _paymentService.ProcessRefundAsync(refundDto);
-                return Ok(payment);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
-            catch (ArgumentException ex)
-            {
-                ModelState.AddModelError(nameof(refundDto.Amount), ex.Message);
-                return BadRequest(ModelState);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing refund for payment {PaymentId}", refundDto.PaymentId);
-                return Problem("An error occurred while processing refund.", 
-                    statusCode: StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        
-        /// Get payments by status
+        /// <summary>
+        /// Get payments by status or all payments
+        /// </summary>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReturnPaymentDTO>>> GetPaymentsByStatus([FromQuery] PaymentStatus? status = null)
+        public async Task<ActionResult<IEnumerable<ReturnPaymentDTO>>> GetPayments([FromQuery] PaymentStatus? status = null)
         {
             try
             {
@@ -153,13 +225,17 @@ namespace TourismAgency.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving payments by status {Status}", status);
-                return Problem("An error occurred while retrieving payments.", 
-                    statusCode: StatusCodes.Status500InternalServerError);
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while retrieving payments",
+                    Details = ex.Message
+                });
             }
         }
 
-        
+        /// <summary>
         /// Get detailed payment information
+        /// </summary>
         [HttpGet("{id}/details")]
         public async Task<ActionResult<PaymentDetailsDTO>> GetPaymentDetails(int id)
         {
@@ -170,13 +246,16 @@ namespace TourismAgency.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound(new { Error = $"Payment with ID {id} not found" });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving details for payment {PaymentId}", id);
-                return Problem("An error occurred while retrieving payment details.", 
-                    statusCode: StatusCodes.Status500InternalServerError);
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while retrieving payment details",
+                    Details = ex.Message
+                });
             }
         }
     }

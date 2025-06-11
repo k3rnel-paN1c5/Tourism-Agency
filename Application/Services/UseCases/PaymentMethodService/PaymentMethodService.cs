@@ -1,96 +1,119 @@
 using Application.IServices.UseCases;
 using Domain.Entities;
 using Domain.IRepositories;
-using DTO.PaymentMethod;
+using Application.DTOs.PaymentMethod;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Services.UseCases
 {
     public class PaymentMethodService : IPaymentMethodService
     {
-        private readonly IRepository<PaymentMethod, int> _repository;
+        private readonly IRepository<PaymentMethod, int> _paymentMethodRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<PaymentMethodService> _logger;
 
         public PaymentMethodService(
-            IRepository<PaymentMethod, int> repository,
+            IRepository<PaymentMethod, int> paymentMethodRepository,
+            IMapper mapper,
             ILogger<PaymentMethodService> logger)
         {
-            _repository = repository;
+            _paymentMethodRepository = paymentMethodRepository;
+            _mapper = mapper;
             _logger = logger;
         }
 
         public async Task<ReturnPaymentMethodDTO> CreatePaymentMethodAsync(CreatePaymentMethodDTO paymentMethodDto)
         {
-            var paymentMethod = new PaymentMethod
+            // Validate input
+            if (string.IsNullOrWhiteSpace(paymentMethodDto.Method))
             {
-                Method = paymentMethodDto.Method,
-                Icon = paymentMethodDto.Icon
-            };
+                throw new ArgumentException("Payment method name is required", nameof(paymentMethodDto.Method));
+            }
 
-            await _repository.AddAsync(paymentMethod);
-            await _repository.SaveAsync();
+            // Check for duplicate method names
+            var existingMethods = await _paymentMethodRepository.GetAllByPredicateAsync(
+                pm => pm.Method!.ToLower() == paymentMethodDto.Method.Trim().ToLower());
+            
+            if (existingMethods.Any())
+            {
+                throw new InvalidOperationException($"Payment method '{paymentMethodDto.Method}' already exists");
+            }
 
-            _logger.LogInformation("Created payment method: {Method}", paymentMethod.Method);
-            return MapToReturnDto(paymentMethod);
+            var paymentMethod = _mapper.Map<PaymentMethod>(paymentMethodDto);
+
+            await _paymentMethodRepository.AddAsync(paymentMethod);
+            await _paymentMethodRepository.SaveAsync();
+
+            _logger.LogInformation("Created payment method: {Method} (Active: {IsActive})", 
+                paymentMethod.Method, paymentMethod.IsActive);
+            return _mapper.Map<ReturnPaymentMethodDTO>(paymentMethod);
         }
 
         public async Task<ReturnPaymentMethodDTO> GetPaymentMethodByIdAsync(int id)
         {
-            var paymentMethod = await _repository.GetByIdAsync(id);
+            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(id);
             if (paymentMethod == null)
             {
                 _logger.LogWarning("Payment method {Id} not found", id);
                 throw new KeyNotFoundException($"Payment method with ID {id} not found");
             }
 
-            return MapToReturnDto(paymentMethod);
+            return _mapper.Map<ReturnPaymentMethodDTO>(paymentMethod);
         }
 
         public async Task<IEnumerable<ReturnPaymentMethodDTO>> GetAllPaymentMethodsAsync()
         {
-            var paymentMethods = await _repository.GetAllAsync();
-            var dtos = new List<ReturnPaymentMethodDTO>();
+            var paymentMethods = await _paymentMethodRepository.GetAllAsync();
+            _logger.LogDebug("Retrieved {Count} payment methods", paymentMethods.Count());
+            return _mapper.Map<IEnumerable<ReturnPaymentMethodDTO>>(paymentMethods);
+        }
 
-            foreach (var pm in paymentMethods)
-            {
-                dtos.Add(MapToReturnDto(pm));
-            }
-
-            return dtos;
+        public async Task<IEnumerable<ReturnPaymentMethodDTO>> GetActivePaymentMethodsAsync()
+        {
+            var activeMethods = await _paymentMethodRepository.GetAllByPredicateAsync(pm => pm.IsActive);
+            _logger.LogDebug("Retrieved {Count} active payment methods", activeMethods.Count());
+            return _mapper.Map<IEnumerable<ReturnPaymentMethodDTO>>(activeMethods);
         }
 
         public async Task<ReturnPaymentMethodDTO> UpdatePaymentMethodAsync(UpdatePaymentMethodDTO paymentMethodDto)
         {
-            var paymentMethod = await _repository.GetByIdAsync(paymentMethodDto.Id);
+            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(paymentMethodDto.Id);
             if (paymentMethod == null)
             {
-                _logger.LogWarning("Payment method {Id} not found for update", paymentMethodDto.Id);
                 throw new KeyNotFoundException($"Payment method with ID {paymentMethodDto.Id} not found");
             }
 
-            // Partial update - only update fields that were provided
-            if (!string.IsNullOrEmpty(paymentMethodDto.Method))
+            // Check for duplicate method names (excluding current record)
+            if (!string.IsNullOrWhiteSpace(paymentMethodDto.Method))
             {
-                paymentMethod.Method = paymentMethodDto.Method;
+                var existingMethods = await _paymentMethodRepository.GetAllByPredicateAsync(
+                    pm => pm.Id != paymentMethodDto.Id && 
+                          pm.Method!.ToLower() == paymentMethodDto.Method.Trim().ToLower());
+                
+                if (existingMethods.Any())
+                {
+                    throw new InvalidOperationException($"Payment method '{paymentMethodDto.Method}' already exists");
+                }
             }
 
-            if (!string.IsNullOrEmpty(paymentMethodDto.Icon))
-            {
-                paymentMethod.Icon = paymentMethodDto.Icon;
-            }
+            // Use AutoMapper to update the entity
+            _mapper.Map(paymentMethodDto, paymentMethod);
 
-            _repository.Update(paymentMethod);
-            await _repository.SaveAsync();
+            _paymentMethodRepository.Update(paymentMethod);
+            await _paymentMethodRepository.SaveAsync();
 
-            _logger.LogInformation("Updated payment method {Id}", paymentMethod.Id);
-            return MapToReturnDto(paymentMethod);
+            _logger.LogInformation("Updated payment method {Id}: {Method} (Active: {IsActive})", 
+                paymentMethod.Id, paymentMethod.Method, paymentMethod.IsActive);
+            return _mapper.Map<ReturnPaymentMethodDTO>(paymentMethod);
         }
 
         public async Task<bool> DeletePaymentMethodAsync(int id)
         {
-            var paymentMethod = await _repository.GetByIdAsync(id);
+            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(id);
             if (paymentMethod == null)
             {
                 _logger.LogWarning("Payment method {Id} not found for deletion", id);
@@ -100,25 +123,31 @@ namespace Application.Services.UseCases
             // Check for existing transactions
             if (paymentMethod.PaymentTransactions?.Count > 0)
             {
-                _logger.LogWarning("Cannot delete payment method {Id} with existing transactions", id);
-                throw new InvalidOperationException("Cannot delete payment method with existing transactions");
+                _logger.LogWarning("Cannot delete payment method {Id} with existing transactions. Consider deactivating instead.", id);
+                throw new InvalidOperationException("Cannot delete payment method with existing transactions. Consider deactivating the payment method instead.");
             }
 
-            _repository.Delete(paymentMethod);
-            await _repository.SaveAsync();
+            _paymentMethodRepository.Delete(paymentMethod);
+            await _paymentMethodRepository.SaveAsync();
 
-            _logger.LogInformation("Deleted payment method {Id}", id);
+            _logger.LogInformation("Deleted payment method {Id}: {Method}", id, paymentMethod.Method);
             return true;
         }
 
-        private ReturnPaymentMethodDTO MapToReturnDto(PaymentMethod paymentMethod)
+        public async Task<ReturnPaymentMethodDTO> TogglePaymentMethodStatusAsync(int id)
         {
-            return new ReturnPaymentMethodDTO
+            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(id);
+            if (paymentMethod == null)
             {
-                Id = paymentMethod.Id,
-                Method = paymentMethod.Method!,
-                Icon = paymentMethod.Icon!
-            };
+                throw new KeyNotFoundException($"Payment method with ID {id} not found");
+            }
+
+            paymentMethod.IsActive = !paymentMethod.IsActive;
+            _paymentMethodRepository.Update(paymentMethod);
+            await _paymentMethodRepository.SaveAsync();
+
+            _logger.LogInformation("Toggled payment method {Id} status to {IsActive}", id, paymentMethod.IsActive);
+            return _mapper.Map<ReturnPaymentMethodDTO>(paymentMethod);
         }
     }
 }
