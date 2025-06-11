@@ -9,6 +9,7 @@
     justify-content: space-between;
     align-items: center;
     animation: fadeIn 0.3s ease-in-out;
+
 }
 
 .error-message-container p {

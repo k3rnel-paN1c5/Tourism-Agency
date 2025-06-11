@@ -1,9 +1,9 @@
 .form {
-    padding: 20px;
-    background-color: #161e2e;
-    border-radius: 8px;
-    max-width: 700px;
-    margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  animation: fadeInUp 0.5s ease-out;
+  margin: 0 auto;
 }
 
 .trip-plan-form h3 {
@@ -18,6 +18,18 @@
     gap: 20px;
 }
 
+.form-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: none;
+  border-radius: 12px;
+  background: #161e2e;
+  color: #ffffff;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+   box-sizing: border-box;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -28,10 +40,10 @@
 }
 
 .form-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #fff;
-    font-size: 14px;
+  font-size: 1rem;
+  color: #8892a4;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .form-group input[type="text"],
@@ -40,11 +52,10 @@
 .form-group textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
-    box-sizing: border-box; /* Important for padding and width calculation */
-}
+    box-sizing: border-box;
+} 
+
 
 .form-group textarea {
     min-height: 80px;
@@ -55,7 +66,7 @@
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #007bff;
+    border-color:rgb(34, 0, 255);
     box-shadow: 0 0 0 2px rgba(0,123,255,.25);
 }
 
@@ -85,4 +96,45 @@
     .form-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #8892a4;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid #4da6ff;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+  background: #4da6ff;
+}
+
+.checkbox-container input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

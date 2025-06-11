@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display :wght@400;500;600&display=swap');
 #root {
-  max-width: 1800px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  width:100%;
 }
 
 body {

@@ -154,8 +154,7 @@ const RegionManagementPage = () => {
                         <RegionForm
                             onSubmit={handleSave}
                             initialData={selectedRegion}
-                            onSave={handleSave}
-                            onCancel={() => setIsModalOpen(false)}
+                            isLoading={isLoading}
                         />
                     </Modal>
                 )}

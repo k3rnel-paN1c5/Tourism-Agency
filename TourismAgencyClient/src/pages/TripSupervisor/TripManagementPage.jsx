@@ -183,8 +183,7 @@ const TripManagementPage = () => {
                         <TripForm
                             onSubmit={handleSave}
                             initialData={selectedTrip}
-                            onSave={handleSave}
-                            onCancel={() => setIsModalOpen(false)}
+                            isLoading={isLoading}
                         />
                     </Modal>
                 )}

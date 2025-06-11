@@ -3,7 +3,7 @@
     flex-direction: column;
     height: 100vh;
     background-color: #0f172a; /* Same dark background */
-    width: 140vh;
+    width: 100%;
 }
 
 .management-content {
@@ -16,9 +16,8 @@
 }
 
 .management-content .data-table-container,
-.management-content .toolbar,
-.management-content .error-message-container{
-    width: 140vh;
+.management-content .toolbar{
+    width: 100%;
     //max-width: 1800px; /* Give the content a max-width for very large screens */
     margin-bottom: 1.5rem;
 }
