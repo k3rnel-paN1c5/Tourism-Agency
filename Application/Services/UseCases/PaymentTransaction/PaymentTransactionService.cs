@@ -34,24 +34,14 @@ namespace Application.Services.UseCases
 
         public async Task<ReturnPaymentTransactionDTO> CreatePaymentTransactionAsync(CreatePaymentTransactionDTO transactionDto)
         {
-            // Validate payment exists
-            var payment = await _validationService.ValidatePaymentExistsAsync(transactionDto.PaymentId);
-
-            // Validate payment method exists and is active
-            var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(transactionDto.PaymentMethodId);
-
-            // Validate transaction amount
-            _validationService.ValidateTransactionAmount(transactionDto.Amount);
-
             // Apply transaction-specific validations
             if (transactionDto.TransactionType == TransactionType.Payment)
             {
-                _validationService.ValidatePaymentCanReceivePayment(payment);
+                _validationService.ValidatePaymentCanReceivePayment(payment, transactionDto.Amount);
             }
             else if (transactionDto.TransactionType == TransactionType.Refund)
             {
-                _validationService.ValidatePaymentCanBeRefunded(payment);
-                _validationService.ValidateRefundAmount(payment, transactionDto.Amount);
+                _validationService.ValidatePaymentCanBeRefunded(payment, transactionDto.Amount);
             }
 
             // Create the transaction

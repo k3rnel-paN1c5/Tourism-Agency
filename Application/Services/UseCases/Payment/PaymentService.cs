@@ -57,10 +57,7 @@ namespace Application.Services.UseCases
                 var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(processPaymentDto.PaymentMethodId);
 
                 // Validate payment can receive payment
-                _validationService.ValidatePaymentCanReceivePayment(payment);
-
-                // Validate transaction amount
-                _validationService.ValidateTransactionAmount(processPaymentDto.Amount);
+                _validationService.ValidatePaymentCanReceivePayment(payment,processPaymentDto.Amount);
 
                 // Create transaction through PaymentTransactionService
                 var createTransactionDto = new CreatePaymentTransactionDTO
@@ -109,10 +106,7 @@ namespace Application.Services.UseCases
                 var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(refundDto.PaymentMethodId);
 
                 // Validate payment can be refunded
-                _validationService.ValidatePaymentCanBeRefunded(payment);
-
-                // Validate refund amount
-                _validationService.ValidateRefundAmount(payment, refundDto.Amount);
+                _validationService.ValidatePaymentCanBeRefunded(payment, refundDto.Amount);
 
                 // Create refund transaction
                 var createTransactionDto = new CreatePaymentTransactionDTO
@@ -125,7 +119,14 @@ namespace Application.Services.UseCases
                 };
 
                 var transaction = await _paymentTransactionService.CreatePaymentTransactionAsync(createTransactionDto);
-
+                
+                
+                // Update payment notes with refund information
+                payment.Notes = string.IsNullOrEmpty(payment.Notes) 
+                    ? $"REFUND: {refundDto.Amount:C} - {refundDto.Reason} (Transaction: {transaction.Id})"
+                    : $"{payment.Notes}; REFUND: {refundDto.Amount:C} - {refundDto.Reason} (Transaction: {transaction.Id})";
+                
+                
                 // Update payment status after refund
                 await UpdatePaymentStatusAfterTransaction(payment.Id);
 
