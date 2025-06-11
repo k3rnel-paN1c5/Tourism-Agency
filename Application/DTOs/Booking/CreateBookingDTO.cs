@@ -1,6 +1,5 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using Domain.Enums;
+
 
 namespace Application.DTOs.Booking;
 /// <summary>

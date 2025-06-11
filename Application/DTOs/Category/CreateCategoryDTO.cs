@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Category
 {
@@ -17,9 +12,9 @@ namespace Application.DTOs.Category
         /// Gets or sets the title or name of the category.
         /// This field is required and has a maximum length of 100 characters.
         /// </summary>
-        [Required(ErrorMessage = "Name cannot be empty")]
-        [StringLength(100)]
-        [Display(Name = "Category Name")]
+        [Required(ErrorMessage = "Title cannot be empty")]
+        [StringLength(100, ErrorMessage = "Category title cannot exceed 100 characters.")]
+        [Display(Name = "Category Title")]
         public string? Title { get; set; }
 
     }
