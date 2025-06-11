@@ -1,9 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+
 
 namespace Application.DTOs.Category
 {
@@ -16,11 +12,13 @@ namespace Application.DTOs.Category
         /// <summary>
         /// Gets or sets the unique identifier of the category.
         /// </summary>
+        [Display(Name = "Category ID")]
         public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the title or name of the category.
         /// </summary>
+        [Display(Name = "Title")]
         public string? Title { get; set; }
         
     }

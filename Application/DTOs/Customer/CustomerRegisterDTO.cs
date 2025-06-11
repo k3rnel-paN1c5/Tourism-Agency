@@ -14,6 +14,7 @@ public class CustomerRegisterDTO
     /// </summary>
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid email format")]
+    [Display(Name = "Email")]
     public string? Email { get; set; }
 
     /// <summary>
@@ -23,6 +24,7 @@ public class CustomerRegisterDTO
     [Required(ErrorMessage = "Password is required")]
     [DataType(DataType.Password)]
     [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be 6-100 characters")]
+    [Display(Name = "Password")]
     public string? Password { get; set; }
 
     /// <summary>
@@ -32,6 +34,7 @@ public class CustomerRegisterDTO
     [Required(ErrorMessage = "Confirm password is required")]
     [DataType(DataType.Password)]
     [Compare("Password", ErrorMessage = "Passwords don't match")]
+    [Display(Name = "Confirm Password")]
     public string? ConfirmPassword { get; set; }
 
     /// <summary>
@@ -40,6 +43,7 @@ public class CustomerRegisterDTO
     /// </summary>
     [Required(ErrorMessage = "First name is required")]
     [StringLength(100, MinimumLength = 2, ErrorMessage = "First name must be 2-100 characters")]
+    [Display(Name = "First Name")]
     public string? FirstName { get; set; }
 
     /// <summary>
@@ -48,6 +52,7 @@ public class CustomerRegisterDTO
     /// </summary>
     [Required(ErrorMessage = "Last name is required")]
     [StringLength(100, MinimumLength = 2, ErrorMessage = "Last name must be 2-100 characters")]
+    [Display(Name = "Last Name")]
     public string? LastName { get; set; }
 
     /// <summary>
@@ -56,6 +61,7 @@ public class CustomerRegisterDTO
     /// </summary>
     [Required(ErrorMessage = "Phone number is required")]
     [RegularExpression(@"^[0-9]{12}$", ErrorMessage = "Phone number must be 12 digits")]
+    [Display(Name = "Phone Number")]
     public string? PhoneNumber { get; set; }
 
     /// <summary>
@@ -63,6 +69,7 @@ public class CustomerRegisterDTO
     /// This field is optional and must be a 14-digit number if provided.
     /// </summary>
     [RegularExpression(@"^[0-9]{14}$", ErrorMessage = "WhatsApp number must be 14 digits")]
+    [Display(Name = "Whatsapp")]
     public string? Whatsapp { get; set; }
 
     /// <summary>
@@ -71,6 +78,7 @@ public class CustomerRegisterDTO
     /// </summary>
     [Required(ErrorMessage = "Country is required")]
     [StringLength(100, ErrorMessage = "Country name cannot exceed 100 characters")]
+    [Display(Name = "Country")]
     public string? Country { get; set; }
 
 }
