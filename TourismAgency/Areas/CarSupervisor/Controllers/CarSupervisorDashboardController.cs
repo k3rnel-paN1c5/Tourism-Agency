@@ -4,11 +4,9 @@ using Application.IServices.UseCases;
 using Application.DTOs.Car;
 using Application.DTOs.Category;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Domain.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.UseCases;
-
 
 namespace TourismAgency.Areas.CarSupervisor.Controllers
 {
@@ -241,6 +239,76 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
             {
                 return StatusCode(500, new{
                     Error = "Failed to create car",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        [HttpPut("Cars/{id}")]
+        public async Task<IActionResult> UpdateCar(int id, [FromBody] UpdateCarDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                await _carService.UpdateCarAsync(dto);
+                return Ok(dto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while updating car with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        [HttpDelete("Cars/{id}")]
+        public async Task<IActionResult> DeleteCar(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                await _carService.DeleteCarAsync(id);
+                return Ok($"Deleted A car with id {id}");
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(new { Error = e.Message });
+
+            }
+            catch (DbUpdateException e)
+            {
+                return Conflict(new { Error = e.Message });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while Deleting car with ID {id}",
                     Details = ex.Message
                 });
             }
