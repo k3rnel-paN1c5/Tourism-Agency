@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+
 
 namespace Application.DTOs.Category
 {
@@ -17,6 +13,7 @@ namespace Application.DTOs.Category
         /// Gets or sets the unique identifier of the category to be updated. This field is required.
         /// </summary>
         [Required(ErrorMessage = "Specify which category to edit")]
+        [Display(Name = "Category ID")]
         public int Id { get; set; }
 
         /// <summary>
@@ -24,7 +21,8 @@ namespace Application.DTOs.Category
         /// This field is required and has a maximum length of 100 characters.
         /// </summary>
         [Required(ErrorMessage = "New category name cannot be empty")]
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "Category title cannot exceed 100 characters.")]
+        [Display(Name="Title")]
         public string? Title { get; set; }
     }
 }

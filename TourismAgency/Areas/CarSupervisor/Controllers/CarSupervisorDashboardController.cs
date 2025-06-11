@@ -1,15 +1,20 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Application.IServices.UseCases;
 using Application.DTOs.Car;
 using Application.DTOs.Category;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Domain.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.EntityFrameworkCore;
+using Application.Services.UseCases;
+
 
 namespace TourismAgency.Areas.CarSupervisor.Controllers
 {
     [Area("CarSupervisor")]
-    [Route("api/[controller]")]
-    [Authorize(Roles = "CarSupervisor,Admin")]
+    [Route("api/[area]/[controller]")]
+    [Authorize(Roles = "CarSupervisor,Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class CarSupervisorDashboardController : ControllerBase
     {
@@ -31,7 +36,7 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
         }
 
         //* Category *//
-        [HttpGet("category")]
+        [HttpGet("Categories")]
         public async Task<IActionResult> GetCategories()
         {
             try
@@ -49,26 +54,26 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
             }
         }
        
-        [HttpGet("category/{id}")]
+        [HttpGet("Categories/{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {
             try
             {
                 var cat = await _categoryService.GetCategoryByIdAsync(id);
-                if (cat == null) return NotFound();
+                if (cat == null) return NotFound(new { Error = $"Category with ID {id} not found" });
                 return Ok(cat);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
-                    Error = $"Failed to retrieve category with ID {id}",
+                    Error = $"An error occurred while retrieving category with ID {id}",
                     Details = ex.Message
                 });
             }
         }
        
-        [HttpPost("category")]
+        [HttpPost("Categories")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDTO dto)
         {
             if (!ModelState.IsValid)
@@ -97,6 +102,81 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
 
         }
 
+        [HttpPut("Categories/{id}")]
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                await _categoryService.UpdateCategoryAsync(dto);
+                return Ok(dto);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(new { Error = e.Message });
+
+            }
+            catch (DbUpdateException e)
+            {
+                return Conflict(new { Error = e.Message });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while updating category with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        [HttpDelete("Categories/{id}")]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+            try
+            {
+                await _categoryService.DeleteCategoryAsync(id);
+                return Ok($"Deleted category with id {id}");
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(new { Error = e.Message });
+
+            }
+            catch (DbUpdateException e)
+            {
+                return Conflict(new { Error = e.Message });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while Deleting Category with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
 
         //* Cars *//
 
@@ -112,14 +192,14 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
             {
                 return StatusCode(500, new
                 {
-                    Error = "Failed to retrieve cars",
+                    Error = "An error occurred while retrieving cars",
                     Details = ex.Message
                 });
             }
 
         }
 
-        [HttpGet("car/{id}")]
+        [HttpGet("Cars/{id}")]
         public async Task<IActionResult> GetCarById(int id)
         {
             try
@@ -132,13 +212,13 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
             {
                 return StatusCode(500, new
                 {
-                    Error = $"Failed to retrieve car with ID {id}",
+                    Error = $"An error occurred while retrieving car with ID {id}",
                     Details = ex.Message
                 });
             }
         }
 
-        [HttpPost("Car")]
+        [HttpPost("Cars")]
         public async Task<IActionResult> CreateCar([FromBody] CreateCarDTO dto)
         {
             if (!ModelState.IsValid)
@@ -184,7 +264,9 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
             }
         }
 
-        //* Cars *//
+
+
+        //* CarBooking *//
 
         [HttpGet("carbooking")]
         public async Task<IActionResult> GetCarBookings()
