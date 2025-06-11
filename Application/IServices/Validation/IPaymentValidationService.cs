@@ -29,14 +29,14 @@ namespace Application.IServices.Validation
         /// </summary>
         /// <param name="payment">The payment to validate.</param>
         /// <exception cref="InvalidOperationException">Thrown when the payment cannot receive payments.</exception>
-        void ValidatePaymentCanReceivePayment(Payment payment);
+        void ValidatePaymentCanReceivePayment(Payment payment, decimal paymentAmount);
 
         /// <summary>
         /// Validates that a payment can be refunded.
         /// </summary>
         /// <param name="payment">The payment to validate.</param>
         /// <exception cref="InvalidOperationException">Thrown when the payment cannot be refunded.</exception>
-        void ValidatePaymentCanBeRefunded(Payment payment);
+        void ValidatePaymentCanBeRefunded(Payment payment, decimal refundAmount, string reason);
 
     }
 }

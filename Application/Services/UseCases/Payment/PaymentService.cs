@@ -106,7 +106,7 @@ namespace Application.Services.UseCases
                 var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(refundDto.PaymentMethodId);
 
                 // Validate payment can be refunded
-                _validationService.ValidatePaymentCanBeRefunded(payment, refundDto.Amount);
+                _validationService.ValidatePaymentCanBeRefunded(payment, refundDto.Amount , refundDto.Reason);
 
                 // Create refund transaction
                 var createTransactionDto = new CreatePaymentTransactionDTO

@@ -34,6 +34,11 @@ namespace Application.Services.UseCases
 
         public async Task<ReturnPaymentTransactionDTO> CreatePaymentTransactionAsync(CreatePaymentTransactionDTO transactionDto)
         {
+            // Validate payment exists
+            var payment = await _validationService.ValidatePaymentExistsAsync(transactionDto.PaymentId);
+
+            // Validate payment method exists and is active
+            var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(transactionDto.PaymentMethodId);
             // Apply transaction-specific validations
             if (transactionDto.TransactionType == TransactionType.Payment)
             {
@@ -41,7 +46,7 @@ namespace Application.Services.UseCases
             }
             else if (transactionDto.TransactionType == TransactionType.Refund)
             {
-                _validationService.ValidatePaymentCanBeRefunded(payment, transactionDto.Amount);
+                _validationService.ValidatePaymentCanBeRefunded(payment, transactionDto.Amount, transactionDto.Notes);
             }
 
             // Create the transaction
@@ -64,7 +69,7 @@ namespace Application.Services.UseCases
             var transactions = await _paymentTransactionRepository.GetAllAsync();
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            await PopulatePaymentMethodNamesAsync(result);
+            //await PopulatePaymentMethodNamesAsync(result);
             
             return result;
         }
@@ -91,7 +96,7 @@ namespace Application.Services.UseCases
             var transactions = await _paymentTransactionRepository.GetAllByPredicateAsync(t => t.PaymentId == paymentId);
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            await PopulatePaymentMethodNamesAsync(result);
+            //await PopulatePaymentMethodNamesAsync(result);
             
             return result;
         }
@@ -101,7 +106,7 @@ namespace Application.Services.UseCases
             var transactions = await _paymentTransactionRepository.GetAllByPredicateAsync(t => t.TransactionType == transactionType);
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            await PopulatePaymentMethodNamesAsync(result);
+            //await PopulatePaymentMethodNamesAsync(result);
             
             return result;
         }
@@ -111,7 +116,7 @@ namespace Application.Services.UseCases
             var transactions = await _paymentTransactionRepository.GetAllByPredicateAsync(t => t.PaymentMethodId == paymentMethodId);
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            await PopulatePaymentMethodNamesAsync(result);
+            //await PopulatePaymentMethodNamesAsync(result);
             
             return result;
         }
@@ -128,7 +133,7 @@ namespace Application.Services.UseCases
             
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            await PopulatePaymentMethodNamesAsync(result);
+            //await PopulatePaymentMethodNamesAsync(result);
             
             return result;
         }
@@ -192,31 +197,10 @@ namespace Application.Services.UseCases
             var refundAmount = transactions
                 .Where(t => t.TransactionType == TransactionType.Refund)
                 .Sum(t => t.Amount);
+
                 
             return paymentAmount - refundAmount;
         }
 
-        private async Task PopulatePaymentMethodNamesAsync(IEnumerable<ReturnPaymentTransactionDTO> transactions)
-        {
-            var paymentMethodIds = transactions.Select(t => t.PaymentMethodId).Distinct();
-            var paymentMethods = new Dictionary<int, string>();
-
-            foreach (var id in paymentMethodIds)
-            {
-                var method = await _paymentMethodRepository.GetByIdAsync(id);
-                if (method != null)
-                {
-                    paymentMethods[id] = method.Method ?? string.Empty;
-                }
-            }
-
-            foreach (var transaction in transactions)
-            {
-                if (paymentMethods.TryGetValue(transaction.PaymentMethodId, out var methodName))
-                {
-                    transaction.PaymentMethodName = methodName;
-                }
-            }
-        }
     }
 }
