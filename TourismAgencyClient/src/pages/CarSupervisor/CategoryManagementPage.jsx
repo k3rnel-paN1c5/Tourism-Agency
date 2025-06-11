@@ -117,7 +117,7 @@ const CategoryManagementPage = () => {
 
     const categoryColumns = [
         { header: 'ID', key: 'id' },
-        { header: 'Name', key: 'name' },
+        { header: 'Title', key: 'title' },
     ];
     
     return (
@@ -126,10 +126,7 @@ const CategoryManagementPage = () => {
             <DashboardHeader title="Manage Categories" />
             <main className="management-content">
                 <div className="actions-bar">
-                    <SearchBar 
-                        onSearch={setSearchQuery}
-                        placeholder="Search by category name..."
-                    />
+                   
                     <button onClick={handleCreate} className="btn-add-new">Add New Category</button>
                 </div>
 

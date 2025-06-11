@@ -22,7 +22,7 @@ const carService = {
 
   getCarById: async (id) => {
     try {
-      const response = await apiClient.get(`/api/CarSupervisor/CarSupervisorDashboard/car/${id}`); 
+      const response = await apiClient.get(`/api/CarSupervisor/CarSupervisorDashboard/Cars/${id}`); 
       return response.data;
     } catch (error) {
       console.error(`Error fetching car with id: ${id}:`, error);
@@ -32,7 +32,7 @@ const carService = {
 
   createCar: async (carData) => {
     try {
-      const response = await apiClient.post('/api/CarSupervisor/CarSupervisorDashboard/Car', carData); 
+      const response = await apiClient.post('/api/CarSupervisor/CarSupervisorDashboard/Cars', carData); 
       return response.data;
     } catch (error) {
       console.error('Error creating car:', error);
