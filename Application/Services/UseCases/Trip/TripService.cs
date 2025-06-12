@@ -159,7 +159,7 @@ public class TripService : ITripService
 
             if (!string.Equals(updateTripDto.Slug, existingTrip.Slug, StringComparison.OrdinalIgnoreCase))
             {
-                var tripWithSameSlug = await _tripRepository.GetByPredicateAsync(t => t.Slug.ToLower().Equals(updateTripDto.Slug.ToLower()) && t.Id != updateTripDto.Id).ConfigureAwait(false);
+                var tripWithSameSlug = await _tripRepository.GetByPredicateAsync(t => t.Slug.ToLower().Equals(updateTripDto.Slug.ToLower()!) && t.Id != updateTripDto.Id).ConfigureAwait(false);
                 if (tripWithSameSlug is not null)
                 {
                     _logger.LogWarning("A trip with slug '{Slug}' already exists. Update failed for trip ID {TripId}.", updateTripDto.Slug, updateTripDto.Id);
