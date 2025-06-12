@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Tag
 {
-    public class TagDto
+    public class GetTagDTO
     {
         public int Id { get; set; }
         
