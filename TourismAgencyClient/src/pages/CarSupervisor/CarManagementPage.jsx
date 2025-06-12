@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import carService from "../../services/CarSupervisor/carService";
 
-import DashboardHeader from "../../components/DashboardHeader";
-import DataTable from "../../components/DataTable";
-import Modal from "../../components/Modal";
-import CarForm from "../../components/CarForm";
-import "./ManagementPage.css"; // Shared styles for management pages
+
+import DashboardHeader from "../../components/shared/DashboardHeader";
+import DataTable from "../../components/shared/DataTable";
+import Modal from "../../components/shared/Modal";
+import CarForm from "../../components/carSupervisor/CarForm";
+import "../shared/ManagementPage.css"; // Shared styles for management pages
 
 /**
  * CarManagementPage component.

@@ -17,7 +17,7 @@ public static class IdentitySeed
     /// <returns>A task that represents the asynchronous seeding operation.</returns>
     public static async Task SeedRolesAndAdmin(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
     {
-        string[] roleNames = { "Admin", "Manager", "TripSupervisor", "BookingSupervisor", "Customer" };
+        string[] roleNames = { "Admin", "Manager", "TripSupervisor", "CarSupervisor", "Customer" };
         foreach (var roleName in roleNames)
         {
             if (!await roleManager.RoleExistsAsync(roleName))

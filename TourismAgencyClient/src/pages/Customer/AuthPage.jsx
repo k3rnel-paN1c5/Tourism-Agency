@@ -1,7 +1,7 @@
 import { Link, useNavigate} from 'react-router-dom';
 import { useState } from 'react';
-import Login from '../../components/Login';
-import Register from '../../components/Register';
+import Login from '../../components/auth/Login';
+import Register from '../../components/auth/Register';
 import './AuthPage.css'
 
 export default function AuthPage() {

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import tripService from '../../services/TripSupervisor/tripService';
 
-import DashboardHeader from '../../components/DashboardHeader';
-import DataTable from '../../components/DataTable';
-import Modal from '../../components/Modal';
-import ErrorMessage from '../../components/ErrorMessage';
-import TripForm from '../../components/TripForm';
-import SearchBar from '../../components/SearchBar';
-import './ManagementPage.css';
+import DashboardHeader from '../../components/shared/DashboardHeader';
+import DataTable from '../../components/shared/DataTable';
+import Modal from '../../components/shared/Modal';
+import ErrorMessage from '../../components/shared/ErrorMessage';
+import TripForm from '../../components/tripSupervisor/TripForm';
+import SearchBar from '../../components/shared/SearchBar';
+import '../shared/ManagementPage.css';
 
 /**
  * TripManagementPage component.

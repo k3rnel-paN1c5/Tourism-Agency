@@ -1,6 +1,6 @@
 import React from 'react';
-import DashboardHeader from '../../components/DashboardHeader';
-import DashboardBlock from '../../components/DashboardBlock'; // Import the new component
+import DashboardHeader from '../../components/shared/DashboardHeader';
+import DashboardBlock from '../../components/shared/DashboardBlock'; // Import the new component
 import './TripSupervisorDashboard.css';
 
 /**

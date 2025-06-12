@@ -1,0 +1,54 @@
+.navbar {
+  background-color: #1a1a1a; /* Dark background similar to button background */
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #242424; /* Subtle border */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1.5rem; /* Space between navigation items */
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.87); /* White color for links */
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.nav-link:hover {
+  background-color: #2e2e2e; /* Slightly lighter background on hover */
+  color: #646cff; /* Hover color similar to existing links */
+}
+
+.logout-btn {
+  background-color: #646cff; /* Blue background for logout button */
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: 8px;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+.logout-btn:hover {
+  background-color: #535bf2; /* Darker blue on hover */
+  border-color: #535bf2;
+}

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import tripBookingService from '../../services/TripSupervisor/tripBookingService';
 import tripPlanService from '../../services/TripSupervisor/tripPlanService';
-import DashboardHeader from '../../components/DashboardHeader';
-import DataTable from '../../components/DataTable';
-import ErrorMessage from '../../components/ErrorMessage';
-import './ManagementPage.css';
+import DashboardHeader from '../../components/shared/DashboardHeader';
+import DataTable from '../../components/shared/DataTable';
+import ErrorMessage from '../../components/shared/ErrorMessage';
+import '../shared/ManagementPage.css';
 
 const TripBookingManagementPage = () => {
     const [bookings, setBookings] = useState([]);

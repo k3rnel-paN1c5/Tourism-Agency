@@ -13,6 +13,7 @@ const login = async (email, password, rememberMe) => {
   });
   if (response.data.token) {
     localStorage.setItem('token', response.data.token);
+    localStorage.setItem('role', JSON.stringify(response.data.role)); //
   }
   return response.data;
 };
@@ -49,20 +50,24 @@ const logout = async () => {
     await apiClient.post('/api/customer/logout');
     // Clear all auth-related data
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('role');
     // Redirect to login page
     window.location.href = '/login';
   } catch (error) {
     console.error('Logout failed:', error);
     // Even if the API call fails, clear local storage and redirect
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('role');
     window.location.href = '/login';
   }
 };
 
-const getCurrentUser = () => {
-  return localStorage.getItem('token');
+const getCurrentRole = () => {
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+  if (token && role) {
+    return {'token': token, 'roles': JSON.parse(role)}
+  }
 };
 
 const isAuthenticated = () => {
@@ -73,6 +78,6 @@ export default {
   login,
   register,
   logout,
-  getCurrentUser,
+  getCurrentRole,
   isAuthenticated,
 };

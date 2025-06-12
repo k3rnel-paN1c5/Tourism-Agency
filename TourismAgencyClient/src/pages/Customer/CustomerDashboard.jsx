@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import authService from '../../services/authService';
-import DashboardHeader from '../../components/DashboardHeader'
-import TripBookingSection from '../../components/TripBookingSection';
-import CarBookingSection from '../../components/CarBookingSection';
+import DashboardHeader from '../../components/shared/DashboardHeader'
+import TripBookingSection from '../../components/booking/TripBookingSection';
+import CarBookingSection from '../../components/booking/CarBookingSection';
 import bookingService from '../../services/bookingService';
 import './Dashboard.css';
 

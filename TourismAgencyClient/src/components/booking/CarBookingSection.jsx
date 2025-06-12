@@ -1,4 +1,4 @@
-import Section from "./Section";
+import Section from "../shared/Section";
 import BookingCard from "./BookingCard";
 import  './Booking.css' ;
 

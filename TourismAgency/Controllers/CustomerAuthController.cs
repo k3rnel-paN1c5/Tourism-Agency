@@ -90,6 +90,7 @@ namespace TourismAgency.Controllers
                     isSuccess = true,
                     Token = token,
                     message = "Login successful.",
+                    role,
                     result,
                     redirectUrl = !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
                         ? returnUrl

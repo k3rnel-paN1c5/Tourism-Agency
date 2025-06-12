@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import categoryService from '../../services/CarSupervisor/categoryService';
-import DashboardHeader from '../../components/DashboardHeader';
-import DataTable from '../../components/DataTable';
-import Modal from '../../components/Modal';
-import ErrorMessage from '../../components/ErrorMessage';
-import CategoryForm from '../../components/CategoryForm';
-import SearchBar from '../../components/SearchBar';
-import './ManagementPage.css'; // Shared styles for management pages
+import DashboardHeader from '../../components/shared/DashboardHeader';
+import DataTable from '../../components/shared/DataTable';
+import Modal from '../../components/shared/Modal';
+import ErrorMessage from '../../components/shared/ErrorMessage';
+import CategoryForm from '../../components/carSupervisor/CategoryForm';
+import SearchBar from '../../components/shared/SearchBar';
+import "../shared/ManagementPage.css";// Shared styles for management pages
 
 
 /**

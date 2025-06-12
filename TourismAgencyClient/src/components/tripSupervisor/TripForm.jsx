@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ErrorMessage from './ErrorMessage';
-import "./Form.css";
+import "../shared/Form.css";
 
 const TripForm = ({ onSubmit, initialData, isLoading }) => {
   const [formData, setFormData] = useState({

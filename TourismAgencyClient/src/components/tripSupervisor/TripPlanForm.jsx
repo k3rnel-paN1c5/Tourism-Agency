@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import regionService from '../services/TripSupervisor/regionService';
-import tripService from '../services/TripSupervisor/tripService';
-import './Form.css'
+import regionService from '../../services/TripSupervisor/regionService';
+import tripService from '../../services/TripSupervisor/tripService';
+import "../shared/Form.css";
 const TripPlanForm = ({ onSubmit, initialData, isLoading }) => {
   const [formData, setFormData] = useState({
     tripId: '',
