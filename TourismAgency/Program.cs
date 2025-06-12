@@ -210,7 +210,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
@@ -232,8 +232,14 @@ app.UseEndpoints(endpoints =>
     _ = endpoints.MapControllers();
 });
 
-app.MapControllerRoute(
+
+/*app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");*/
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "api/{area}/{controller}/{action=Index}/{id?}");
+
 
 app.Run();
