@@ -14,8 +14,6 @@ public interface IPostTypeService
     /// <param name="postTypeDto">The DTO containing information for the new post type.</param>
     /// <returns>A <see cref="PostTypeDto"/> representing the newly created post type.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="postTypeDto"/> is null.</exception>
-    /// <exception cref="InvalidOperationException">Thrown if the HTTP context is unavailable.</exception>
-    /// <exception cref="UnauthorizedAccessException">Thrown if the user is not an administrator.</exception>
     /// <exception cref="ValidationException">Thrown if the post type title or description is empty.</exception>
     public Task<PostTypeDto> CreatePostTypeAsync(CreatePostTypeDTO postTypeDto);
 
@@ -39,8 +37,6 @@ public interface IPostTypeService
     /// <param name="postTypeDto">The DTO containing updated information for the post type.</param>
     /// <returns>A <see cref="PostTypeDto"/> representing the updated post type.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="postTypeDto"/> is null.</exception>
-    /// <exception cref="InvalidOperationException">Thrown if the HTTP context is unavailable.</exception>
-    /// <exception cref="UnauthorizedAccessException">Thrown if the user is not an administrator.</exception>
     /// <exception cref="KeyNotFoundException">Thrown if the post type with the specified ID is not found.</exception>
     public Task<PostTypeDto> UpdatePostTypeAsync(UpdatePostTypeDTO postTypeDto);
 
@@ -50,8 +46,6 @@ public interface IPostTypeService
     /// </summary>
     /// <param name="postTypeId">The unique identifier of the post type to delete.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the HTTP context is unavailable.</exception>
-    /// <exception cref="UnauthorizedAccessException">Thrown if the user is not an administrator.</exception>
     /// <exception cref="KeyNotFoundException">Thrown if the post type with the specified ID is not found.</exception>
     /// <exception cref="InvalidOperationException">
     /// Thrown if there are associated posts and the default post type ('Normal') does not exist.

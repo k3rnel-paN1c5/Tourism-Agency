@@ -59,16 +59,6 @@ public class PostTypeService : IPostTypeService
 
         try
         {
-            var httpContext = _httpContextAccessor.HttpContext
-                ?? throw new InvalidOperationException("HTTP context is unavailable.");
-
-            var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-            if (role != "Admin")
-            {
-                _logger.LogWarning("Unauthorized attempt to create post type '{Title}' by a non-admin user.", postTypeDto.Title);
-                throw new UnauthorizedAccessException("Only administrators can create post types.");
-            }
-
             if (string.IsNullOrWhiteSpace(postTypeDto.Title))
             {
                 _logger.LogWarning("Post type creation failed due to empty title.");
@@ -151,16 +141,6 @@ public class PostTypeService : IPostTypeService
 
         try
         {
-            var httpContext = _httpContextAccessor.HttpContext
-                ?? throw new InvalidOperationException("HTTP context is unavailable.");
-
-            var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-            if (role != "Admin")
-            {
-                _logger.LogWarning("Unauthorized attempt to update post type ID {Id} by a non-admin user.", postTypeDto.Id);
-                throw new UnauthorizedAccessException("Only administrators can update post types.");
-            }
-
             var existingPostType = await _postTypeRepository.GetByIdAsync(postTypeDto.Id).ConfigureAwait(false);
 
             if (existingPostType is null)
@@ -204,16 +184,6 @@ public class PostTypeService : IPostTypeService
 
         try
         {
-            var httpContext = _httpContextAccessor.HttpContext
-                ?? throw new InvalidOperationException("HTTP context is unavailable.");
-
-            var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-            if (role != "Admin")
-            {
-                _logger.LogWarning("Unauthorized attempt to delete post type ID {Id} by a non-admin user.", postTypeId);
-                throw new UnauthorizedAccessException("Only administrators can delete post types.");
-            }
-
             var postType = await _postTypeRepository.GetByIdAsync(postTypeId).ConfigureAwait(false);
             if (postType is null)
             {
