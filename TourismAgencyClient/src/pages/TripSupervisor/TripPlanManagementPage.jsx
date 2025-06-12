@@ -187,6 +187,7 @@ const TripPlanManagementPage = () => {
         { header: 'Start Date', key: 'startDate' },
         { header: 'End Date', key: 'endDate' },
         { header: 'Duration', key: 'duration' },
+        { header: 'Price', key: 'price' },
         { header: 'Included Services', key: 'includedServices' },
         { header: 'Stops', key: 'stops' },
         { header: 'Meals Plan', key: 'mealsPlan' },

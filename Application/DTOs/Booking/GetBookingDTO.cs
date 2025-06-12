@@ -18,8 +18,8 @@ public class GetBookingDTO
     /// <summary>
     /// Gets or sets a value indicating the type of booking.
     /// </summary>
-    [Display(Name = "Booking Type")]
-    public bool BookingType { get; set; }
+    [Display(Name = "Trip Booking")]
+    public bool IsTripBooking { get; set; }
 
     /// <summary>
     /// Gets or sets the starting date of the booking.

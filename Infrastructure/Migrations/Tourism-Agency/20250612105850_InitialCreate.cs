@@ -34,8 +34,8 @@ namespace Infrastructure.Migrations.TourismAgency
                     firstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     lastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     phoneNumber = table.Column<string>(type: "char(12)", nullable: false),
-                    whatsapp = table.Column<string>(type: "char(14)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    whatsapp = table.Column<string>(type: "char(14)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,27 +55,13 @@ namespace Infrastructure.Migrations.TourismAgency
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentMethods",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    method = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    icon = table.Column<string>(type: "nvarchar(50)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PaymentMethods", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PostTypes",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     title = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(200)", nullable: false)
+                    description = table.Column<string>(type: "nvarchar(200)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -106,6 +92,21 @@ namespace Infrastructure.Migrations.TourismAgency
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransactionMethods",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    method = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    icon = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    is_active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransactionMethods", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,7 +158,7 @@ namespace Infrastructure.Migrations.TourismAgency
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    bookingType = table.Column<bool>(type: "bit", nullable: false),
+                    IsTripBooking = table.Column<bool>(type: "bit", nullable: false),
                     startDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     endDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     status = table.Column<string>(type: "nvarchar(30)", nullable: false),
@@ -190,11 +191,11 @@ namespace Infrastructure.Migrations.TourismAgency
                         .Annotation("SqlServer:Identity", "1, 1"),
                     title = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     body = table.Column<string>(type: "nvarchar(500)", nullable: false),
-                    image = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    image = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     slug = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     views = table.Column<int>(type: "int", nullable: false),
                     status = table.Column<string>(type: "nvarchar(30)", nullable: false),
-                    summary = table.Column<string>(type: "nvarchar(200)", nullable: false),
+                    summary = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     publishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     postTypeId = table.Column<int>(type: "int", nullable: false),
                     employeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
@@ -230,7 +231,8 @@ namespace Infrastructure.Migrations.TourismAgency
                     includedServices = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     stops = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     mealsPlan = table.Column<string>(type: "nvarchar(200)", nullable: true),
-                    hotelStays = table.Column<string>(type: "nvarchar(200)", nullable: true)
+                    hotelStays = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    price = table.Column<decimal>(type: "decimal(16,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,7 +289,7 @@ namespace Infrastructure.Migrations.TourismAgency
                     amountDue = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
                     amountPaid = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
                     paymentDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
-                    notes = table.Column<string>(type: "nvarchar(200)", nullable: false)
+                    notes = table.Column<string>(type: "nvarchar(200)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -379,8 +381,7 @@ namespace Infrastructure.Migrations.TourismAgency
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     tripPlanId = table.Column<int>(type: "int", nullable: false),
-                    carId = table.Column<int>(type: "int", nullable: false),
-                    price = table.Column<decimal>(type: "decimal(16,2)", nullable: false)
+                    carId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -430,23 +431,23 @@ namespace Infrastructure.Migrations.TourismAgency
                     amount = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
                     transactionDate = table.Column<DateTime>(type: "datetime2(7)", nullable: false),
                     paymentId = table.Column<int>(type: "int", nullable: false),
-                    paymentMethodId = table.Column<int>(type: "int", nullable: false)
+                    TransactionMethodId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PaymentTransaction", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_PaymentTransaction_PaymentMethods_paymentMethodId",
-                        column: x => x.paymentMethodId,
-                        principalTable: "PaymentMethods",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PaymentTransaction_Payments_paymentId",
                         column: x => x.paymentId,
                         principalTable: "Payments",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PaymentTransaction_TransactionMethods_TransactionMethodId",
+                        column: x => x.TransactionMethodId,
+                        principalTable: "TransactionMethods",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -457,26 +458,6 @@ namespace Infrastructure.Migrations.TourismAgency
                     { 1, "Sedan" },
                     { 2, "SUV" },
                     { 3, "Sports" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Customers",
-                columns: new[] { "id", "Country", "firstName", "lastName", "phoneNumber", "whatsapp" },
-                values: new object[,]
-                {
-                    { "user1", "USA", "John", "Doe", "+1234567890", "+1234567890" },
-                    { "user2", "Canada", "Jane", "Smith", "+0987654321", "+0987654321" },
-                    { "user3", "UK", "Alice", "Johnson", "+1122334455", "+1122334455" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Employees",
-                columns: new[] { "id", "hireDate" },
-                values: new object[,]
-                {
-                    { "emp1", new DateTime(2020, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { "emp2", new DateTime(2018, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { "emp3", new DateTime(2022, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -521,27 +502,21 @@ namespace Infrastructure.Migrations.TourismAgency
                 column: "carBookingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentMethods_method",
-                table: "PaymentMethods",
-                column: "method",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Payments_bookingId",
                 table: "Payments",
                 column: "bookingId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentTransaction_paymentId_paymentMethodId_transactionDate",
+                name: "IX_PaymentTransaction_paymentId_TransactionMethodId_transactionDate",
                 table: "PaymentTransaction",
-                columns: new[] { "paymentId", "paymentMethodId", "transactionDate" },
+                columns: new[] { "paymentId", "TransactionMethodId", "transactionDate" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentTransaction_paymentMethodId",
+                name: "IX_PaymentTransaction_TransactionMethodId",
                 table: "PaymentTransaction",
-                column: "paymentMethodId");
+                column: "TransactionMethodId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_employeeId",
@@ -579,6 +554,12 @@ namespace Infrastructure.Migrations.TourismAgency
                 name: "IX_Tags_name",
                 table: "Tags",
                 column: "name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransactionMethods_method",
+                table: "TransactionMethods",
+                column: "method",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -644,10 +625,10 @@ namespace Infrastructure.Migrations.TourismAgency
                 name: "CarBookings");
 
             migrationBuilder.DropTable(
-                name: "PaymentMethods");
+                name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "Payments");
+                name: "TransactionMethods");
 
             migrationBuilder.DropTable(
                 name: "Tags");

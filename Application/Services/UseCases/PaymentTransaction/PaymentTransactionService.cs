@@ -13,20 +13,20 @@ namespace Application.Services.UseCases
     public class PaymentTransactionService : IPaymentTransactionService
      {
         private readonly IRepository<PaymentTransaction, int> _paymentTransactionRepository;
-        private readonly IRepository<PaymentMethod, int> _paymentMethodRepository;
+        private readonly IRepository<TransactionMethod, int> _TransactionMethodRepository;
         private readonly IPaymentValidationService _validationService;
         private readonly IMapper _mapper;
         private readonly ILogger<PaymentTransactionService> _logger;
 
         public PaymentTransactionService(
             IRepository<PaymentTransaction, int> paymentTransactionRepository,
-            IRepository<PaymentMethod, int> paymentMethodRepository,
+            IRepository<TransactionMethod, int> TransactionMethodRepository,
             IPaymentValidationService validationService,
             IMapper mapper,
             ILogger<PaymentTransactionService> logger)
         {
             _paymentTransactionRepository = paymentTransactionRepository;
-            _paymentMethodRepository = paymentMethodRepository;
+            _TransactionMethodRepository = TransactionMethodRepository;
             _validationService = validationService;
             _mapper = mapper;
             _logger = logger;
@@ -37,8 +37,8 @@ namespace Application.Services.UseCases
             // Validate payment exists
             var payment = await _validationService.ValidatePaymentExistsAsync(transactionDto.PaymentId);
 
-            // Validate payment method exists and is active
-            var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(transactionDto.PaymentMethodId);
+            // Validate Transaction Method exists and is active
+            var TransactionMethod = await _validationService.ValidateTransactionMethodExistsAndActiveAsync(transactionDto.TransactionMethodId);
             // Apply transaction-specific validations
             if (transactionDto.TransactionType == TransactionType.Payment)
             {
@@ -46,7 +46,7 @@ namespace Application.Services.UseCases
             }
             else if (transactionDto.TransactionType == TransactionType.Refund)
             {
-                _validationService.ValidatePaymentCanBeRefunded(payment, transactionDto.Amount, transactionDto.Notes);
+                _validationService.ValidatePaymentCanBeRefunded(payment, transactionDto.Amount, transactionDto.Notes!);
             }
 
             // Create the transaction
@@ -60,7 +60,7 @@ namespace Application.Services.UseCases
                 transactionDto.TransactionType, transaction.Id, transactionDto.PaymentId);
 
             var result = _mapper.Map<ReturnPaymentTransactionDTO>(transaction);
-            result.PaymentMethodName = paymentMethod.Method;
+            result.TransactionMethodName = TransactionMethod.Method;
             return result;
         }
 
@@ -69,7 +69,7 @@ namespace Application.Services.UseCases
             var transactions = await _paymentTransactionRepository.GetAllAsync();
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            //await PopulatePaymentMethodNamesAsync(result);
+            //await PopulateTransactionMethodNamesAsync(result);
             
             return result;
         }
@@ -85,8 +85,8 @@ namespace Application.Services.UseCases
 
             var result = _mapper.Map<ReturnPaymentTransactionDTO>(transaction);
             
-            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(transaction.PaymentMethodId);
-            result.PaymentMethodName = paymentMethod?.Method;
+            var TransactionMethod = await _TransactionMethodRepository.GetByIdAsync(transaction.TransactionMethodId);
+            result.TransactionMethodName = TransactionMethod?.Method;
 
             return result;
         }
@@ -96,7 +96,7 @@ namespace Application.Services.UseCases
             var transactions = await _paymentTransactionRepository.GetAllByPredicateAsync(t => t.PaymentId == paymentId);
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            //await PopulatePaymentMethodNamesAsync(result);
+            //await PopulateTransactionMethodNamesAsync(result);
             
             return result;
         }
@@ -106,17 +106,17 @@ namespace Application.Services.UseCases
             var transactions = await _paymentTransactionRepository.GetAllByPredicateAsync(t => t.TransactionType == transactionType);
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            //await PopulatePaymentMethodNamesAsync(result);
+            //await PopulateTransactionMethodNamesAsync(result);
             
             return result;
         }
 
-        public async Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByPaymentMethodAsync(int paymentMethodId)
+        public async Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByTransactionMethodAsync(int TransactionMethodId)
         {
-            var transactions = await _paymentTransactionRepository.GetAllByPredicateAsync(t => t.PaymentMethodId == paymentMethodId);
+            var transactions = await _paymentTransactionRepository.GetAllByPredicateAsync(t => t.TransactionMethodId == TransactionMethodId);
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            //await PopulatePaymentMethodNamesAsync(result);
+            //await PopulateTransactionMethodNamesAsync(result);
             
             return result;
         }
@@ -133,7 +133,7 @@ namespace Application.Services.UseCases
             
             var result = _mapper.Map<IEnumerable<ReturnPaymentTransactionDTO>>(transactions);
             
-            //await PopulatePaymentMethodNamesAsync(result);
+            //await PopulateTransactionMethodNamesAsync(result);
             
             return result;
         }
@@ -156,8 +156,8 @@ namespace Application.Services.UseCases
 
             var result = _mapper.Map<ReturnPaymentTransactionDTO>(transaction);
             
-            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(transaction.PaymentMethodId);
-            result.PaymentMethodName = paymentMethod?.Method;
+            var TransactionMethod = await _TransactionMethodRepository.GetByIdAsync(transaction.TransactionMethodId);
+            result.TransactionMethodName = TransactionMethod?.Method;
 
             return result;
         }
@@ -172,11 +172,11 @@ namespace Application.Services.UseCases
 
             var result = _mapper.Map<PaymentTransactionDetailsDTO>(transaction);
 
-            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(transaction.PaymentMethodId);
-            if (paymentMethod != null)
+            var TransactionMethod = await _TransactionMethodRepository.GetByIdAsync(transaction.TransactionMethodId);
+            if (TransactionMethod != null)
             {
-                result.PaymentMethodName = paymentMethod.Method;
-                result.PaymentMethodIcon = paymentMethod.Icon;
+                result.TransactionMethodName = TransactionMethod.Method;
+                result.TransactionMethodIcon = TransactionMethod.Icon;
             }
 
             var payment = await _validationService.ValidatePaymentExistsAsync(transaction.PaymentId);

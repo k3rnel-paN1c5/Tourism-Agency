@@ -16,16 +16,16 @@ namespace Application.MappingProfiles
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.TransactionDate, opt => opt.Ignore()) // Set in service
                 .ForMember(dest => dest.Payment, opt => opt.Ignore())
-                .ForMember(dest => dest.PaymentMethod, opt => opt.Ignore());
+                .ForMember(dest => dest.TransactionMethod, opt => opt.Ignore());
 
             // PaymentTransaction to ReturnPaymentTransactionDTO
             CreateMap<PaymentTransaction, ReturnPaymentTransactionDTO>()
-                .ForMember(dest => dest.PaymentMethodName, opt => opt.Ignore()); // Set in service
+                .ForMember(dest => dest.TransactionMethodName, opt => opt.Ignore()); // Set in service
 
             // PaymentTransaction to PaymentTransactionDetailsDTO
             CreateMap<PaymentTransaction, PaymentTransactionDetailsDTO>()
-                .ForMember(dest => dest.PaymentMethodName, opt => opt.Ignore()) // Set in service
-                .ForMember(dest => dest.PaymentMethodIcon, opt => opt.Ignore()) // Set in service
+                .ForMember(dest => dest.TransactionMethodName, opt => opt.Ignore()) // Set in service
+                .ForMember(dest => dest.TransactionMethodIcon, opt => opt.Ignore()) // Set in service
                 .ForMember(dest => dest.BookingId, opt => opt.Ignore()) // Set in service
                 .ForMember(dest => dest.PaymentStatus, opt => opt.Ignore()); // Set in service
 
@@ -35,9 +35,9 @@ namespace Application.MappingProfiles
                 .ForMember(dest => dest.Amount, opt => opt.Ignore())
                 .ForMember(dest => dest.TransactionDate, opt => opt.Ignore())
                 .ForMember(dest => dest.PaymentId, opt => opt.Ignore())
-                .ForMember(dest => dest.PaymentMethodId, opt => opt.Ignore())
+                .ForMember(dest => dest.TransactionMethodId, opt => opt.Ignore())
                 .ForMember(dest => dest.Payment, opt => opt.Ignore())
-                .ForMember(dest => dest.PaymentMethod, opt => opt.Ignore());
+                .ForMember(dest => dest.TransactionMethod, opt => opt.Ignore());
         }
     }
 }

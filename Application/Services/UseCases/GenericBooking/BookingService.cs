@@ -57,7 +57,7 @@ public class BookingService : IBookingService
             _logger.LogError("CreateBookingAsync: Input DTO is null.");
             throw new ArgumentNullException(nameof(createBookingDto), "Booking creation DTO cannot be null.");
         }
-        _logger.LogInformation("Attempting to create base booking for a {type} booking", createBookingDto.BookingType ? "Trip" : "Car");
+        _logger.LogInformation("Attempting to create base booking for a {type} booking", createBookingDto.IsTripBooking ? "Trip" : "Car");
 
         try
         {

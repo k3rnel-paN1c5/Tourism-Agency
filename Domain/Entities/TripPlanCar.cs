@@ -30,12 +30,6 @@ public partial class TripPlanCar
     [ForeignKey("Car")]
     public int CarId { get; set; }
 
-    /// <summary>
-    /// Price of the car for this specific trip plan.
-    /// </summary>
-    [Required]
-    [Column("price", TypeName = "decimal(16,2)")]
-    public decimal Price { get; set; }
 
     /// <summary>
     /// Navigation property to the Car.

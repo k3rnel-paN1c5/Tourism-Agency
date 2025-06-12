@@ -16,13 +16,13 @@ namespace Application.IServices.Validation
         Task<Payment> ValidatePaymentExistsAsync(int paymentId);
 
         /// <summary>
-        /// Validates that a payment method exists and is active asynchronously.
+        /// Validates that a Transaction Method exists and is active asynchronously.
         /// </summary>
-        /// <param name="paymentMethodId">The ID of the payment method to validate.</param>
-        /// <returns>The payment method entity if it exists and is active.</returns>
-        /// <exception cref="KeyNotFoundException">Thrown when the payment method is not found.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when the payment method is inactive.</exception>
-        Task<PaymentMethod> ValidatePaymentMethodExistsAndActiveAsync(int paymentMethodId);
+        /// <param name="TransactionMethodId">The ID of the Transaction Method to validate.</param>
+        /// <returns>The Transaction Method entity if it exists and is active.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown when the Transaction Method is not found.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the Transaction Method is inactive.</exception>
+        Task<TransactionMethod> ValidateTransactionMethodExistsAndActiveAsync(int TransactionMethodId);
 
         /// <summary>
         /// Validates that a payment can receive additional payments.

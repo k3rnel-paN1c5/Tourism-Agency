@@ -25,6 +25,7 @@ public class TripPlanProfile : Profile
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
                 .ForMember(dest => dest.IncludedServices, opt => opt.MapFrom(src => src.IncludedServices))
                 .ForMember(dest => dest.Stops, opt => opt.MapFrom(src => src.Stops))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
                 .ForMember(dest => dest.MealsPlan, opt => opt.MapFrom(src => src.MealsPlan))
                 .ForMember(dest => dest.HotelStays, opt => opt.MapFrom(src => src.HotelStays))
 
@@ -43,6 +44,7 @@ public class TripPlanProfile : Profile
             .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
             .ForMember(dest => dest.IncludedServices, opt => opt.MapFrom(src => src.IncludedServices))
             .ForMember(dest => dest.Stops, opt => opt.MapFrom(src => src.Stops))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
             .ForMember(dest => dest.MealsPlan, opt => opt.MapFrom(src => src.MealsPlan))
             .ForMember(dest => dest.HotelStays, opt => opt.MapFrom(src => src.HotelStays))
 
@@ -64,6 +66,7 @@ public class TripPlanProfile : Profile
             .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
             .ForMember(dest => dest.IncludedServices, opt => opt.MapFrom(src => src.IncludedServices))
             .ForMember(dest => dest.Stops, opt => opt.MapFrom(src => src.Stops))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
             .ForMember(dest => dest.MealsPlan, opt => opt.MapFrom(src => src.MealsPlan))
             .ForMember(dest => dest.HotelStays, opt => opt.MapFrom(src => src.HotelStays))
 

@@ -46,11 +46,11 @@ public partial class PaymentTransaction
     public int PaymentId { get; set; }
 
     /// <summary>
-    /// Foreign key for the payment method used in this transaction.
+    /// Foreign key for the Transaction Method used in this transaction.
     /// </summary>
-    [Column("paymentMethodId")]
-    [ForeignKey("PaymentMethod")]
-    public int PaymentMethodId { get; set; }
+    [Column("TransactionMethodId")]
+    [ForeignKey("TransactionMethod")]
+    public int TransactionMethodId { get; set; }
 
 
     // Navigation Proporties
@@ -61,8 +61,8 @@ public partial class PaymentTransaction
     public Payment? Payment { get; set; }
 
     /// <summary>
-    /// Navigation property to the PaymentMethod used for this transaction.
+    /// Navigation property to the TransactionMethod used for this transaction.
     /// </summary>
-    public PaymentMethod? PaymentMethod { get; set; }
+    public TransactionMethod? TransactionMethod { get; set; }
 }
 

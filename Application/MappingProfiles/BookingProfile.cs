@@ -28,7 +28,7 @@ public class BookingProfile : Profile
         // This mapping is used when retrieving booking data to be sent to the client.
         CreateMap<Booking, GetBookingDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.BookingType, opt => opt.MapFrom(src => src.BookingType))
+            .ForMember(dest => dest.IsTripBooking, opt => opt.MapFrom(src => src.IsTripBooking))
             .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
             .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
@@ -41,7 +41,7 @@ public class BookingProfile : Profile
         // This mapping is used when creating a new booking from client-provided data.s
         CreateMap<CreateBookingDTO, Booking>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ForMember(dest => dest.BookingType, opt => opt.Ignore()) // Or set manually if needed
+            .ForMember(dest => dest.IsTripBooking, opt => opt.Ignore()) // Or set manually if needed
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => BookingStatus.Pending)) // Default value
             .ForMember(dest => dest.NumOfPassengers, opt => opt.MapFrom(src => src.NumOfPassengers))
             .ForMember(dest => dest.CustomerId, opt => opt.Ignore()) 
@@ -53,8 +53,8 @@ public class BookingProfile : Profile
         CreateMap<Booking, CreatePaymentDTO>()
             .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.AmountDue,
-                opt => opt.MapFrom(src => src.BookingType ?
-                    TripBookingAmountDueCalculator.CalculateAmountDue((decimal)6.0, src.NumOfPassengers):
+                opt => opt.MapFrom(src => src.IsTripBooking ?
+                    TripBookingAmountDueCalculator.CalculateAmountDue(src.TripBooking!.TripPlan!.Price, src.NumOfPassengers):
                     CarBookingAmountDueCalculator.CalculateAmountDue(src.StartDate, src.EndDate, src.CarBooking!.Car!.Ppd, src.CarBooking.Car.Ppd)));
 
         // Map from UpdateBookingDTO to Booking Entity
@@ -65,7 +65,7 @@ public class BookingProfile : Profile
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.NumOfPassengers, opt => opt.MapFrom(src => src.NumOfPassengers))
-                .ForMember(dest => dest.BookingType, opt => opt.Ignore())
+                .ForMember(dest => dest.IsTripBooking, opt => opt.Ignore())
                 .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
                 .ForMember(dest => dest.CarBooking, opt => opt.Ignore())
                 .ForMember(dest => dest.TripBooking, opt => opt.Ignore())

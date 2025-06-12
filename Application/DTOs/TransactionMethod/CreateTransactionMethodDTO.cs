@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.PaymentMethod
+namespace Application.DTOs.TransactionMethod
 {
-   public class CreatePaymentMethodDTO
+   public class CreateTransactionMethodDTO
     {
         [Required(ErrorMessage = "Method name is required")]
         public string Method { get; set; } = string.Empty;

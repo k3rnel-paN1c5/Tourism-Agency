@@ -85,7 +85,7 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 
 // Payment Services
 builder.Services.AddScoped<IPaymentService, PaymentService>();
-builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
+builder.Services.AddScoped<ITransactionMethodService, TransactionMethodService>();
 builder.Services.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
 
 builder.Services.AddScoped<IPostService, PostService>();

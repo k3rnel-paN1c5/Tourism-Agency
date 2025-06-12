@@ -53,8 +53,8 @@ namespace Application.Services.UseCases
                 // Validate payment exists
                 var payment = await _validationService.ValidatePaymentExistsAsync(processPaymentDto.PaymentId);
 
-                // Validate payment method exists and is active
-                var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(processPaymentDto.PaymentMethodId);
+                // Validate Transaction Method exists and is active
+                var TransactionMethod = await _validationService.ValidateTransactionMethodExistsAndActiveAsync(processPaymentDto.TransactionMethodId);
 
                 // Validate payment can receive payment
                 _validationService.ValidatePaymentCanReceivePayment(payment,processPaymentDto.Amount);
@@ -63,7 +63,7 @@ namespace Application.Services.UseCases
                 var createTransactionDto = new CreatePaymentTransactionDTO
                 {
                     PaymentId = processPaymentDto.PaymentId,
-                    PaymentMethodId = processPaymentDto.PaymentMethodId,
+                    TransactionMethodId = processPaymentDto.TransactionMethodId,
                     Amount = processPaymentDto.Amount,
                     TransactionType = TransactionType.Payment,
                     //TransactionReference = processPaymentDto.TransactionReference,
@@ -77,15 +77,15 @@ namespace Application.Services.UseCases
 
                 var updatedPayment = await _paymentRepository.GetByIdAsync(payment.Id);
                 
-                _logger.LogInformation("Processed payment {PaymentId} with transaction {TransactionId} using {PaymentMethod}", 
-                    payment.Id, transaction.Id, paymentMethod.Method);
+                _logger.LogInformation("Processed payment {PaymentId} with transaction {TransactionId} using {TransactionMethod}", 
+                    payment.Id, transaction.Id, TransactionMethod.Method);
 
                 return new PaymentProcessResultDTO
                 {
                     Payment = _mapper.Map<ReturnPaymentDTO>(updatedPayment),
                     Transaction = transaction,
                     Success = true,
-                    Message = $"Payment processed successfully via {paymentMethod.Method}"
+                    Message = $"Payment processed successfully via {TransactionMethod.Method}"
                 };
             }
             catch (Exception ex)
@@ -102,8 +102,8 @@ namespace Application.Services.UseCases
                 // Validate payment exists
                 var payment = await _validationService.ValidatePaymentExistsAsync(refundDto.PaymentId);
 
-                // Validate payment method exists and is active
-                var paymentMethod = await _validationService.ValidatePaymentMethodExistsAndActiveAsync(refundDto.PaymentMethodId);
+                // Validate Transaction Method exists and is active
+                var TransactionMethod = await _validationService.ValidateTransactionMethodExistsAndActiveAsync(refundDto.TransactionMethodId);
 
                 // Validate payment can be refunded
                 _validationService.ValidatePaymentCanBeRefunded(payment, refundDto.Amount , refundDto.Reason);
@@ -112,7 +112,7 @@ namespace Application.Services.UseCases
                 var createTransactionDto = new CreatePaymentTransactionDTO
                 {
                     PaymentId = refundDto.PaymentId,
-                    PaymentMethodId = refundDto.PaymentMethodId,
+                    TransactionMethodId = refundDto.TransactionMethodId,
                     Amount = refundDto.Amount,
                     TransactionType = TransactionType.Refund,
                     Notes = $"REFUND: {refundDto.Reason}"
@@ -132,15 +132,15 @@ namespace Application.Services.UseCases
 
                 var updatedPayment = await _paymentRepository.GetByIdAsync(payment.Id);
 
-                _logger.LogInformation("Processed refund of {Amount} for payment {PaymentId} via {PaymentMethod}", 
-                    refundDto.Amount, refundDto.PaymentId, paymentMethod.Method);
+                _logger.LogInformation("Processed refund of {Amount} for payment {PaymentId} via {TransactionMethod}", 
+                    refundDto.Amount, refundDto.PaymentId, TransactionMethod.Method);
 
                 return new PaymentProcessResultDTO
                 {
                     Payment = _mapper.Map<ReturnPaymentDTO>(updatedPayment),
                     Transaction = transaction,
                     Success = true,
-                    Message = $"Refund of {refundDto.Amount:C} processed successfully via {paymentMethod.Method}"
+                    Message = $"Refund of {refundDto.Amount:C} processed successfully via {TransactionMethod.Method}"
                 };
             }
             catch (Exception ex)
@@ -155,7 +155,7 @@ namespace Application.Services.UseCases
             var payment = await _paymentRepository.GetByIdAsync(paymentId);
             var totalPaid = await _paymentTransactionService.GetTotalTransactionAmountByPaymentAsync(paymentId);
 
-            payment.AmountPaid = totalPaid;
+            payment!.AmountPaid = totalPaid;
 
             if (totalPaid <= 0)
             {

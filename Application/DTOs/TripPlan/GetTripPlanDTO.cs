@@ -84,6 +84,13 @@ public class GetTripPlanDTO
     [Display(Name = "Region")]
     public GetRegionDTO? Region { get; set; }
 
+
+    /// <summary>
+    /// Gets or sets the price of a seat in this car for this specific trip plan.
+    /// </summary>
+    [Display(Name = "Price")]
+    public decimal Price { get; set; }
+
     /// <summary>
     /// Gets or sets the collection of cars assigned to the trip plan.
     /// </summary>

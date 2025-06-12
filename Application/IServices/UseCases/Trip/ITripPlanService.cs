@@ -16,7 +16,7 @@ public interface ITripPlanService
     /// <returns>A <see cref="GetTripPlanDTO"/> representing the newly created trip plan.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="createTripPlanDto"/> is null.</exception>
     /// <exception cref="KeyNotFoundException">Thrown if the associated Trip or Region is not found.</exception>
-    /// <exception cref="ValidationException">Thrown if the trip is unavailable or date validations fail (e.g., End Date is not after Start Date, Start Date is in the past).</exception>
+    /// <exception cref="ValidationException">Thrown if the trip is unavailable or date validations fail (e.g., End Date is not after Start Date, Start Date is in the past) Or price less than 0.</exception>
     Task<GetTripPlanDTO> CreateTripPlanAsync(CreateTripPlanDTO createTripPlanDto);
     
     /// <summary>

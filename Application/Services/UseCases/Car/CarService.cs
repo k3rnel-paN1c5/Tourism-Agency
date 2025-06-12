@@ -218,13 +218,13 @@ namespace Application.Services.UseCases
             {
                 var availableCars = await _repo.GetAllByPredicateAsync(car =>
 
-                           !car.CarBookings.Any(cb =>
-                           cb.Booking.StartDate < endDate &&
+                           !car.CarBookings!.Any(cb =>
+                           cb.Booking!.StartDate < endDate &&
                            cb.Booking.EndDate > startDate)
                            &&
 
-                           !car.TripPlanCars.Any(tpc =>
-                           tpc.TripPlan.StartDate < endDate &&
+                           !car.TripPlanCars!.Any(tpc =>
+                           tpc.TripPlan!.StartDate < endDate &&
                            tpc.TripPlan.EndDate > startDate));
                 _logger.LogInformation("Cars retrieved successfully.");
                 return _mapper.Map<IEnumerable<GetCarDTO>>(availableCars);

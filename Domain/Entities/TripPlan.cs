@@ -76,6 +76,12 @@ public partial class TripPlan
     [Column("hotelStays", TypeName = "nvarchar(200)")]
     public string? HotelStays { get; set; }
 
+    /// <summary>
+    /// Fee for the seat in this specific trip plan.
+    /// </summary>
+    [Required]
+    [Column("price", TypeName = "decimal(16,2)")]
+    public decimal Price { get; set; }
 
     // Navigation Properties
 

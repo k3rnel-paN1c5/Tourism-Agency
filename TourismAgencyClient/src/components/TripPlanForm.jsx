@@ -12,6 +12,7 @@ const TripPlanForm = ({ onSubmit, initialData, isLoading }) => {
     stops: '',
     mealsPlan: '',
     hotelStays: '',
+    price: '',
   });
   const [trips, setTrips] = useState([]);
   const [regions, setRegions] = useState([]);
@@ -53,6 +54,7 @@ const TripPlanForm = ({ onSubmit, initialData, isLoading }) => {
         stops: initialData.stops || '',
         mealsPlan: initialData.mealsPlan || '',
         hotelStays: initialData.hotelStays || '',
+        price: initialData.price || '',
       });
     } else {
       setFormData({
@@ -64,6 +66,7 @@ const TripPlanForm = ({ onSubmit, initialData, isLoading }) => {
         stops: '',
         mealsPlan: '',
         hotelStays: '',
+        price : '',
       });
     }
   }, [initialData]);
@@ -130,6 +133,11 @@ const TripPlanForm = ({ onSubmit, initialData, isLoading }) => {
         <div className="form-group">
           <label htmlFor="endDate" className="form-group">End Date</label>
           <input type="datetime-local" id="endDate" name="endDate" className='form-input' value={formData.endDate} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="price" className="form-group">Price</label>
+          <input type="number" id="price" name="price" className='form-input' value={formData.price} onChange={handleChange} required />
         </div>
 
         <div className="form-group form-group-full">

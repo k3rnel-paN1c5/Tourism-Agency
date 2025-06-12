@@ -40,7 +40,7 @@ public class TripBookingProfile : Profile
 
         // Map from Create Trip Booking DTO -> Create Booking DTO
         CreateMap<CreateTripBookingDTO, CreateBookingDTO>()
-                .ForMember(dest => dest.BookingType, opt => opt.MapFrom(src => true))
+                .ForMember(dest => dest.IsTripBooking, opt => opt.MapFrom(src => true))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
                 .ForMember(dest => dest.NumOfPassengers, opt => opt.MapFrom(src => src.NumOfPassengers));

@@ -116,20 +116,20 @@ namespace TourismAgency.Controllers
         }
 
         /// <summary>
-        /// Get transactions by payment method
+        /// Get transactions by Transaction Method
         /// </summary>
-        [HttpGet("payment-methods/{paymentMethodId}")]
+        [HttpGet("payment-methods/{TransactionMethodId}")]
         [Authorize(Roles = "Admin,TripSupervisor")]
-        public async Task<ActionResult<IEnumerable<ReturnPaymentTransactionDTO>>> GetTransactionsByPaymentMethod(int paymentMethodId)
+        public async Task<ActionResult<IEnumerable<ReturnPaymentTransactionDTO>>> GetTransactionsByTransactionMethod(int TransactionMethodId)
         {
             try
             {
-                var transactions = await _paymentTransactionService.GetTransactionsByPaymentMethodAsync(paymentMethodId);
+                var transactions = await _paymentTransactionService.GetTransactionsByTransactionMethodAsync(TransactionMethodId);
                 return Ok(transactions);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving transactions for payment method {PaymentMethodId}", paymentMethodId);
+                _logger.LogError(ex, "Error retrieving transactions for Transaction Method {TransactionMethodId}", TransactionMethodId);
                 return StatusCode(500, new
                 {
                     Error = "An error occurred while retrieving payment transactions",

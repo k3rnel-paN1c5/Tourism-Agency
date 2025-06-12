@@ -46,7 +46,7 @@ namespace Application.Services.UseCases
 
             CreateBookingDTO bookingDto = new CreateBookingDTO
             {
-                BookingType = false,
+                IsTripBooking = false,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
                 NumOfPassengers = dto.NumOfPassengers
@@ -106,7 +106,7 @@ namespace Application.Services.UseCases
         {
             CreateBookingDTO booking = new CreateBookingDTO
             {
-                BookingType = true,
+                IsTripBooking = true,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
                 NumOfPassengers = dto.NumOfPassengers

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.PaymentMethod
+namespace Application.DTOs.TransactionMethod
 {
-    public class ReturnPaymentMethodDTO
+    public class ReturnTransactionMethodDTO
     {
         public int Id { get; set; }
         public string Method { get; set; } = string.Empty;

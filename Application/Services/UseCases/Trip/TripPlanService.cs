@@ -92,6 +92,11 @@ public class TripPlanService : ITripPlanService
                 _logger.LogWarning("Invalid Date: Start Date cannot be in the past.");
                 throw new ValidationException("Start Date cannot be in the past.");
             }
+            if (createTripPlanDto.Price < 0)
+            {
+                _logger.LogWarning("Invalid Price: Price cannot be negative.");
+                throw new ValidationException("Price cannot be negative.");
+            }
 
             var tripPlanEntity = _mapper.Map<TripPlan>(createTripPlanDto);
 
@@ -212,6 +217,12 @@ public class TripPlanService : ITripPlanService
             {
                 _logger.LogWarning("Invalid Date: Start Date cannot be in the past.");
                 throw new ValidationException("Start Date cannot be in the past.");
+            }
+
+            if (updateTripPlanDto.Price < 0)
+            {
+                _logger.LogWarning("Invalid Price: Price cannot be negative.");
+                throw new ValidationException("Price cannot be negative.");
             }
 
             _mapper.Map(updateTripPlanDto, existingTripPlan);

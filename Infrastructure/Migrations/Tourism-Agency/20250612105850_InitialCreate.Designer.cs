@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations.TourismAgency
 {
     [DbContext(typeof(TourismAgencyDbContext))]
-    [Migration("20250519192126_InitialCreate")]
+    [Migration("20250612105850_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -34,10 +34,6 @@ namespace Infrastructure.Migrations.TourismAgency
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("BookingType")
-                        .HasColumnType("bit")
-                        .HasColumnName("bookingType");
-
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
@@ -50,6 +46,10 @@ namespace Infrastructure.Migrations.TourismAgency
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2(7)")
                         .HasColumnName("endDate");
+
+                    b.Property<bool>("IsTripBooking")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsTripBooking");
 
                     b.Property<int>("NumOfPassengers")
                         .HasColumnType("int")
@@ -239,7 +239,6 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnName("id");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Country");
 
@@ -259,42 +258,12 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnName("phoneNumber");
 
                     b.Property<string>("Whatsapp")
-                        .IsRequired()
                         .HasColumnType("char(14)")
                         .HasColumnName("whatsapp");
 
                     b.HasKey("UserId");
 
                     b.ToTable("Customers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "user1",
-                            Country = "USA",
-                            FirstName = "John",
-                            LastName = "Doe",
-                            PhoneNumber = "+1234567890",
-                            Whatsapp = "+1234567890"
-                        },
-                        new
-                        {
-                            UserId = "user2",
-                            Country = "Canada",
-                            FirstName = "Jane",
-                            LastName = "Smith",
-                            PhoneNumber = "+0987654321",
-                            Whatsapp = "+0987654321"
-                        },
-                        new
-                        {
-                            UserId = "user3",
-                            Country = "UK",
-                            FirstName = "Alice",
-                            LastName = "Johnson",
-                            PhoneNumber = "+1122334455",
-                            Whatsapp = "+1122334455"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Employee", b =>
@@ -310,23 +279,6 @@ namespace Infrastructure.Migrations.TourismAgency
                     b.HasKey("UserId");
 
                     b.ToTable("Employees", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "emp1",
-                            HireDate = new DateTime(2020, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            UserId = "emp2",
-                            HireDate = new DateTime(2018, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            UserId = "emp3",
-                            HireDate = new DateTime(2022, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.ImageShot", b =>
@@ -380,7 +332,6 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnName("bookingId");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("notes");
 
@@ -402,33 +353,6 @@ namespace Infrastructure.Migrations.TourismAgency
                     b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.PaymentMethod", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("icon");
-
-                    b.Property<string>("Method")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("method");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Method")
-                        .IsUnique();
-
-                    b.ToTable("PaymentMethods", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Entities.PaymentTransaction", b =>
                 {
                     b.Property<int>("Id")
@@ -446,13 +370,13 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnType("int")
                         .HasColumnName("paymentId");
 
-                    b.Property<int>("PaymentMethodId")
-                        .HasColumnType("int")
-                        .HasColumnName("paymentMethodId");
-
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2(7)")
                         .HasColumnName("transactionDate");
+
+                    b.Property<int>("TransactionMethodId")
+                        .HasColumnType("int")
+                        .HasColumnName("TransactionMethodId");
 
                     b.Property<string>("TransactionType")
                         .IsRequired()
@@ -461,9 +385,9 @@ namespace Infrastructure.Migrations.TourismAgency
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PaymentMethodId");
+                    b.HasIndex("TransactionMethodId");
 
-                    b.HasIndex("PaymentId", "PaymentMethodId", "TransactionDate")
+                    b.HasIndex("PaymentId", "TransactionMethodId", "TransactionDate")
                         .IsUnique();
 
                     b.ToTable("PaymentTransaction", (string)null);
@@ -489,7 +413,6 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnName("employeeId");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("image");
 
@@ -512,7 +435,6 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnName("status");
 
                     b.Property<string>("Summary")
-                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("summary");
 
@@ -559,7 +481,6 @@ namespace Infrastructure.Migrations.TourismAgency
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("description");
 
@@ -660,6 +581,36 @@ namespace Infrastructure.Migrations.TourismAgency
                     b.ToTable("Tags", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.TransactionMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("icon");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("method");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Method")
+                        .IsUnique();
+
+                    b.ToTable("TransactionMethods", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Trip", b =>
                 {
                     b.Property<int>("Id")
@@ -753,6 +704,10 @@ namespace Infrastructure.Migrations.TourismAgency
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("mealsPlan");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(16,2)")
+                        .HasColumnName("price");
+
                     b.Property<int>("RegionId")
                         .HasColumnType("int")
                         .HasColumnName("regionId");
@@ -790,10 +745,6 @@ namespace Infrastructure.Migrations.TourismAgency
                     b.Property<int>("CarId")
                         .HasColumnType("int")
                         .HasColumnName("carId");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(16,2)")
-                        .HasColumnName("price");
 
                     b.Property<int>("TripPlanId")
                         .HasColumnType("int")
@@ -886,15 +837,15 @@ namespace Infrastructure.Migrations.TourismAgency
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.PaymentMethod", "PaymentMethod")
+                    b.HasOne("Domain.Entities.TransactionMethod", "TransactionMethod")
                         .WithMany("PaymentTransactions")
-                        .HasForeignKey("PaymentMethodId")
+                        .HasForeignKey("TransactionMethodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Payment");
 
-                    b.Navigation("PaymentMethod");
+                    b.Navigation("TransactionMethod");
                 });
 
             modelBuilder.Entity("Domain.Entities.Post", b =>
@@ -1046,11 +997,6 @@ namespace Infrastructure.Migrations.TourismAgency
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PaymentMethod", b =>
-                {
-                    b.Navigation("PaymentTransactions");
-                });
-
             modelBuilder.Entity("Domain.Entities.Post", b =>
                 {
                     b.Navigation("PostTags");
@@ -1071,6 +1017,11 @@ namespace Infrastructure.Migrations.TourismAgency
             modelBuilder.Entity("Domain.Entities.Tag", b =>
                 {
                     b.Navigation("PostTags");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TransactionMethod", b =>
+                {
+                    b.Navigation("PaymentTransactions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Trip", b =>

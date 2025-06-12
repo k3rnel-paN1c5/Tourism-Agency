@@ -20,8 +20,8 @@ public partial class Booking
     /// A value indicating whether the booking is for a car (false) or a trip (true).
     /// </summary>
     [Required]
-    [Column("bookingType")]
-    public bool BookingType { get; set; }
+    [Column("IsTripBooking")]
+    public bool IsTripBooking { get; set; }
 
     /// <summary>
     /// Start date and time of the booking.

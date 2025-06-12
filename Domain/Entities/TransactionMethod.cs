@@ -4,33 +4,33 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities;
 
 /// <summary>
-/// Represents a payment method available (e.g., Credit Card, PayPal).
+/// Represents a Transaction Method available (e.g., Credit Card, PayPal).
 /// </summary>
-public partial class PaymentMethod
+public partial class TransactionMethod
 {
 
     /// <summary>
-    /// Unique identifier for the payment method.
+    /// Unique identifier for the Transaction Method.
     /// </summary>
     [Key]
     [Column("id")]
     public int Id { get; set; }
 
     /// <summary>
-    /// Name of the payment method.
+    /// Name of the Transaction Method.
     /// </summary>
     [Required]
     [Column("method", TypeName = "nvarchar(50)")]
     public string? Method { get; set; }
 
     /// <summary>
-    /// Icon representing the payment method.
+    /// Icon representing the Transaction Method.
     /// </summary>
     [Column("icon", TypeName = "nvarchar(50)")]
     public string? Icon { get; set; }
 
     /// <summary>
-    /// Indicates whether the payment method is currently active and available for use.
+    /// Indicates whether the Transaction Method is currently active and available for use.
     /// </summary>
     [Column("is_active")]
     public bool IsActive { get; set; } = true;

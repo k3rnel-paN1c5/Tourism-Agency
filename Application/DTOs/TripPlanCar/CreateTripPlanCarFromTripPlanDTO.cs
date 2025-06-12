@@ -29,14 +29,6 @@ public class CreateTripPlanCarFromTripPlanDTO
     public int CarId { get; set; }
 
     /// <summary>
-    /// Gets or sets the price of the seat in this car for this specific trip plan.
-    /// This field is required.
-    /// </summary>
-    [Required(ErrorMessage = "{0} is required.")]
-    [Display(Name = "Price")]
-    public decimal Price { get; set; }
-
-    /// <summary>
     /// Navigation property to derive the start and end date.
     /// </summary>
     public GetTripPlanDTO? TripPlan { get; set; } = null;

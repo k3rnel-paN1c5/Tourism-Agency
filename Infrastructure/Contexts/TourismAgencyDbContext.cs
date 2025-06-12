@@ -40,9 +40,9 @@ public partial class TourismAgencyDbContext : DbContext
     /// </summary>
     public DbSet<Payment> Payments { get; set; }
     /// <summary>
-    /// Gets or sets the DbSet for <see cref="PaymentMethod"/> entities.
+    /// Gets or sets the DbSet for <see cref="TransactionMethod"/> entities.
     /// </summary>
-    public DbSet<PaymentMethod> PaymentMethods { get; set; }
+    public DbSet<TransactionMethod> TransactionMethods { get; set; }
     /// <summary>
     /// Gets or sets the DbSet for <see cref="PaymentTransaction"/> entities.
     /// </summary>
@@ -116,7 +116,7 @@ public partial class TourismAgencyDbContext : DbContext
         ConfigureCar(modelBuilder);
         ConfigureCategory(modelBuilder);
         ConfigurePayment(modelBuilder);
-        ConfigurePaymentMethod(modelBuilder);
+        ConfigureTransactionMethod(modelBuilder);
         ConfigurePaymentTransaction(modelBuilder);
         ConfigurePost(modelBuilder);
         ConfigurePostTag(modelBuilder);
@@ -183,18 +183,18 @@ public partial class TourismAgencyDbContext : DbContext
     }
 
     /// <summary>
-    /// Configures the <see cref="PaymentMethod"/> entity's properties and relationships.
+    /// Configures the <see cref="TransactionMethod"/> entity's properties and relationships.
     /// </summary>
     /// <param name="modelBuilder">The model builder.</param>
-    private static void ConfigurePaymentMethod(ModelBuilder modelBuilder)
+    private static void ConfigureTransactionMethod(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PaymentMethod>().ToTable("PaymentMethods")
+        modelBuilder.Entity<TransactionMethod>().ToTable("TransactionMethods")
                     .HasMany(pm => pm.PaymentTransactions)
-                    .WithOne(pt => pt.PaymentMethod)
-                    .HasForeignKey(pt => pt.PaymentMethodId)
+                    .WithOne(pt => pt.TransactionMethod)
+                    .HasForeignKey(pt => pt.TransactionMethodId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<PaymentMethod>().HasIndex(e => e.Method).IsUnique();
+        modelBuilder.Entity<TransactionMethod>().HasIndex(e => e.Method).IsUnique();
     }
 
     /// <summary>
@@ -215,11 +215,11 @@ public partial class TourismAgencyDbContext : DbContext
                  .HasForeignKey(pt => pt.PaymentId)
                  .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(pt => pt.PaymentMethod)
+            entity.HasOne(pt => pt.TransactionMethod)
                  .WithMany(pm => pm.PaymentTransactions)
-                 .HasForeignKey(pt => pt.PaymentMethodId)
+                 .HasForeignKey(pt => pt.TransactionMethodId)
                  .OnDelete(DeleteBehavior.Restrict);
-            entity.HasIndex(e => new { e.PaymentId, e.PaymentMethodId, e.TransactionDate })
+            entity.HasIndex(e => new { e.PaymentId, e.TransactionMethodId, e.TransactionDate })
             .IsUnique(true);
         });
     }

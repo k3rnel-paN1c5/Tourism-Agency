@@ -43,11 +43,11 @@ namespace Application.IServices.UseCases
         Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByTypeAsync(TransactionType transactionType);
 
         /// <summary>
-        /// Retrieves transactions by payment method asynchronously.
+        /// Retrieves transactions by Transaction Method asynchronously.
         /// </summary>
-        /// <param name="paymentMethodId">The ID of the payment method.</param>
-        /// <returns>A collection of transactions for the specified payment method.</returns>
-        Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByPaymentMethodAsync(int paymentMethodId);
+        /// <param name="TransactionMethodId">The ID of the Transaction Method.</param>
+        /// <returns>A collection of transactions for the specified Transaction Method.</returns>
+        Task<IEnumerable<ReturnPaymentTransactionDTO>> GetTransactionsByTransactionMethodAsync(int TransactionMethodId);
 
         /// <summary>
         /// Retrieves transactions within a specific date range asynchronously.

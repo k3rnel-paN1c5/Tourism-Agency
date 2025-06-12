@@ -12,16 +12,16 @@ namespace Application.Services.Validation
     public class PaymentValidationService : IPaymentValidationService
     {
         private readonly IRepository<Payment, int> _paymentRepository;
-        private readonly IRepository<PaymentMethod, int> _paymentMethodRepository;
+        private readonly IRepository<TransactionMethod, int> _TransactionMethodRepository;
         private readonly ILogger<PaymentValidationService> _logger;
 
         public PaymentValidationService(
             IRepository<Payment, int> paymentRepository,
-            IRepository<PaymentMethod, int> paymentMethodRepository,
+            IRepository<TransactionMethod, int> TransactionMethodRepository,
             ILogger<PaymentValidationService> logger)
         {
             _paymentRepository = paymentRepository;
-            _paymentMethodRepository = paymentMethodRepository;
+            _TransactionMethodRepository = TransactionMethodRepository;
             _logger = logger;
         }
 
@@ -36,22 +36,22 @@ namespace Application.Services.Validation
             return payment;
         }
 
-        public async Task<PaymentMethod> ValidatePaymentMethodExistsAndActiveAsync(int paymentMethodId)
+        public async Task<TransactionMethod> ValidateTransactionMethodExistsAndActiveAsync(int TransactionMethodId)
         {
-            var paymentMethod = await _paymentMethodRepository.GetByIdAsync(paymentMethodId);
-            if (paymentMethod == null)
+            var TransactionMethod = await _TransactionMethodRepository.GetByIdAsync(TransactionMethodId);
+            if (TransactionMethod == null)
             {
-                _logger.LogWarning("Payment method {PaymentMethodId} not found", paymentMethodId);
-                throw new KeyNotFoundException($"Payment method with ID {paymentMethodId} not found");
+                _logger.LogWarning("Transaction Method {TransactionMethodId} not found", TransactionMethodId);
+                throw new KeyNotFoundException($"Transaction Method with ID {TransactionMethodId} not found");
             }
 
-            if (!paymentMethod.IsActive)
+            if (!TransactionMethod.IsActive)
             {
-                _logger.LogWarning("Payment method {PaymentMethodId} is inactive", paymentMethodId);
-                throw new InvalidOperationException($"Payment method '{paymentMethod.Method}' is not active");
+                _logger.LogWarning("Transaction Method {TransactionMethodId} is inactive", TransactionMethodId);
+                throw new InvalidOperationException($"Transaction Method '{TransactionMethod.Method}' is not active");
             }
 
-            return paymentMethod;
+            return TransactionMethod;
         }
 
         public void ValidatePaymentCanReceivePayment(Payment payment, decimal paymentAmount)
@@ -125,7 +125,7 @@ namespace Application.Services.Validation
                     $"Refund amount ({refundAmount:C}) exceeds maximum allowed ({maxRefundAllowed:C} = 80% of paid amount)");
         
             //  Temporal Constraints 
-            var refundDeadline = payment.PaymentDate.Value.AddDays(14);
+            var refundDeadline = payment.PaymentDate!.Value.AddDays(14);
             if (DateTime.UtcNow > refundDeadline)
                 throw new InvalidOperationException(
                     $"Refunds allowed within 14 days only. Deadline passed on {refundDeadline:yyyy-MM-dd}");

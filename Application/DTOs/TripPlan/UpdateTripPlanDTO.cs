@@ -77,4 +77,12 @@ public class UpdateTripPlanDTO
     [Display(Name = "Hotel Stays")]
     public string? HotelStays { get; set; }
 
+    /// <summary>
+    /// Gets or sets the updated price of a seat in this car for this specific trip plan.
+    /// This field is required.
+    /// </summary>
+    [Required(ErrorMessage = "{0} is required.")]
+    [Display(Name = "Price")]
+    public decimal Price { get; set; }
+
 }

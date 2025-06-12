@@ -27,9 +27,4 @@ public class GetTripPlanCarDTO
     [Display(Name = "Car")]
     public int CarId { get; set; }
 
-    /// <summary>
-    /// Gets or sets the price of a seat in this car for this specific trip plan.
-    /// </summary>
-    [Display(Name = "Price")]
-    public decimal Price { get; set; }
 }
