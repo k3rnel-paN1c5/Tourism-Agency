@@ -47,9 +47,14 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             return Ok(new { Message = "Welcome to the Trip Supervisor Dashboard" });
         }
         //* Trip Bookings *//
-        [HttpPut("AcceptTripBooking/{id}")]
-        public async Task<IActionResult> ConfirmTripBooking(int id){
+        [HttpPut("Accept/{id}")]
+        public async Task<IActionResult> Confirm(int id){
             await _tripBookingServ.ConfirmTripBookingAsync(id);
+            return Ok();
+        }
+        [HttpPut("Cancel/{id}")]
+        public async Task<IActionResult> Cancel(int id){
+            await _tripBookingServ.CancelTripBookingAsync(id);
             return Ok();
         }
         //* Regions *//
@@ -572,8 +577,6 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 });
             }
         }
-
-
 
     }
 }

@@ -30,6 +30,11 @@ const TripSupervisorDashboard = () => {
                         linkTo="/trip-supervisor/trip-plans"
                     />
                     <DashboardBlock
+                        title="Manage Trip Bookings"
+                        description="View, Accept, Reject Trip bookings"
+                        linkTo="/trip-supervisor/trip-bookings"
+                    />
+                    <DashboardBlock
                         title="Future Use"
                         description="This block is reserved for future features."
                         isEmpty={true}

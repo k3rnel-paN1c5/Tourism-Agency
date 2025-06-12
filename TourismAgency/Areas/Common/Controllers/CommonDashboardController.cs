@@ -2,6 +2,7 @@ using Application.DTOs.Post;
 using Application.DTOs.PostType;
 using Application.DTOs.Tag;
 using Application.IServices.UseCases;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace TourismAgency.Areas.Common.Controllers
 {
     [Area("Common")]
     [ApiController]
-    [Authorize(Roles = "Employee,Admin")]
+    [Authorize(Roles = "TripSupervisor,CarSupervisor,Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[area]/[controller]")]
     public class CommonDashboardController : ControllerBase
     {

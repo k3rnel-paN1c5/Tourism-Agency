@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Application.IServices.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Application.DTOs.Employee;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace TourismAgency.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("api/[area]/[controller]")]
     public class AdminDashboardController : ControllerBase

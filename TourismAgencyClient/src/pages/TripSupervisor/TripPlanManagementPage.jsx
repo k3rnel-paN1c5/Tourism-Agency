@@ -73,6 +73,7 @@ const TripPlanManagementPage = () => {
             setPlans(data);
             setRegions(regionsData);
             setTrips(tripsData);
+                    console.log(data);
         } catch (error) {
             setError("Failed to load Data. Please try again later.");
             console.error("Failed to load plans:", error);
@@ -146,6 +147,7 @@ const TripPlanManagementPage = () => {
         let filteredPlans = plans;
         const regionMap = new Map(regions.map(region => [region.id, region.name]));
         const tripMap = new Map(trips.map(trip => [trip.id, trip.name]));
+
 
         if (searchQuery) {
             filteredPlans = filteredPlans.filter(plan =>

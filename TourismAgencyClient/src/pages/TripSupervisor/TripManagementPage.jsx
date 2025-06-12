@@ -21,8 +21,8 @@ const TripManagementPage = () => {
     const [error, setError] = useState(null);
     const [formError, setFormError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
-    const [availabilityFilter, setAvailabilityFilter] = useState('all'); // 'all', 'available', 'unavailable'
-    const [privacyFilter, setPrivacyFilter] = useState('all'); // 'all', 'private', 'public'
+    const [availabilityFilter, setAvailabilityFilter] = useState('available'); // 'all', 'available', 'unavailable'
+    const [privacyFilter, setPrivacyFilter] = useState('public'); // 'all', 'private', 'public'
 
     useEffect(() => {
         loadTrips();
@@ -144,7 +144,7 @@ const TripManagementPage = () => {
                     <div className="filters">
                         <div className="filter-group">
                             <label htmlFor="availability-filter">Availability:</label>
-                            <select id="availability-filter" value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)}>
+                            <select id="availability-filter" value={availabilityFilter}  onChange={(e) => setAvailabilityFilter(e.target.value)}>
                                 <option value="all">All</option>
                                 <option value="available">Available</option>
                                 <option value="unavailable">Unavailable</option>

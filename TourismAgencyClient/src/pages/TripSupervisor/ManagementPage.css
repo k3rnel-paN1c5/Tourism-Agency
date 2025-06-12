@@ -63,17 +63,18 @@
 
 .filter-group label {
     font-weight: 500;
-    color: #fff;
-    font-size: 14px;
+    color: #8892a4;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
 }
 
 .filter-group select {
     padding: 8px 10px;
     border-radius: 4px;
     border: 1px solid #ccc;
-    background-color: #fff;
-    color:#000;
-    font-size: 14px;
+   background: #161e2e;
+    color: #ffffff;
+    font-size: 1.1rem;
     cursor: pointer;
 }
 
