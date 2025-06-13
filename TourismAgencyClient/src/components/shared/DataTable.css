@@ -1,6 +1,7 @@
 /* src/components/DataTable.css */
 
 .data-table-container {
+  width:100%;
   background: linear-gradient(145deg, #121b2c, #0f172a);
   border-radius: 15px;
   padding: 2rem;

@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display :wght@400;500;600&display=swap');
 #root {
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0rem 2rem 2rem 2rem;
   text-align: center;
   width:100%;
 }

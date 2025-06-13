@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import authService from '../../services/authService';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext'; // Import AuthContext
 import { useNavigate } from 'react-router-dom';
 import './Login.css'
 
@@ -9,12 +9,13 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await authService.login(email, password, rememberMe);
+      await login(email, password, rememberMe);
       navigate('/dashboard');
     } catch (error) {
       setIsLoading(false);
@@ -77,10 +78,7 @@ export default function Login() {
       
       <div className="divider"/>
       
-      <button type="button" className="social-button apple">
-        <svg viewBox="0 0 24 24" className="social-icon">
-          <path d="../assets/hiast.ico"/>
-        </svg>
+      <button type="button" className="social-button">
         Sign in with E-class
       </button>
     </form>

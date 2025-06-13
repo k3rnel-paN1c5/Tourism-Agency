@@ -18,8 +18,8 @@ import CarManagementPage from '../pages/CarSupervisor/CarManagementPage';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<AuthPage />} />
-      <Route path="/register" element={<AuthPage />} />
+      <Route path="/login" element={<AuthPage login={true}/>} />
+      <Route path="/register" element={<AuthPage login={false}/>} />
 
       {/* Customer Routes */}
       <Route element={<PrivateRoute allowedRoles={['Customer', 'Admin']} />}>

@@ -72,7 +72,6 @@ const Navbar = () => {
             <li className="nav-item">
               <Link to="/admin-dashboard" className="nav-link">Admin Dashboard</Link>
             </li>
-            {/* Admin can access all other pages, so we might need to dynamically generate them or have a separate admin section */}
             <li className="nav-item">
               <Link to="/dashboard" className="nav-link">Customer Dashboard</Link>
             </li>

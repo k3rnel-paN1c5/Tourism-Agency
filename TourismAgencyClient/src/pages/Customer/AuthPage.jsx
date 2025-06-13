@@ -1,12 +1,14 @@
-import { Link, useNavigate} from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Login from '../../components/auth/Login';
 import Register from '../../components/auth/Register';
 import './AuthPage.css'
 
-export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const navigate = useNavigate();
+export default function AuthPage(login) {
+  const [isLogin, setIsLogin] = useState(login['login']);
+
+  useEffect(() => {
+    setIsLogin(login['login']);
+  }, [login])
 
   return (
     <div className="auth-container">
@@ -15,13 +17,13 @@ export default function AuthPage() {
           {/* <div className="logo"></div> */}
           <h1>HIAST Tourism Agency</h1>
         </div>
-        
+
         {isLogin ? <Login /> : <Register />}
-        
+
         <div className="toggle-container">
           <p>
             {isLogin ? "Don't have an account?" : "Already have an account?"}
-            <button 
+            <button
               className="toggle-button"
               onClick={() => setIsLogin(!isLogin)}
             >
@@ -30,7 +32,7 @@ export default function AuthPage() {
           </p>
         </div>
       </div>
-      
+
       <div className="background-shapes">
         <div className="shape circle-1"></div>
         <div className="shape circle-2"></div>

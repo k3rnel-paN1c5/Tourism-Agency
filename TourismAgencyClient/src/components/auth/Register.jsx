@@ -174,10 +174,7 @@ export default function Register() {
         <span>or continue with</span>
       </div>
       
-      <button type="button" className="social-button apple">
-        <svg viewBox="0 0 24 24" className="social-icon">
-          <path d="../assets/hiast.ico"/>
-        </svg>
+      <button type="button" className="social-button">
         Sign up with E-class
       </button>
     </form>
