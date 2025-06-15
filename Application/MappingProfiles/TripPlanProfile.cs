@@ -22,7 +22,7 @@ public class TripPlanProfile : Profile
                 .ForMember(dest => dest.RegionId, opt => opt.MapFrom(src => src.RegionId))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
-                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.EndDate-src.StartDate))
                 .ForMember(dest => dest.IncludedServices, opt => opt.MapFrom(src => src.IncludedServices))
                 .ForMember(dest => dest.Stops, opt => opt.MapFrom(src => src.Stops))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
@@ -30,8 +30,8 @@ public class TripPlanProfile : Profile
                 .ForMember(dest => dest.HotelStays, opt => opt.MapFrom(src => src.HotelStays))
 
 
-                .ForMember(dest => dest.Trip, opt => opt.Ignore())
-                .ForMember(dest => dest.Region, opt => opt.Ignore())
+                .ForMember(dest => dest.Trip, opt => opt.MapFrom(src => src.Trip))
+                .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region))
                 .ForMember(dest => dest.TripPlanCars, opt => opt.Ignore()) 
                 .ReverseMap();
 

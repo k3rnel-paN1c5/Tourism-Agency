@@ -57,6 +57,7 @@ builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<TourismAgencyD
 
 // Repositories 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+builder.Services.AddScoped<ITripPlanRepository, TripPlanRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(
     options =>

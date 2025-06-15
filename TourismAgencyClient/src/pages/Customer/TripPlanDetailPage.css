@@ -1,0 +1,24 @@
+.trip-booking-page {
+  background-color: #0d1117;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.trip-booking-content {
+max-width: 800px;
+margin: 2rem auto;
+background: linear-gradient(145deg, \#121b2c, \#0f172a);
+padding: 2.5rem;
+border-radius: 15px;
+box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+.success-message {
+background-color: \#dcfce7;
+color: \#166534;
+padding: 1rem 1.5rem;
+border-radius: 8px;
+margin-bottom: 1.5rem;
+text-align: center;
+font-weight: 500;
+}

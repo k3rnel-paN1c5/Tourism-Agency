@@ -34,6 +34,12 @@ public interface ITripPlanService
     Task<IEnumerable<GetTripPlanDTO>> GetAllTripPlansAsync();
 
     /// <summary>
+    /// Retrieves all trip plans that start in the future asynchronously.
+    /// </summary>
+    /// <returns>A collection of <see cref="GetTripPlanDTO"/> representing all upcoming trip plans.</returns>
+    Task<IEnumerable<GetTripPlanDTO>> GetUpcomingTripPlansAsync();
+
+    /// <summary>
     /// Updates an existing trip plan asynchronously.
     /// </summary>
     /// <param name="updateTripPlanDto">The DTO containing updated information for the trip plan.</param>

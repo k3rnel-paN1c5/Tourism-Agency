@@ -1,0 +1,229 @@
+/* src/pages/Customer/TripPlanListPage.css */
+.trip-plan-list-page {
+  background-color: #0d1117;
+  min-height: 100vh;
+  padding: 2rem;
+  color: #c9d1d9;
+}
+
+.trip-plan-list-content {
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.trip-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+    color: #c9d1d9;
+}
+
+/* src/components/trip/TripPlanCard.css (as part of TripPlanListPage.jsx) */
+.trip-plan-card {
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  border-radius: 15px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #c9d1d9;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #30363d;
+}
+
+.trip-plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-color: #4da6ff;
+}
+
+.trip-plan-card-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.trip-plan-card-content {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.trip-plan-card-title {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.trip-plan-card-description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.trip-plan-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.trip-plan-card-price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #4da6ff;
+}
+
+.trip-plan-card-link {
+  color: #4da6ff;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+
+/* src/pages/Customer/TripPlanDetailPage.css */
+.trip-plan-detail-page {
+  background-color: #0d1117;
+  min-height: 100vh;
+  padding: 2rem;
+  color: #c9d1d9;
+}
+
+.trip-plan-detail-content {
+  max-width: 1000px;
+  margin: 2rem auto;
+  background: linear-gradient(145deg, #121b2c, #0f172a);
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid #30363d;
+}
+
+.detail-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+}
+
+.plan-info h2, .booking-section h2 {
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 0.75rem;
+}
+
+.plan-info p {
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.plan-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.plan-info ul li {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.plan-info ul li strong {
+    color: #8892a4;
+    margin-right: 0.5rem;
+}
+
+.success-message {
+    background-color: #dcfce7;
+    color: #166534;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* src/components/booking/TripDetailBookingForm.css (as part of TripPlanDetailPage.jsx) */
+.detail-booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.detail-booking-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-booking-form label {
+    font-size: 1rem;
+    color: #8892a4;
+    font-weight: 500;
+}
+
+.detail-booking-form input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    background: #161e2e;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+}
+.detail-booking-form input:focus {
+    outline: none;
+    border-color: #4da6ff;
+    background: #1c2536;
+}
+
+
+.detail-booking-form .checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.detail-booking-form .checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    background-color: #161e2e;
+    border: 1px solid #30363d;
+}
+
+.detail-booking-form .checkbox-group label {
+    color: #ffffff;
+}
+
+.submit-booking-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4da6ff, #3399ff);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 1rem;
+}
+
+.submit-booking-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(77, 166, 255, 0.3);
+}
+
+@media (max-width: 800px) {
+    .detail-layout {
+        grid-template-columns: 1fr;
+    }
+}

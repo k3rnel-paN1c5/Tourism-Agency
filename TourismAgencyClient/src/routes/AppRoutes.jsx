@@ -14,6 +14,9 @@ import TripBookingManagementPage from '../pages/TripSupervisor/TripBookingManage
 import CategoryManagementPage from '../pages/CarSupervisor/CategoryManagementPage';
 import CarManagementPage from '../pages/CarSupervisor/CarManagementPage';
 
+import TripPlanListPage from '../pages/Customer/TripPlanListPage';
+import TripPlanDetailPage from '../pages/Customer/TripPlanDetailPage';
+
 
 export default function AppRoutes() {
   return (
@@ -24,7 +27,8 @@ export default function AppRoutes() {
       {/* Customer Routes */}
       <Route element={<PrivateRoute allowedRoles={['Customer', 'Admin']} />}>
         <Route path="/dashboard" element={<CustomerDashboard />} />
-        <Route path="/trip-booking" element={<div>Trip Booking Reservation Page</div>} /> {/* Placeholder */}
+        <Route path="/trip-booking" element={<TripPlanListPage />} />
+        <Route path="/trip-plans/:id" element={<TripPlanDetailPage />} />
         <Route path="/car-booking" element={<div>Car Booking Reservation Page</div>} /> {/* Placeholder */}
       </Route>
 

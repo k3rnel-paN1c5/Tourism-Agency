@@ -1,6 +1,26 @@
 import apiClient from './apiService';
 
-const bookingService = {
+const bookingService = {  
+  //sshow availlable plans to customer
+
+  getUpcomingPlans:async () => {
+    try {
+      const response = await apiClient.get('/api/Customer/CustomerDashboard/TripPlans');
+      return response.data; 
+    } catch (error) {
+      console.error('Error fetching upcoming trip plans:', error);
+      throw error;
+    }
+  },
+  getTripPlanById: async (id) => {
+    try {
+      const response = await apiClient.get(`/api/Customer/CustomerDashboard/TripPlans/${id}`); 
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching trip plan ${id}:`, error);
+      throw error;
+    }
+  },
   // Trip Bookings
   getTripBookings: async () => {
     try {

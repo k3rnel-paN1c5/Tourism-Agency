@@ -17,7 +17,7 @@ namespace Application.Services.UseCases;
 /// </summary>
 public class TripPlanService : ITripPlanService
 {
-    private readonly IRepository<TripPlan, int> _tripPlanRepository;
+    private readonly ITripPlanRepository _tripPlanRepository;
     private readonly IRegionService _regionService;
     private readonly ITripService _tripService;
     private readonly ITripPlanCarService _tripPlanCarService;
@@ -34,7 +34,7 @@ public class TripPlanService : ITripPlanService
     /// <param name="tripPlanCarService">The service for TripPlanCar-related operations.</param>
     /// <param name="logger">The logger for this service.</param>
     public TripPlanService(
-        IRepository<TripPlan, int> tripPlanRepository,
+        ITripPlanRepository tripPlanRepository,
         IRegionService regionService,
         ITripService tripService,
         ITripPlanCarService tripPlanCarService,
@@ -171,6 +171,24 @@ public class TripPlanService : ITripPlanService
             throw;
         }
     }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<GetTripPlanDTO>> GetUpcomingTripPlansAsync()
+    {
+         _logger.LogInformation("Attempting to retrieve all trip plans.");
+        try
+        {
+            var plans = await _tripPlanRepository.GetUpcomingAsync().ConfigureAwait(false);
+            var planCount = plans?.Count() ?? 0;
+            _logger.LogInformation("Retrieved {Count} trip plans.", planCount);
+            return _mapper.Map<IEnumerable<GetTripPlanDTO>>(plans);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while retrieving all trip plans.");
+            throw;
+        }
+    }   
 
     /// <inheritdoc />
     public async Task UpdateTripPlanAsync(UpdateTripPlanDTO updateTripPlanDto)

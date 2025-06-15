@@ -17,11 +17,17 @@ namespace TourismAgency.Areas.Customer.Controllers
     {
         private readonly ITripBookingService _tripBookingService;
         private readonly ICarBookingService _carBookingService;
+        private readonly ITripPlanService _tripPlanService;
 
-        public CustomerDashboardController(ITripBookingService tripBookingService, ICarBookingService carBookingService)
+        public CustomerDashboardController(
+            ITripBookingService tripBookingService,
+            ICarBookingService carBookingService,
+            ITripPlanService tripPlanService
+            )
         {
             _tripBookingService = tripBookingService;
             _carBookingService = carBookingService;
+            _tripPlanService = tripPlanService;
         }
 
         [HttpGet]
@@ -40,6 +46,41 @@ namespace TourismAgency.Areas.Customer.Controllers
 
         //* Trip Booking *//
 
+
+        [HttpGet("TripPlans")]
+        public async Task<IActionResult> GetUpcomingTripPlans(){
+            try{
+                var result = await _tripPlanService.GetUpcomingTripPlansAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while retrieving upcoming trip plans",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("TripPlans/{id}")]
+        public async Task<IActionResult> GetTripPlanById(int id)
+        {   
+            try{
+                var tripPlan = await _tripPlanService.GetTripPlanByIdAsync(id);
+                if (tripPlan == null) return NotFound(new { Error = $"Trip Plan with ID {id} not found" });
+                return Ok(tripPlan);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while retrieving trip plan with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
+        
         [HttpGet("TripBooking")]
         public async Task<IActionResult> GetTripBookings()
         {
