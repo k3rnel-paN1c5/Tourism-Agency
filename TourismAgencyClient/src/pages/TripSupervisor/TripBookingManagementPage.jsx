@@ -98,19 +98,9 @@ const TripBookingManagementPage = () => {
         { header: 'Status', key: 'statusText' },
         { header: 'Passengers', key: 'numOfPassengers' },
         { header: 'With Guide', key: 'withGuide' },
-        {
-            header: 'Actions',
-            key: 'actions',
-            render: (item) => (
-                item.status === 0 ? ( // Only show actions for Pending bookings
-                    <div className="actions-cell">
-                        <button onClick={() => handleAction('accept', item.id)} className="action-button edit-button">Accept</button>
-                        <button onClick={() => handleAction('reject', item.id)} className="action-button delete-button">Reject</button>
-                    </div>
-                ) : null
-            ),
-        },
     ];
+    console.log(bookings);
+    
     return (
         <div className="management-page">
             <DashboardHeader title="Manage Trip Bookings" subtitle="Review, accept, or reject trip bookings" />
@@ -155,6 +145,9 @@ const TripBookingManagementPage = () => {
                         title="Trip Bookings"
                         columns={columns}
                         data={filteredBookings}
+                        onAccept={(x) => {handleAction('accept', x)}}
+                        onCancel={(x) => {handleAction('reject', x)}}
+                        
                     />
                 )}
             </main>

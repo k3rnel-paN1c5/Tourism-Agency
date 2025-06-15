@@ -27,7 +27,7 @@ const tripBookingService = {
    */
   acceptTripBooking: async (id) => {
     try {
-      const response = await apiClient.post(`/api/TripSupervisor/TripSupervisorDashboard/TripBookings/Accept/${id}`);
+      const response = await apiClient.put(`/api/TripSupervisor/TripSupervisorDashboard/Accept/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error accepting trip booking ${id}:`, error);
@@ -36,7 +36,7 @@ const tripBookingService = {
   },
   rejectTripBooking: async (id) => {
     try {
-      const response = await apiClient.post(`/api/TripSupervisor/TripSupervisorDashboard/TripBookings/Reject/${id}`);
+      const response = await apiClient.put(`/api/TripSupervisor/TripSupervisorDashboard/Cancel/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error rejecting trip booking ${id}:`, error);

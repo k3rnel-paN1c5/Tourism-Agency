@@ -1,7 +1,7 @@
 import React from 'react';
 import './DataTable.css';
 
-const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLabel = "Create New" }) => {
+const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLabel = "Create New", onAccept, onCancel}) => {
   if (!Array.isArray(data)) {
     return <p>No data available.</p>;
   }
@@ -25,7 +25,7 @@ const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLab
               {columns.map((col) => (
                 <th key={col.key}>{col.header}</th>
               ))}
-              {(onEdit || onDelete) && <th>Actions</th>}
+              {(onEdit || onDelete || onAccept || onCancel) && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -34,7 +34,7 @@ const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLab
                 {columns.map((col) => (
                   <td key={`${item.id}-${col.key}`}>{item[col.key] === true ? "Yes" : item[col.key] === false ? "No" : col.key == "id" ? cnt++ :item[col.key] }</td>
                 ))}
-                {(onEdit || onDelete) && (
+                {(onEdit || onDelete || onAccept || onCancel) && (
                   <td className="actions-cell">
                     {onEdit && (
                       <button onClick={() => onEdit(item)} className="action-button edit-button">
@@ -44,6 +44,16 @@ const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLab
                     {onDelete && (
                       <button onClick={() => onDelete(item.id)} className="action-button delete-button">
                         Delete
+                      </button>
+                    )}
+                    {onAccept && item.status===0  &&  (
+                      <button onClick={() => onAccept(item.id)} className="action-button edit-button">
+                        Accept
+                      </button>
+                    )}
+                    {onCancel && item.status ===0 && (
+                      <button onClick={() => onCancel(item.id)} className="action-button delete-button">
+                        Cancel
                       </button>
                     )}
                   </td>
