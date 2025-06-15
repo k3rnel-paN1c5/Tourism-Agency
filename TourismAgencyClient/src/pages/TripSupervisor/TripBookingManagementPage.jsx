@@ -60,7 +60,7 @@ const TripBookingManagementPage = () => {
         }
     };
 
-    const tripPlanMap = useMemo(() => new Map(tripPlans.map(plan => [plan.id, plan.tripName])), [tripPlans]);
+    const tripPlanMap = useMemo(() => new Map(tripPlans.map(plan => [plan.id, plan.trip.name])), [tripPlans]);
     const getStatusText = (status) => {
         switch (status) {
             case 0: return 'Pending';
@@ -71,6 +71,7 @@ const TripBookingManagementPage = () => {
     };
 
     const filteredBookings = useMemo(() => {
+        
         return bookings
             .filter(booking => {
                 if (filters.status && booking.status.toString() !== filters.status) return false;
@@ -110,7 +111,6 @@ const TripBookingManagementPage = () => {
             ),
         },
     ];
-
     return (
         <div className="management-page">
             <DashboardHeader title="Manage Trip Bookings" subtitle="Review, accept, or reject trip bookings" />
@@ -131,7 +131,7 @@ const TripBookingManagementPage = () => {
                             <select id="trip-plan-filter" name="tripPlanId" value={filters.tripPlanId} onChange={handleFilterChange}>
                                 <option value="">All</option>
                                 {tripPlans.map(plan => (
-                                    <option key={plan.id} value={plan.id}>{plan.tripName}</option>
+                                    <option key={plan.id} value={plan.id}>{plan.trip.name}</option>
                                 ))}
                             </select>
                         </div>

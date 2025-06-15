@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Application.DTOs.Booking;
+using Application.DTOs.Payment;
 using Domain.Enums;
 
 namespace Application.IServices.UseCases;

@@ -17,6 +17,11 @@ public class TripPlanRepository : Repository<TripPlan,int>, ITripPlanRepository
     {
         return await _dbSet.Where(t => t.Id == id).Include(p => p.Region).Include(p => p.Trip).FirstOrDefaultAsync();
     }
+
+    public async Task<IEnumerable<TripPlan>> GetAllAsync()
+    {
+        return await _dbSet.Include(p=>p.Trip).Include(p=>p.Region).ToListAsync();
+    }
     public async Task<IEnumerable<TripPlan>> GetUpcomingAsync()
     {
         return await _dbSet.Where(t => t.StartDate > DateTime.UtcNow).Include(p => p.Trip).Include(p => p.Region).ToListAsync();
