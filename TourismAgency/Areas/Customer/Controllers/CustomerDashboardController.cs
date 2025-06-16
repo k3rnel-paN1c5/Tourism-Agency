@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Infrastructure.Authentication;
+using Application.Services.UseCases;
 
 namespace TourismAgency.Areas.Customer.Controllers
 {
@@ -18,16 +19,22 @@ namespace TourismAgency.Areas.Customer.Controllers
         private readonly ITripBookingService _tripBookingService;
         private readonly ICarBookingService _carBookingService;
         private readonly ITripPlanService _tripPlanService;
+        private readonly ICarService _carService;
+        private readonly ICategoryService _categoryService;
 
         public CustomerDashboardController(
             ITripBookingService tripBookingService,
             ICarBookingService carBookingService,
-            ITripPlanService tripPlanService
+            ITripPlanService tripPlanService,
+            ICarService carService,
+            ICategoryService categoryService
             )
         {
             _tripBookingService = tripBookingService;
             _carBookingService = carBookingService;
             _tripPlanService = tripPlanService;
+            _carService = carService;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -303,5 +310,43 @@ namespace TourismAgency.Areas.Customer.Controllers
 
             }
         }
+
+        // * Cars *  //
+        [HttpGet("AvailableCars")]
+        public async Task<IActionResult> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var result = await _carService.GetAvailableCarsAsync(startDate, endDate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "Failed to retrieve available cars",
+                    Details = ex.Message
+                });
+            }
+        }
+        // * Categories* //
+        [HttpGet("Categories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            try
+            {
+                var result = await _categoryService.GetAllCategoriesAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "Failed to retrieve categories",
+                    Details = ex.Message
+                });
+            }
+        }
+
     }
 }
