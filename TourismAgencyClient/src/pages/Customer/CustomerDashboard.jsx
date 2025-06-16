@@ -85,7 +85,6 @@ export default function CustomerDashboard() {
     try {
       await bookingService.CancelTripBooking(booking.id);
       handleCloseModal();
-      fetchBookings();
       // Refresh bookings after cancellation
       fetchData();
     } catch (err) {
