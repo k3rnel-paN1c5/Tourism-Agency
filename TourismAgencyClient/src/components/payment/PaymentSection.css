@@ -1,0 +1,32 @@
+.payment-section {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.section-header p {
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.payments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.no-payments {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+}

@@ -1,10 +1,100 @@
 .dashboard-container {
-  background-color: #0d1117;
   min-height: 100vh;
-  padding: 2rem;
+  background-color: #f8f9fa;
+  padding: 2rem 0;
 }
 
 .dashboard-wrapper {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 1.2rem;
+  color: #dc3545;
+  text-align: center;
+  padding: 2rem;
+}
+
+.dashboard-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.tab-button {
+  padding: 1rem 2rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c757d;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  color: #495057;
+  background-color: #f8f9fa;
+}
+
+.tab-button.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  background-color: white;
+}
+
+.dashboard-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem 0;
+  }
+  
+  .dashboard-wrapper {
+    padding: 0 0.5rem;
+  }
+  
+  .dashboard-tabs {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .tab-button {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 0;
+  }
+  
+  .tab-button.active {
+    border-bottom-color: #007bff;
+    border-left: 3px solid #007bff;
+  }
+  
+  .dashboard-content {
+    padding: 1rem;
+    border-radius: 8px;
+  }
 }

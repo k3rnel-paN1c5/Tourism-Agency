@@ -1,6 +1,10 @@
 import './BookingCard.css'
+import { useState } from 'react';
+import paymentService from '../../services/paymentService';
 
 const BookingCard = ({ title, details, status }) => {
+  const [paymentInfo, setPaymentInfo] = useState(null);
+
   const getStatusColor = (status) => {
     switch (status) {
       case "Confirmed":
@@ -11,6 +15,15 @@ const BookingCard = ({ title, details, status }) => {
         return "booking-status-canceled";
       default:
         return "booking-status-default";
+    }
+  };
+
+  const fetchPaymentInfo = async () => {
+    try {
+      const payment = await paymentService.getPaymentByBookingId(booking.id);
+      setPaymentInfo(payment);
+    } catch (error) {
+      console.log('No payment found for this booking');
     }
   };
 
@@ -27,6 +40,14 @@ const BookingCard = ({ title, details, status }) => {
           </li>
         ))}
       </ul>
+      {paymentInfo && (
+        <div className="payment-status">
+          <span className="label">Payment Status:</span>
+          <span className={`status ${paymentInfo.status.toLowerCase()}`}>
+            {paymentInfo.status}
+          </span>
+        </div>
+      )}
     </div>
   );
 };
