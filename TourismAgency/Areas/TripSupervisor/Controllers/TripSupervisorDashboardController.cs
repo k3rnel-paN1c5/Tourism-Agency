@@ -21,8 +21,9 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
         private readonly IRegionService _regionServ;
         private readonly ITripService _tripServ;
         private readonly ITripPlanService _tripPlanServ;
-        private readonly ITripPlanCarService _carServ;
+        private readonly ITripPlanCarService _tripPlanCarService;
         private readonly ITripBookingService _tripBookingServ;
+        private readonly ICarService _carService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public TripSupervisorDashboardController(
             IRegionService regionService,
@@ -30,13 +31,15 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             ITripPlanService tripPlanServ,
             ITripPlanCarService carServ,
             ITripBookingService tripBookingServ,
+            ICarService carService,
             IHttpContextAccessor httpContextAccessor
             )
         {
             _regionServ = regionService;
             _tripServ = tripService;
             _tripPlanServ = tripPlanServ;
-            _carServ = carServ;
+            _tripPlanCarService = carServ;
+            _carService = carService;
             _tripBookingServ = tripBookingServ;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -488,10 +491,60 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
 
         //* Trip Plan Car *//
 
+
+        [HttpGet("AvailableCars")]
+        public async Task<IActionResult> GetAvailableCarsAsync(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var result = await _carService.GetAvailableCarsAsync(startDate, endDate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "Failed to retrieve available cars",
+                    Details = ex.Message
+                });
+            }
+        }
+        
+        [HttpPost("AddTripPlanCar")]
+        public async Task<IActionResult> AddTripPlanCar([FromBody] CreateTripPlanCarFromTripPlanDTO dto){
+            try{
+                var result = await _tripPlanServ.AddCarToTripPlanAsync(dto);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while adding trip plan car to a trip plan",
+                    Details = ex.Message
+                });
+            }
+        }
+        [HttpPost("RemoveTripPlanCar/{id}")]
+        public async Task<IActionResult> AddTripPlanCar(int id){
+            try{
+                await _tripPlanServ.RemoveCarFromTripPlanAsync(id);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while removing trip plan car from a trip plan",
+                    Details = ex.Message
+                });
+            }
+        }
+
         [HttpGet("TripPlanCars")]
         public async Task<IActionResult> GetTripPlanCars(){
             try{
-                var result = await _carServ.GetAllTripPlanCarsAsync();
+                var result = await _tripPlanCarService.GetAllTripPlanCarsAsync();
                 return Ok(result);
             }
             catch(Exception ex)
@@ -507,7 +560,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
         public async Task<IActionResult> GetTripPlanCarById(int id)
         {   
             try{
-                var tripPlanCar = await _carServ.GetTripPlanCarByIdAsync(id);
+                var tripPlanCar = await _tripPlanCarService.GetTripPlanCarByIdAsync(id);
                 if (tripPlanCar == null) return NotFound(new { Error = $"Trip Plan Car with ID {id} not found" });
                 return Ok(tripPlanCar);
             }
@@ -534,7 +587,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 });
             }
             try{
-                var newTripPlanCar = await _carServ.CreateTripPlanCarAsync(dto);
+                var newTripPlanCar = await _tripPlanCarService.CreateTripPlanCarAsync(dto);
                 return CreatedAtAction(nameof(GetTripPlanCarById), new { id = newTripPlanCar.Id }, newTripPlanCar);
             }
             catch(Exception ex)
@@ -561,7 +614,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
             try
             {
-                await _carServ.UpdateTripPlanCarAsync(dto);
+                await _tripPlanCarService.UpdateTripPlanCarAsync(dto);
                 return Ok(dto);
             }
             catch (KeyNotFoundException ex)
@@ -583,7 +636,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
         {
             try
             {
-                await _carServ.DeleteTripPlanCarAsync(id);
+                await _tripPlanCarService.DeleteTripPlanCarAsync(id);
                 return Ok($"Deleted A trip plan car with id {id}");
             }
             catch( KeyNotFoundException e)

@@ -1,6 +1,17 @@
 import apiClient from '../apiService';
 
 const tripPlanCarService = {
+    getAvailableCars: async (startDate, endDate) => {
+    try {
+      const response = await apiClient.get('/api/TripSupervisor/TripSupervisorDashboard/AvailableCars',{
+        params: { startDate, endDate }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching available cars:', error);
+      throw error;
+    }
+  },
   getTripPlanCars: async () => {
     try {
       const response = await apiClient.get('/api/TripSupervisor/TripSupervisorDashboard/TripPlanCars');
@@ -16,6 +27,25 @@ const tripPlanCarService = {
       return response.data;
     } catch (error) {
       console.error(`Error fetching trip plan car ${id}:`, error);
+      throw error;
+    }
+  },
+
+  AddTripPlanCartoPlan: async (tripPlanCarData) => {
+    try {
+      const response = await apiClient.post('/api/TripSupervisor/TripSupervisorDashboard/AddTripPlanCar', tripPlanCarData);
+      return response.data;
+    } catch (error) {
+      console.error('Error adding trip plan car:', error);
+      throw error;
+    }
+  },
+  RemoveTripPlanCarFromPlan: async (id) => {
+    try {
+      const response = await apiClient.post(`/api/TripSupervisor/TripSupervisorDashboard/RemoveTripPlanCar/${id}`, id);
+      return response.data;
+    } catch (error) {
+      console.error('Error removing trip plan car:', error);
       throw error;
     }
   },

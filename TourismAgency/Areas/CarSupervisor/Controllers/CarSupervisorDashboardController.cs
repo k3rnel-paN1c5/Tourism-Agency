@@ -12,7 +12,7 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
 {
     [Area("CarSupervisor")]
     [Route("api/[area]/[controller]")]
-    [Authorize(Roles = "CarSupervisor,Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "CarSupervisor,Admin,TripSupervisor", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class CarSupervisorDashboardController : ControllerBase
     {
@@ -179,6 +179,7 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
         //* Cars *//
 
         [HttpGet("Cars")]
+        
         public async Task<IActionResult> GetCars()
         {
             try
