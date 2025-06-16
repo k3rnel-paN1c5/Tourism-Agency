@@ -183,7 +183,19 @@ namespace TourismAgency.Areas.Customer.Controllers
                 });
             }
         }
-
+        //* Trip Bookings *//
+        [HttpPut("CancelTripBooking/{id}")]
+        public async Task<IActionResult> Cancel(int id) {
+            try
+            {
+                await _tripBookingService.CancelTripBookingAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
         // * CarBookings* //
 
 

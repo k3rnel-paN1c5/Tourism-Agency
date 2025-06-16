@@ -2,7 +2,7 @@ import Section from "../shared/Section";
 import BookingCard from "./BookingCard";
 import  './Booking.css' ;
 
-const TripBookingsSection = ({ bookings }) => {
+const TripBookingsSection = ({ bookings, onBookingClick }) => {
   let cnt = 1;
   console.log(bookings);
   return (
@@ -19,8 +19,8 @@ const TripBookingsSection = ({ bookings }) => {
               "End Date": new Date(booking.endDate).toLocaleDateString(),
               "Passengers": booking.numOfPassengers,
               "With Guide": booking.withGuide ? "Yes" : "No",
-              "Employee Assigned": booking.employeeId || "None"
             }}
+            onClick={() => onBookingClick(booking)}
           />
         ))
       ) : (

@@ -2,9 +2,7 @@ import './BookingCard.css'
 import { useState } from 'react';
 import paymentService from '../../services/paymentService';
 
-const BookingCard = ({ title, details, status }) => {
-  const [paymentInfo, setPaymentInfo] = useState(null);
-
+const BookingCard = ({ title, details, status,  onClick}) => {
   const getStatusColor = (status) => {
     switch (status) {
       case "Confirmed":
@@ -28,7 +26,7 @@ const BookingCard = ({ title, details, status }) => {
   };
 
   return (
-    <div className="booking-card">
+    <div className="booking-card" onClick={onClick}>
       <div className="booking-card-header">
         <h3 className="booking-card-title">{title}</h3>
         <span className={`booking-status ${getStatusColor(status)}`}>{status}</span>
