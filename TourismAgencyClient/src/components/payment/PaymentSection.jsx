@@ -1,35 +1,20 @@
 import { useState } from 'react';
 import PaymentCard from './PaymentCard';
-import PaymentModal from './PaymentModal';
 import './PaymentSection.css';
 
-export default function PaymentSection({ payments, onPaymentUpdate }) {
+const PaymentSection = ({ payments, onPaymentUpdate }) => {
   const [selectedPayment, setSelectedPayment] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(''); // 'process', 'refund', 'details'
 
-  const handlePaymentAction = (payment, action) => {
+  const handlePaymentClick = (payment) => {
     setSelectedPayment(payment);
-    setModalType(action);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedPayment(null);
-    setModalType('');
-  };
-
-  const handlePaymentSuccess = (updatedPayment) => {
-    onPaymentUpdate(updatedPayment);
-    handleCloseModal();
+    // You can add modal logic here similar to booking modal
   };
 
   return (
     <div className="payment-section">
       <div className="section-header">
         <h2>Payment Management</h2>
-        <p>Manage your payments and transactions</p>
+        <p>View and manage your payments</p>
       </div>
 
       <div className="payments-grid">
@@ -42,20 +27,13 @@ export default function PaymentSection({ payments, onPaymentUpdate }) {
             <PaymentCard
               key={payment.id}
               payment={payment}
-              onAction={handlePaymentAction}
+              onClick={handlePaymentClick}
             />
           ))
         )}
       </div>
-
-      {showModal && (
-        <PaymentModal
-          payment={selectedPayment}
-          type={modalType}
-          onClose={handleCloseModal}
-          onSuccess={handlePaymentSuccess}
-        />
-      )}
     </div>
   );
-}
+};
+
+export default PaymentSection;

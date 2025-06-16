@@ -1,8 +1,10 @@
 import './BookingCard.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import paymentService from '../../services/paymentService';
 
-const BookingCard = ({ title, details, status,  onClick}) => {
+const BookingCard = ({ title, details, status, onClick, bookingId }) => {
+  const [paymentInfo, setPaymentInfo] = useState(null);
+
   const getStatusColor = (status) => {
     switch (status) {
       case "Confirmed":
@@ -17,13 +19,19 @@ const BookingCard = ({ title, details, status,  onClick}) => {
   };
 
   const fetchPaymentInfo = async () => {
+    if (!bookingId) return;
+    
     try {
-      const payment = await paymentService.getPaymentByBookingId(booking.id);
+      const payment = await paymentService.getPaymentByBookingId(bookingId);
       setPaymentInfo(payment);
     } catch (error) {
       console.log('No payment found for this booking');
     }
   };
+
+  useEffect(() => {
+    fetchPaymentInfo();
+  }, [bookingId]);
 
   return (
     <div className="booking-card" onClick={onClick}>
@@ -49,4 +57,5 @@ const BookingCard = ({ title, details, status,  onClick}) => {
     </div>
   );
 };
+
 export default BookingCard;

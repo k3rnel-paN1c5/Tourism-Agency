@@ -1,76 +1,86 @@
-import { formatCurrency, formatDate } from '../../utils/formatters';
-import './PaymentCard.css';
+import './PaymentCard.css'
+import { useState, useEffect } from 'react';
+import paymentService from '../../services/paymentService';
 
-export default function PaymentCard({ payment, onAction }) {
-  const getStatusClass = (status) => {
-    switch (status?.toLowerCase()) {
-      case 'paid': return 'status-paid';
-      case 'pending': return 'status-pending';
-      case 'cancelled': return 'status-cancelled';
-      case 'refunded': return 'status-refunded';
-      default: return 'status-default';
+const PaymentCard = ({ payment, onClick }) => {
+  const [paymentDetails, setPaymentDetails] = useState(null);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Paid":
+        return "payment-status-paid";
+      case "Pending":
+        return "payment-status-pending";
+      case "Cancelled":
+        return "payment-status-cancelled";
+      case "Refunded":
+        return "payment-status-refunded";
+      default:
+        return "payment-status-default";
     }
   };
 
-  const canProcess = payment.status === 'Pending';
-  const canRefund = payment.status === 'Paid';
+  const fetchPaymentDetails = async () => {
+    if (!payment?.id) return;
+    
+    try {
+      const details = await paymentService.getPaymentDetails(payment.id);
+      setPaymentDetails(details);
+    } catch (error) {
+      console.log('Could not fetch payment details');
+    }
+  };
+
+  useEffect(() => {
+    fetchPaymentDetails();
+  }, [payment?.id]);
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const paymentInfo = {
+    "Payment ID": payment.id,
+    "Booking ID": payment.bookingId,
+    "Amount": formatCurrency(payment.amount),
+    "Created": formatDate(payment.createdAt),
+    ...(payment.notes && { "Notes": payment.notes })
+  };
 
   return (
-    <div className="payment-card">
-      <div className="payment-header">
-        <div className="payment-id">Payment #{payment.id}</div>
-        <div className={`payment-status ${getStatusClass(payment.status)}`}>
+    <div className="payment-card" onClick={() => onClick(payment)}>
+      <div className="payment-card-header">
+        <h3 className="payment-card-title">Payment #{payment.id}</h3>
+        <span className={`payment-status ${getStatusColor(payment.status)}`}>
           {payment.status}
-        </div>
+        </span>
       </div>
-
-      <div className="payment-details">
-        <div className="detail-row">
-          <span className="label">Booking ID:</span>
-          <span className="value">{payment.bookingId}</span>
+      <ul className="payment-details">
+        {Object.entries(paymentInfo).map(([key, value]) => (
+          <li key={key} className="payment-detail-item">
+            <strong>{key}:</strong> {value || "N/A"}
+          </li>
+        ))}
+      </ul>
+      {paymentDetails && paymentDetails.transactionCount > 0 && (
+        <div className="transaction-info">
+          <span className="label">Transactions:</span>
+          <span className="count">{paymentDetails.transactionCount}</span>
         </div>
-        <div className="detail-row">
-          <span className="label">Amount:</span>
-          <span className="value amount">{formatCurrency(payment.amount)}</span>
-        </div>
-        <div className="detail-row">
-          <span className="label">Created:</span>
-          <span className="value">{formatDate(payment.createdAt)}</span>
-        </div>
-        {payment.notes && (
-          <div className="detail-row">
-            <span className="label">Notes:</span>
-            <span className="value notes">{payment.notes}</span>
-          </div>
-        )}
-      </div>
-
-      <div className="payment-actions">
-        <button
-          className="btn btn-secondary"
-          onClick={() => onAction(payment, 'details')}
-        >
-          View Details
-        </button>
-        
-        {canProcess && (
-          <button
-            className="btn btn-primary"
-            onClick={() => onAction(payment, 'process')}
-          >
-            Process Payment
-          </button>
-        )}
-        
-        {canRefund && (
-          <button
-            className="btn btn-warning"
-            onClick={() => onAction(payment, 'refund')}
-          >
-            Process Refund
-          </button>
-        )}
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default PaymentCard;

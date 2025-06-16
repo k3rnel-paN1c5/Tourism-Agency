@@ -1,138 +1,122 @@
 .payment-card {
-  background: white;
+  background: rgba(22, 30, 46, 0.8);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   padding: 1.5rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  animation: fadeInUp 0.5s ease-out;
 }
 
 .payment-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(77, 166, 255, 0.2);
+  border-color: rgba(77, 166, 255, 0.3);
 }
 
-.payment-header {
+.payment-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid #2a3447;
 }
 
-.payment-id {
+.payment-card-title {
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #2c3e50;
-  font-size: 1.1rem;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .payment-status {
-  padding: 0.25rem 0.75rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 20px;
   font-size: 0.875rem;
   font-weight: 500;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.status-paid {
-  background-color: #d4edda;
-  color: #155724;
+.payment-status-paid {
+  background: linear-gradient(135deg, #4da6ff, #3399ff);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(77, 166, 255, 0.3);
 }
 
-.status-pending {
-  background-color: #fff3cd;
-  color: #856404;
+.payment-status-pending {
+  background: linear-gradient(135deg, #ffc107, #ffb300);
+  color: #1a202c;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
 }
 
-.status-cancelled {
-  background-color: #f8d7da;
-  color: #721c24;
+.payment-status-cancelled {
+  background: linear-gradient(135deg, #ff6b6b, #ff5252);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
-.status-refunded {
+.payment-status-refunded {
   background-color: #d1ecf1;
   color: #0c5460;
 }
 
-.status-default {
+.payment-status-default {
   background-color: #e2e3e5;
   color: #383d41;
 }
 
 .payment-details {
-  margin-bottom: 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.detail-row {
+.payment-detail-item {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f8f9fa;
 }
 
-.detail-row .label {
+.payment-detail-item:last-child {
+  border-bottom: none;
+}
+
+.payment-detail-item strong {
   color: #6c757d;
   font-weight: 500;
 }
 
-.detail-row .value {
+.payment-detail-item span {
   color: #2c3e50;
-  font-weight: 400;
-}
-
-.detail-row .value.amount {
-  font-weight: 600;
-  color: #28a745;
-}
-
-.detail-row .value.notes {
-  max-width: 60%;
   text-align: right;
-  font-size: 0.9rem;
-  color: #6c757d;
 }
 
-.payment-actions {
+.transaction-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
+.transaction-info .label {
+  color: #6c757d;
   font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  display: inline-block;
-  text-align: center;
 }
 
-.btn-primary {
+.transaction-info .count {
   background-color: #007bff;
   color: white;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background-color: #545b62;
-}
-
-.btn-warning {
-  background-color: #ffc107;
-  color: #212529;
-}
-
-.btn-warning:hover {
-  background-color: #e0a800;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
