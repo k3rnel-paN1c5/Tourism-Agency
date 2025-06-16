@@ -58,6 +58,20 @@ namespace TourismAgency.Areas.Common.Controllers
             return CreatedAtAction(nameof(GetPostTypes), newPostType);
         }
 
+        [HttpPut("PostType/{id}")]
+        public async Task<IActionResult> UpdatePostType(int id, [FromBody] UpdatePostTypeDTO postTypeDto)
+        {
+            await _postTypeService.UpdatePostTypeAsync(postTypeDto);
+            return Ok(postTypeDto);
+        }
+
+        [HttpDelete("PostType/{id}")]
+        public async Task<IActionResult> DeletePostType(int id)
+        {
+            await _postTypeService.DeletePostTypeAsync(id);
+            return Ok(new { Message = "PostType deleted successfully." });
+        }
+
         //* Post Management *//
 
         [HttpPost("Post")]
