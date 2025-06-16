@@ -1,0 +1,143 @@
+.car-booking-page {
+    padding: 2rem;
+    color: #c9d1d9; /* Light text color for dark background */
+}
+
+/* Date Picker Styles */
+.date-picker-container {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    background-color: #161B22; /* Darker container background */
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #30363d; /* Subtle border */
+}
+
+.date-picker-container .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.date-picker-container label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #8b949e; /* Lighter label color */
+}
+
+.date-picker-container input[type="date"] {
+    padding: 0.75rem;
+    background-color: #0D1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #c9d1d9;
+    color-scheme: dark; /* Helps with native date picker styling in dark mode */
+}
+
+.search-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #238636; /* GitHub-style green button */
+    color: white;
+    border: 1px solid rgba(240, 246, 252, 0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    height: fit-content;
+    font-weight: 500;
+}
+
+.search-button:hover {
+    background-color: #2ea043;
+}
+
+/* Main Content Layout */
+.page-content {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.results-container {
+    width: 100%;
+}
+
+/* Car Card Grid */
+.cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Car Card Styles */
+.car-card {
+    background-color: #161B22;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.car-card:hover {
+    transform: translateY(-5px);
+    border-color: #8b949e;
+}
+
+.car-card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.car-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.car-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #f0f6fc;
+}
+
+.car-attributes, .car-pricing {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: #8b949e;
+    font-size: 0.9rem;
+}
+
+.car-attributes span, .car-pricing span {
+    background-color: #21262d;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.car-pricing {
+    font-weight: bold;
+    color: #58a6ff; /* A nice blue for pricing */
+}
+
+.book-now-button {
+    margin-top: auto;
+    background-color: #238636;
+    color: white;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(240, 246, 252, 0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    width: 100%;
+    font-weight: 500;
+}
+
+.book-now-button:hover {
+    background-color: #2ea043;
+}
