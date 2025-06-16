@@ -503,7 +503,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 });
             }
         }
-        [HttpGet("TripPlanCar/{id}")]
+        [HttpGet("TripPlanCars/{id}")]
         public async Task<IActionResult> GetTripPlanCarById(int id)
         {   
             try{
@@ -521,7 +521,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
         
-        [HttpPost("TripPlanCar")]
+        [HttpPost("TripPlanCars")]
         public async Task<IActionResult> CreateTripPlanCar([FromBody] CreateTripPlanCarDTO dto){
             if (!ModelState.IsValid)
             {
@@ -547,7 +547,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
 
-        [HttpPut("TripPlanCar/{id}")]
+        [HttpPut("TripPlanCars/{id}")]
         public async Task<IActionResult> UpdateTripPlanCar(int id, [FromBody] UpdateTripPlanCarDTO dto){
             if (!ModelState.IsValid)
             {
@@ -578,5 +578,26 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
 
+        [HttpDelete("TripPlanCars/{id}")]
+        public async Task<IActionResult> DeleteTripPlanCar(int id)
+        {
+            try
+            {
+                await _carServ.DeleteTripPlanCarAsync(id);
+                return Ok($"Deleted A trip plan car with id {id}");
+            }
+            catch( KeyNotFoundException e)
+            {
+                return NotFound(new { Error = e.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while Deleting trip plan car with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
     }
 }

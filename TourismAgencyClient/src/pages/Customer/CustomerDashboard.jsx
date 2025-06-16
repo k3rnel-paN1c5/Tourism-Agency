@@ -84,6 +84,8 @@ export default function CustomerDashboard() {
   const handleCancel = async (booking) => {
     try {
       await bookingService.CancelTripBooking(booking.id);
+      handleCloseModal();
+      fetchBookings();
       // Refresh bookings after cancellation
       fetchData();
     } catch (err) {
@@ -133,7 +135,7 @@ export default function CustomerDashboard() {
           {activeTab === 'bookings' && (
             <>
               <TripBookingSection 
-                bookings={tripBookings} 
+                bookings={tripBookings.filter(t => t.status != 5)} 
                 onBookingClick={handleOpenModal}
               />
               <CarBookingSection 
