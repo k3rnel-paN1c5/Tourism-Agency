@@ -17,6 +17,8 @@ import CarManagementPage from '../pages/CarSupervisor/CarManagementPage';
 import TripPlanListPage from '../pages/Customer/TripPlanListPage';
 import TripPlanDetailPage from '../pages/Customer/TripPlanDetailPage';
 
+import CarBookingPage from '../pages/Customer/CarBookingPage';
+
 
 export default function AppRoutes() {
   return (
@@ -29,7 +31,7 @@ export default function AppRoutes() {
         <Route path="/dashboard" element={<CustomerDashboard />} />
         <Route path="/trip-booking" element={<TripPlanListPage />} />
         <Route path="/trip-plans/:id" element={<TripPlanDetailPage />} />
-        <Route path="/car-booking" element={<div>Car Booking Reservation Page</div>} /> {/* Placeholder */}
+        <Route path="/car-booking" element={<CarBookingPage />} /> {/* Placeholder */}
       </Route>
 
       {/* Trip Supervisor Routes */}

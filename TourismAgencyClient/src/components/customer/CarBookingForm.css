@@ -1,0 +1,120 @@
+.car-booking-form {
+    padding: 1rem;
+    color: #c9d1d9;
+}
+
+.booking-summary {
+    background-color: #0D1117;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #30363d;
+}
+
+.booking-summary h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #f0f6fc;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 0.5rem;
+}
+
+.booking-summary p {
+    margin: 0.5rem 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.car-booking-form .form-group,
+.car-booking-form .form-group-checkbox {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Span the checkbox across two columns if needed, or handle layout */
+.form-grid .form-group-checkbox {
+    grid-column: 1 / -1; /* Make it span full width */
+    flex-direction: row;
+    align-items: center;
+}
+
+
+.car-booking-form label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #8b949e;
+}
+
+.car-booking-form input[type="text"],
+.car-booking-form input[type="number"],
+.car-booking-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #0D1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #c9d1d9;
+    font-size: 1rem;
+}
+
+.car-booking-form input:focus,
+.car-booking-form textarea:focus {
+    outline: none;
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.4);
+}
+
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem; /* Adjust as needed */
+}
+
+.form-group-checkbox input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.75rem;
+    accent-color: #238636;
+    height: 1.1em;
+    width: 1.1em;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #30363d;
+}
+
+.form-actions button {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid rgba(240, 246, 252, 0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-cancel {
+    background-color: #21262d;
+    color: #c9d1d9;
+}
+
+.btn-cancel:hover {
+    background-color: #30363d;
+}
+
+.btn-confirm {
+    background-color: #238636;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background-color: #2ea043;
+}
