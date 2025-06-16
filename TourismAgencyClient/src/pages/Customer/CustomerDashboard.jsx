@@ -4,59 +4,96 @@ import DashboardHeader from '../../components/shared/DashboardHeader'
 import TripBookingSection from '../../components/booking/TripBookingSection';
 import CarBookingSection from '../../components/booking/CarBookingSection';
 import bookingService from '../../services/bookingService';
+import Modal from '../../components/shared/Modal'
 import './Dashboard.css';
 
 export default function CustomerDashboard() {
-  const [user, setUser] = useState(null);
   const [tripBookings, setTripBookings] = useState([]);
   const [carBookings, setCarBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  // const [paymentDetails, setPaymentDetails] = useState(null);
+  // const [paymentError, setPaymentError] = useState(null);
 
-  const handleLogout = async () => {
+  const fetchBookings = async () => {
     try {
-      await authService.logout();
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      console.log('Token exists:', !!token);
+
+      if (!token) {
+        setError('No authentication token found. Please login again.');
+        return;
+      }
+      const [tripData, carData] = await Promise.all([
+        bookingService.getTripBookings(),
+        bookingService.getCarBookings()
+      ]);
+      setTripBookings(tripData);
+      setCarBookings(carData);
+      setError(null);
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error('Error fetching bookings:', error);
+      setError('Failed to load bookings. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchBookings();
+  }, []);
+
+  const handleOpenModal = async (booking) => {
+    setSelectedBooking(booking);
+    setIsModalOpen(true);
+    // setPaymentError(null);
+    try {
+      // const payment = await paymentService.getPaymentByBookingId(booking.id);
+      // setPaymentDetails(payment);
+    } catch (err) {
+      console.error('Failed to get payment details', err);
+      setPaymentError('Could not load payment details for this booking.');
     }
   };
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBooking(null);
+    // setPaymentDetails(null);
+    // setPaymentError(null);
+  };
+  const handleCancel = async (booking) => {
+    try {
+      await bookingService.CancelTripBooking(booking.id);
     }
-  }, []);
+    catch (err) {
+      console.error("Cancelation failed", err);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem('token');
-        console.log('Token exists:', !!token);
-
-        if (!token) {
-          setError('No authentication token found. Please login again.');
-          return;
-        }
-        const [tripData, carData] = await Promise.all([
-          bookingService.getTripBookings(),
-          bookingService.getCarBookings()
-        ]);
-        setTripBookings(tripData);
-        setCarBookings(carData);
-        setError(null);
-      } catch (error) {
-        console.error('Error fetching bookings:', error);
-        setError('Failed to load bookings. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookings();
-    console.log(tripBookings);
-  }, []);
+    }
+  }
+  const handlePayment = async () => {
+    // if (!paymentDetails) {
+    //   setPaymentError("Payment details are not available.");
+    //   return;
+    // }
+    try {
+      // This is a placeholder for a real payment flow.
+      // You would typically integrate a payment gateway here.
+      // const processPaymentDto = {
+      // paymentId: paymentDetails.id,
+      // transactionMethodId: 1, // Assuming '1' is a valid transaction method like 'Credit Card'
+      // amount: paymentDetails.amount
+      // };
+      // await paymentService.processPayment(paymentDetails.id, processPaymentDto);
+      handleCloseModal();
+      fetchBookings(); // Refetch bookings to show the updated status
+    } catch (err) {
+      console.error("Payment failed", err);
+      // setPaymentError("Payment failed. Please try again.");
+    }
+  };
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -67,13 +104,38 @@ export default function CustomerDashboard() {
   }
 
   return (
-     <div className="dashboard-container">
+    <div className="dashboard-container">
       <div className="dashboard-wrapper">
         <DashboardHeader title="Customer Dashboard" subtitle="Manage your trip and car bookings" />
 
-        <TripBookingSection bookings={tripBookings} />
+        <TripBookingSection bookings={tripBookings} onBookingClick={handleOpenModal} />
         <CarBookingSection bookings={carBookings} />
       </div>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Trip Booking Details">
+        {selectedBooking && (
+          <div>
+            <h3>{selectedBooking.tripName}</h3>
+            <p><strong>Start Date:</strong> {selectedBooking.startDate}</p>
+            <p><strong>End Date:</strong> {selectedBooking.endDate}</p>
+            <p><strong>Status:</strong> {selectedBooking.status == 0 ? 'Pending' : selectedBooking.status == 2 ? 'Confirmed' : 'Canceled'}</p>
+            <p><strong>Amount:</strong> ${selectedBooking.amountDue}</p>
+
+            {selectedBooking.status == 0 &&
+              <button onClick={() => { handleCancel(selectedBooking) }} className="pay-button">Cancel</button>
+            }
+            {/* {paymentError && <div className="error">{paymentError}</div>} */}
+
+            {/* {paymentDetails && paymentDetails.status === 'Pending' && ( */}
+
+            {/* <button onClick={handlePayment} className="pay-button">Pay Now</button> */}
+
+            {/* )} */}
+            {/* {paymentDetails && paymentDetails.status === 'Completed' && (
+                    <p>Payment for this booking is complete.</p>
+                )} */}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

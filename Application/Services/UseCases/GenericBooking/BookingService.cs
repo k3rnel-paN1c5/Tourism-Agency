@@ -329,6 +329,9 @@ public class BookingService : IBookingService
             _logger.LogWarning("Missing UserId claim. Available claims: {@Claims}", claimsList);
             throw new UnauthorizedAccessException("User ID claim not found.");
         }
+
+        if (httpContext.User.IsInRole("Customer"))
+            return null;
         return userIdClaim;
     }
 

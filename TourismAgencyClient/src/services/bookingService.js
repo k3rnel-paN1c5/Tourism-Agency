@@ -61,7 +61,16 @@ const bookingService = {
       throw error;
     }
   },
-
+  CancelTripBooking: async (id) => {
+    try {
+      const response = await apiClient.put(`/api/Customer/CustomerDashboard/CancelTripBooking/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error Canceling trip booking:', error);
+      throw error;
+    }
+  },
+  
   // Car Bookings
   getCarBookings: async () => {
     try {

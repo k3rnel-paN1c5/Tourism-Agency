@@ -4,13 +4,18 @@ import authService from '../services/authService';
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [currentRole, setCurrenteRole] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentRole, setCurrentRole] = useState(() => {
+    const saved = authService.getCurrentRole();
+    return saved ? saved.roles : null;
+  });
 
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return authService.isAuthenticated();
+  });
   useEffect(() => {
     const res = authService.getCurrentRole();
     if (res && res['roles']) {
-      setCurrenteRole(res['roles']);
+      setCurrentRole(res['roles']);
       setIsAuthenticated(true);
     }
   }, []);
@@ -18,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password, rememberMe) => {
     const data = await authService.login(email, password, rememberMe);
     if (data.role) { // Assuming data contains a user object upon successful login
-      setCurrenteRole(data.role);
+      setCurrentRole(data.role);
       setIsAuthenticated(true);
     }
     return data;
@@ -26,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await authService.logout();
-    setCurrenteRole(null);
+    setCurrentRole(null);
     setIsAuthenticated(false);
   };
 
