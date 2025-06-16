@@ -354,6 +354,19 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
 
 
         }
+        
+        [HttpPut("Accept/{id}")]
+        public async Task<IActionResult> Confirm(int id)
+        {
+            await _carBookingService.ConfirmCarBookingAsync(id);
+            return Ok();
+        }
+        [HttpPut("Cancel/{id}")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            await _carBookingService.CancelCarBookingAsync(id);
+            return Ok();
+        }
 
     }
 }

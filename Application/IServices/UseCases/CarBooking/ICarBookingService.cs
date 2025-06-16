@@ -59,5 +59,24 @@ namespace Application.IServices.UseCases
         /// <returns>A collection of <see cref="GetCarBookingDTO"/> that fall within the specified date interval.</returns>
         /// <exception cref="ArgumentException">Thrown if <paramref name="endDate"/> is not after <paramref name="startDate"/>.</exception>
         Task<IEnumerable<GetCarBookingDTO>> GetCarBookingsByDateIntervalAsync(DateTime startDate, DateTime endDate);
+
+        /// <summary>
+        /// Confirms a car booking by its unique identifier asynchronously.
+        /// </summary>
+        /// <param name="id">The unique identifier of the car booking to confirm.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the car booking with the specified ID is not found.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the car booking with the specified ID is confirmed, rejected, or completed.</exception>
+        public Task ConfirmCarBookingAsync(int id);
+
+        /// <summary>
+        /// Cancels a car booking by its unique identifier asynchronously.
+        /// </summary>
+        /// <param name="id">The unique identifier of the car booking to cancel.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the car booking with the specified ID is not found.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the car booking with the specified ID has already started and cannot be cancelled.</exception>
+        public Task CancelCarBookingAsync(int id);
+
     }
 }
