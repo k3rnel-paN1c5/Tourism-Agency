@@ -9,6 +9,8 @@ import ErrorMessage from '../../components/shared/ErrorMessage';
 import SearchBar from '../../components/shared/SearchBar';
 import '../shared/ManagementPage.css';
 import TripPlanForm from '../../components/tripSupervisor/TripPlanForm';
+import TripPlanCarForm from '../../components/tripSupervisor/TripPlanCarForm'; // Import the new component
+
 
 /**
  * Calculates the duration between two dates
@@ -43,6 +45,7 @@ const calculateDuration = (startDateStr, endDateStr) => {
 const TripPlanManagementPage = () => {
     const [plans, setPlans] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCarModalOpen, setIsCarModalOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -101,6 +104,15 @@ const TripPlanManagementPage = () => {
         setFormError(null);
         setSelectedPlan(plan);
         setIsModalOpen(true);
+    };
+
+    /**
+     * Handles opening the modal for managing cars for a trip plan.
+     * @param {object} plan - The plan to manage cars for.
+     */
+    const handleManageCars = (plan) => {
+        setSelectedPlan(plan);
+        setIsCarModalOpen(true);
     };
 
     /**
@@ -260,6 +272,8 @@ const TripPlanManagementPage = () => {
                             onSubmit={handleSave}
                             initialData={selectedPlan}
                             isLoading={isLoading}
+                            onManageCars={handleManageCars}
+                            isCarModal={isCarModalOpen}
                         />
                     </Modal>
                 )}

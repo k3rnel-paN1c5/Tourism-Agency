@@ -73,9 +73,6 @@ const Navbar = () => {
               <Link to="/admin-dashboard" className="nav-link">Admin Dashboard</Link>
             </li>
             <li className="nav-item">
-              <Link to="/dashboard" className="nav-link">Customer Dashboard</Link>
-            </li>
-            <li className="nav-item">
               <Link to="/trip-booking" className="nav-link">Trip Booking</Link>
             </li>
             <li className="nav-item">

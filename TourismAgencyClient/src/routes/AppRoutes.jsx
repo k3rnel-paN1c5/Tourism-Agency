@@ -5,6 +5,7 @@ import TripSupervisorDashboard from '../pages/TripSupervisor/TripSupervisorDashb
 import CarSupervisorDashboard from '../pages/CarSupervisor/CarSupervisorDashboard';
 import NotFound from '../pages/NotFound';
 import PrivateRoute from './PrivateRoutes';
+import Home from '../pages/Home';
 
 import RegionManagementPage from '../pages/TripSupervisor/RegionManagementPage';
 import TripManagementPage from '../pages/TripSupervisor/TripManagementPage';
@@ -23,11 +24,13 @@ import CarBookingPage from '../pages/Customer/CarBookingPage';
 export default function AppRoutes() {
   return (
     <Routes>
+
+      <Route path="/home" element={<Home/>} />
       <Route path="/login" element={<AuthPage login={true}/>} />
       <Route path="/register" element={<AuthPage login={false}/>} />
 
       {/* Customer Routes */}
-      <Route element={<PrivateRoute allowedRoles={['Customer', 'Admin']} />}>
+      <Route element={<PrivateRoute allowedRoles={['Customer']} />}>
         <Route path="/dashboard" element={<CustomerDashboard />} />
         <Route path="/trip-booking" element={<TripPlanListPage />} />
         <Route path="/trip-plans/:id" element={<TripPlanDetailPage />} />

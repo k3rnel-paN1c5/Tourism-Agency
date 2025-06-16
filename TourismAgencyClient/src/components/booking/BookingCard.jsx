@@ -1,6 +1,10 @@
 import './BookingCard.css'
+import { useState, useEffect } from 'react';
+import paymentService from '../../services/paymentService';
 
-const BookingCard = ({ title, details, status }) => {
+const BookingCard = ({ title, details, status, onClick, bookingId }) => {
+  const [paymentInfo, setPaymentInfo] = useState(null);
+
   const getStatusColor = (status) => {
     switch (status) {
       case "Confirmed":
@@ -14,8 +18,23 @@ const BookingCard = ({ title, details, status }) => {
     }
   };
 
+  const fetchPaymentInfo = async () => {
+    if (!bookingId) return;
+    
+    try {
+      const payment = await paymentService.getPaymentByBookingId(bookingId);
+      setPaymentInfo(payment);
+    } catch (error) {
+      console.log('No payment found for this booking');
+    }
+  };
+
+  useEffect(() => {
+    fetchPaymentInfo();
+  }, [bookingId]);
+
   return (
-    <div className="booking-card">
+    <div className="booking-card" onClick={onClick}>
       <div className="booking-card-header">
         <h3 className="booking-card-title">{title}</h3>
         <span className={`booking-status ${getStatusColor(status)}`}>{status}</span>
@@ -27,7 +46,16 @@ const BookingCard = ({ title, details, status }) => {
           </li>
         ))}
       </ul>
+      {paymentInfo && (
+        <div className="payment-status">
+          <span className="label">Payment Status:</span>
+          <span className={`status ${paymentInfo.status.toLowerCase()}`}>
+            {paymentInfo.status}
+          </span>
+        </div>
+      )}
     </div>
   );
 };
+
 export default BookingCard;

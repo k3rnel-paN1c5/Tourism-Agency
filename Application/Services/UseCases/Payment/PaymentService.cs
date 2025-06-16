@@ -71,7 +71,12 @@ namespace Application.Services.UseCases
                 };
 
                 var transaction = await _paymentTransactionService.CreatePaymentTransactionAsync(createTransactionDto);
-
+                
+                // Update payment notes with the process information
+                payment.Notes = string.IsNullOrEmpty(payment.Notes) 
+                    ? $"PAYMENT: {processPaymentDto.Amount:C} - {processPaymentDto.Notes} (Transaction: {transaction.Id})"
+                    : $"{payment.Notes}; PAYMENT: {processPaymentDto.Amount:C} - {processPaymentDto.Notes} (Transaction: {transaction.Id})";
+                
                 // Update payment status based on total paid amount
                 await UpdatePaymentStatusAfterTransaction(payment.Id);
 

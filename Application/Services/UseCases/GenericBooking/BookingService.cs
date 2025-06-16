@@ -171,6 +171,8 @@ public class BookingService : IBookingService
             }
 
             booking.Status = BookingStatus.Cancelled;
+            if (_httpContextAccessor.HttpContext.User.IsInRole("Customer"))
+                userIdClaim = null;
             booking.EmployeeId = userIdClaim;
             _bookingRepository.Update(booking);
             await _bookingRepository.SaveAsync();
@@ -234,6 +236,75 @@ public class BookingService : IBookingService
     }
 
 
+    /// <summary>
+    /// Process payment for a booking
+    /// </summary>
+    public async Task<PaymentProcessResultDTO> ProcessBookingPaymentAsync(int bookingId, ProcessPaymentDTO processPaymentDto)
+    {
+        try
+        {
+            var booking = await _bookingRepository.GetByIdAsync(bookingId);
+            if (booking == null)
+                throw new KeyNotFoundException($"Booking with ID {bookingId} not found");
+
+            // Get the payment for this booking
+            var payment = await _paymentService.GetPaymentByBookingIdAsync(bookingId);
+            
+            // Process the payment
+            processPaymentDto.PaymentId = payment.Id;
+            var result = await _paymentService.ProcessPaymentAsync(processPaymentDto);
+
+            // Auto-confirm booking if payment is completed
+            if (result.Payment.Status == PaymentStatus.Paid && booking.Status == BookingStatus.Pending)
+            {
+                await ConfirmBookingAsync(bookingId);
+                _logger.LogInformation("Booking {BookingId} automatically confirmed after full payment", bookingId);
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing payment for booking {BookingId}", bookingId);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Process refund for a booking
+    /// </summary>
+    public async Task<PaymentProcessResultDTO> ProcessBookingRefundAsync(int bookingId, ProcessRefundDTO refundDto)
+    {
+        try
+        {
+            var booking = await _bookingRepository.GetByIdAsync(bookingId);
+            if (booking == null)
+                throw new KeyNotFoundException($"Booking with ID {bookingId} not found");
+
+            var payment = await _paymentService.GetPaymentByBookingIdAsync(bookingId);
+            
+            refundDto.PaymentId = payment.Id;
+            var result = await _paymentService.ProcessRefundAsync(refundDto);
+
+            // Handle booking status based on refund
+            if (result.Payment.Status == PaymentStatus.Refunded)
+            {
+                booking.Status = BookingStatus.Cancelled;
+                _bookingRepository.Update(booking);
+                await _bookingRepository.SaveAsync();
+                _logger.LogInformation("Booking {BookingId} cancelled after full refund", bookingId);
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing refund for booking {BookingId}", bookingId);
+            throw;
+        }
+    }
+
+
     //* Utility Functions for Booking Service *//
 
     /// <summary>
@@ -260,6 +331,8 @@ public class BookingService : IBookingService
             _logger.LogWarning("Missing UserId claim. Available claims: {@Claims}", claimsList);
             throw new UnauthorizedAccessException("User ID claim not found.");
         }
+
+
         return userIdClaim;
     }
 

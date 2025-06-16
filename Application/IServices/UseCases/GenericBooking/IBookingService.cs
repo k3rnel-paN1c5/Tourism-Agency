@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Application.DTOs.Booking;
+using Application.DTOs.Payment;
 using Domain.Enums;
 
 namespace Application.IServices.UseCases;
@@ -21,6 +22,10 @@ public interface IBookingService
     /// <exception cref="UnauthorizedAccessException">Thrown if the user is not autheticated.</exception>
     /// <exception cref="ValidationException">Thrown if date/passenger validations fail.</exception>
     public Task<GetBookingDTO> CreateBookingAsync(CreateBookingDTO createBookingDto);
+    
+    public Task<PaymentProcessResultDTO> ProcessBookingPaymentAsync(int bookingId, ProcessPaymentDTO processPaymentDto);
+    
+    public Task<PaymentProcessResultDTO> ProcessBookingRefundAsync(int bookingId, ProcessRefundDTO refundDto);
 
     /// <summary>
     /// Retrieves a booking by its unique identifier asynchronously.

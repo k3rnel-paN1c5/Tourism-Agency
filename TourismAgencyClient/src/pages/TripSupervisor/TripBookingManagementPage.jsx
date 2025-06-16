@@ -60,7 +60,7 @@ const TripBookingManagementPage = () => {
         }
     };
 
-    const tripPlanMap = useMemo(() => new Map(tripPlans.map(plan => [plan.id, plan.tripName])), [tripPlans]);
+    const tripPlanMap = useMemo(() => new Map(tripPlans.map(plan => [plan.id, plan.trip.name])), [tripPlans]);
     const getStatusText = (status) => {
         switch (status) {
             case 0: return 'Pending';
@@ -71,6 +71,7 @@ const TripBookingManagementPage = () => {
     };
 
     const filteredBookings = useMemo(() => {
+        
         return bookings
             .filter(booking => {
                 if (filters.status && booking.status.toString() !== filters.status) return false;
@@ -97,20 +98,9 @@ const TripBookingManagementPage = () => {
         { header: 'Status', key: 'statusText' },
         { header: 'Passengers', key: 'numOfPassengers' },
         { header: 'With Guide', key: 'withGuide' },
-        {
-            header: 'Actions',
-            key: 'actions',
-            render: (item) => (
-                item.status === 0 ? ( // Only show actions for Pending bookings
-                    <div className="actions-cell">
-                        <button onClick={() => handleAction('accept', item.id)} className="action-button edit-button">Accept</button>
-                        <button onClick={() => handleAction('reject', item.id)} className="action-button delete-button">Reject</button>
-                    </div>
-                ) : null
-            ),
-        },
     ];
-
+    console.log(bookings);
+    
     return (
         <div className="management-page">
             <DashboardHeader title="Manage Trip Bookings" subtitle="Review, accept, or reject trip bookings" />
@@ -131,7 +121,7 @@ const TripBookingManagementPage = () => {
                             <select id="trip-plan-filter" name="tripPlanId" value={filters.tripPlanId} onChange={handleFilterChange}>
                                 <option value="">All</option>
                                 {tripPlans.map(plan => (
-                                    <option key={plan.id} value={plan.id}>{plan.tripName}</option>
+                                    <option key={plan.id} value={plan.id}>{plan.trip.name}</option>
                                 ))}
                             </select>
                         </div>
@@ -155,6 +145,9 @@ const TripBookingManagementPage = () => {
                         title="Trip Bookings"
                         columns={columns}
                         data={filteredBookings}
+                        onAccept={(x) => {handleAction('accept', x)}}
+                        onCancel={(x) => {handleAction('reject', x)}}
+                        
                     />
                 )}
             </main>
