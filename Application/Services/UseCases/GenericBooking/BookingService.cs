@@ -171,6 +171,8 @@ public class BookingService : IBookingService
             }
 
             booking.Status = BookingStatus.Cancelled;
+            if (_httpContextAccessor.HttpContext.User.IsInRole("Customer"))
+                userIdClaim = null;
             booking.EmployeeId = userIdClaim;
             _bookingRepository.Update(booking);
             await _bookingRepository.SaveAsync();
@@ -330,8 +332,7 @@ public class BookingService : IBookingService
             throw new UnauthorizedAccessException("User ID claim not found.");
         }
 
-        if (httpContext.User.IsInRole("Customer"))
-            return null;
+
         return userIdClaim;
     }
 
