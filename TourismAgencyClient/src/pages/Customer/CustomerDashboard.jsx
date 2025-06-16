@@ -84,10 +84,31 @@ export default function CustomerDashboard() {
   const handleCancel = async (booking) => {
     try {
       await bookingService.CancelTripBooking(booking.id);
-      handleCloseModal();
-      fetchBookings();
-      // Refresh bookings after cancellation
+      setIsModalOpen(false);
       fetchData();
+
+    }
+    catch (err) {
+      console.error("Cancelation failed", err);
+
+    }
+  }
+  const handlePayment = async () => {
+    // if (!paymentDetails) {
+    //   setPaymentError("Payment details are not available.");
+    //   return;
+    // }
+    try {
+      // This is a placeholder for a real payment flow.
+      // You would typically integrate a payment gateway here.
+      // const processPaymentDto = {
+      // paymentId: paymentDetails.id,
+      // transactionMethodId: 1, // Assuming '1' is a valid transaction method like 'Credit Card'
+      // amount: paymentDetails.amount
+      // };
+      // await paymentService.processPayment(paymentDetails.id, processPaymentDto);
+      handleCloseModal();
+      fetchBookings(); // Refetch bookings to show the updated status
     } catch (err) {
       console.error("Cancellation failed", err);
     }
@@ -111,47 +132,10 @@ export default function CustomerDashboard() {
   return (
     <div className="dashboard-container">
       <div className="dashboard-wrapper">
-        <DashboardHeader 
-          title="Customer Dashboard" 
-          subtitle="Manage your bookings and payments" 
-        />
+        <DashboardHeader title="Customer Dashboard" subtitle="Manage your trip and car bookings" />
 
-        <div className="dashboard-tabs">
-          <button 
-            className={`tab-button ${activeTab === 'bookings' ? 'active' : ''}`}
-            onClick={() => handleTabChange('bookings')}
-          >
-            Bookings
-          </button>
-          <button 
-            className={`tab-button ${activeTab === 'payments' ? 'active' : ''}`}
-            onClick={() => handleTabChange('payments')}
-          >
-            Payments
-          </button>
-        </div>
-
-        <div className="dashboard-content">
-          {activeTab === 'bookings' && (
-            <>
-              <TripBookingSection 
-                bookings={tripBookings.filter(t => t.status != 5)} 
-                onBookingClick={handleOpenModal}
-              />
-              <CarBookingSection 
-                bookings={carBookings}
-                onBookingClick={handleOpenModal}
-              />
-            </>
-          )}
-          
-          {activeTab === 'payments' && (
-            <PaymentSection 
-              payments={payments} 
-              onPaymentUpdate={handlePaymentUpdate}
-            />
-          )}
-        </div>
+        <TripBookingSection bookings={tripBookings} onBookingClick={handleOpenModal} />
+        <CarBookingSection bookings={carBookings} />
       </div>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Booking Details">
