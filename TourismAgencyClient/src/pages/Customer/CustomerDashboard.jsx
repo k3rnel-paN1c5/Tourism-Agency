@@ -134,7 +134,7 @@ export default function CustomerDashboard() {
           {activeTab === 'bookings' && (
             <>
               <TripBookingSection 
-                bookings={tripBookings.filter(t => t.status != 5)} 
+                bookings={tripBookings.filter(t => t.status != 'Canceled')} 
                 onBookingClick={handleOpenModal}
               />
               <CarBookingSection 
@@ -169,8 +169,9 @@ export default function CustomerDashboard() {
               <div className="detail-item">
                 <strong>Status:</strong> 
                 <span className={`status-${selectedBooking.status}`}>
-                  {selectedBooking.status === 0 ? 'Pending' : 
-                   selectedBooking.status === 2 ? 'Confirmed' : 'Canceled'}
+                  {selectedBooking.status} 
+                  {/* 0 ? 'Pending' : 
+                   selectedBooking.status === 2 ? 'Confirmed' : 'Canceled'} */}
                 </span>
               </div>
               <div className="detail-item">

@@ -46,7 +46,7 @@ namespace Application.Services.Auth
             await _Repository.AddAsync(newEmp);
             await _Repository.SaveAsync();
 
-            await _userManager.AddToRoleAsync(user, dto.EmpRole.ToString());
+            await _userManager.AddToRoleAsync(user, dto.EmpRole);
 
             return result;
         }

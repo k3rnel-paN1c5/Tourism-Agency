@@ -66,7 +66,7 @@ const TripBookingManagementPage = () => {
             case 0: return 'Pending';
             case 1: return 'Rejected';
             case 2: return 'Confirmed';
-            default: return 'Unknown';
+            default: return status;
         }
     };
 
@@ -74,7 +74,7 @@ const TripBookingManagementPage = () => {
         
         return bookings
             .filter(booking => {
-                if (filters.status && booking.status.toString() !== filters.status) return false;
+                if (filters.status && booking.status !== filters.status) return false;
                 if (filters.tripPlanId && booking.tripPlanId.toString() !== filters.tripPlanId) return false;
                 if (filters.startDate && new Date(booking.startDate) < new Date(filters.startDate)) return false;
                 if (filters.endDate && new Date(booking.endDate) > new Date(filters.endDate)) return false;
@@ -111,9 +111,9 @@ const TripBookingManagementPage = () => {
                             <label htmlFor="status-filter">Status:</label>
                             <select id="status-filter" name="status" value={filters.status} onChange={handleFilterChange}>
                                 <option value="">All</option>
-                                <option value="0">Pending</option>
-                                <option value="2">Confirmed</option>
-                                <option value="1">Rejected</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Rejected">Rejected</option>
                             </select>
                         </div>
                         <div className="filter-group">
