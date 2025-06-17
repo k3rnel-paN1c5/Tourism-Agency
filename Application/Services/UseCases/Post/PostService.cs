@@ -158,40 +158,13 @@ public class PostService : IPostService
         _logger.LogInformation("Attempting to retrieve all posts.");
         try
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null)
-            {
-                _logger.LogError("HTTP context is unavailable during GetAllPostsAsync.");
-                throw new InvalidOperationException("HTTP context is unavailable.");
-            }
-
-            var userIdClaim = httpContext.User.Claims
-                .FirstOrDefault(c => c.Type == "UserId" || c.Type == "sub" || c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var role = httpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-
+  
+      
             IEnumerable<Post> posts;
 
-            if (role == "Employee")
-            {
-                if (string.IsNullOrEmpty(userIdClaim))
-                {
-                    _logger.LogWarning("Employee role detected but UserId claim is missing.");
-                    throw new UnauthorizedAccessException("Employee ID not found for retrieving posts.");
-                }
-
-                _logger.LogDebug("Retrieving posts for Employee ID: {EmployeeId}", userIdClaim);
-                posts = await _postRepository.GetAllByPredicateAsync(p => p.EmployeeId == userIdClaim).ConfigureAwait(false);
-            }
-            else if (role == "Admin")
-            {
-                _logger.LogDebug("Retrieving all posts.");
                 posts = await _postRepository.GetAllAsync().ConfigureAwait(false);
-            }
-            else
-            {
-                _logger.LogWarning("Unauthorized attempt to retrieve all posts.");
-                throw new UnauthorizedAccessException("You do not have permission to view all posts.");
-            }
+            
+        
 
             _logger.LogDebug("{Count} posts retrieved.", posts?.Count() ?? 0);
 

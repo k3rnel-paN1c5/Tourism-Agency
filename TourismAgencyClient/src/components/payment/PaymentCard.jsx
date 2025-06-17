@@ -1,9 +1,25 @@
 import './PaymentCard.css'
-import { useState, useEffect } from 'react';
-import paymentService from '../../services/paymentService';
 
 const PaymentCard = ({ payment, onClick }) => {
-  const [paymentDetails, setPaymentDetails] = useState(null);
+  // Convert numeric status to text
+  const getStatusText = (statusCode) => {
+    switch (statusCode) {
+      case 0:
+        return "Pending";
+      case 1:
+        return "Paid";
+      case 2:
+        return "Cancelled";
+      case 3:
+        return "Refunded";
+      case 4:
+        return "PartiallyPaid";
+      default:
+        return "Unknown";
+    }
+  };
+  
+  const status = getStatusText(payment?.status);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -15,25 +31,12 @@ const PaymentCard = ({ payment, onClick }) => {
         return "payment-status-cancelled";
       case "Refunded":
         return "payment-status-refunded";
+      case "PartiallyPaid":
+        return "payment-status-partial";
       default:
         return "payment-status-default";
     }
   };
-
-  const fetchPaymentDetails = async () => {
-    if (!payment?.id) return;
-    
-    try {
-      const details = await paymentService.getPaymentDetails(payment.id);
-      setPaymentDetails(details);
-    } catch (error) {
-      console.log('Could not fetch payment details');
-    }
-  };
-
-  useEffect(() => {
-    fetchPaymentDetails();
-  }, [payment?.id]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -53,7 +56,9 @@ const PaymentCard = ({ payment, onClick }) => {
   const paymentInfo = {
     "Payment ID": payment.id,
     "Booking ID": payment.bookingId,
-    "Amount": formatCurrency(payment.amount),
+    "Amount Due": formatCurrency(payment.amountDue),
+    "Amount Paid": formatCurrency(payment.amountPaid || 0),
+    "Payment Date": payment.paymentDate ? formatDate(payment.paymentDate) : "Not paid",
     "Created": formatDate(payment.createdAt),
     ...(payment.notes && { "Notes": payment.notes })
   };
@@ -62,9 +67,7 @@ const PaymentCard = ({ payment, onClick }) => {
     <div className="payment-card" onClick={() => onClick(payment)}>
       <div className="payment-card-header">
         <h3 className="payment-card-title">Payment #{payment.id}</h3>
-        <span className={`payment-status ${getStatusColor(payment.status)}`}>
-          {payment.status}
-        </span>
+        <span className={`payment-status ${getStatusColor(status)}`}>{status}</span>
       </div>
       <ul className="payment-details">
         {Object.entries(paymentInfo).map(([key, value]) => (
@@ -73,12 +76,6 @@ const PaymentCard = ({ payment, onClick }) => {
           </li>
         ))}
       </ul>
-      {paymentDetails && paymentDetails.transactionCount > 0 && (
-        <div className="transaction-info">
-          <span className="label">Transactions:</span>
-          <span className="count">{paymentDetails.transactionCount}</span>
-        </div>
-      )}
     </div>
   );
 };

@@ -87,6 +87,12 @@ namespace TourismAgency.Areas.Common.Controllers
             return CreatedAtAction(nameof(GetPostById), new { id = newPost.Id }, newPost);
         }
 
+        [HttpGet("Posts")]
+        public async Task<IActionResult> GetAllPost()
+        {
+            var posts = await _postService.GetAllPostsAsync();
+            return Ok(posts);
+        }
         [HttpGet("Post/{id}")]
         public async Task<IActionResult> GetPostById(int id)
         {

@@ -1,0 +1,16 @@
+.post-list-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.post-list-page h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.post-list-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
