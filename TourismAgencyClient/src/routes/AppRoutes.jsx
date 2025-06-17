@@ -16,6 +16,7 @@ import TripBookingManagementPage from '../pages/TripSupervisor/TripBookingManage
 
 import CategoryManagementPage from '../pages/CarSupervisor/CategoryManagementPage';
 import CarManagementPage from '../pages/CarSupervisor/CarManagementPage';
+import CarBookingManagementPage from '../pages/CarSupervisor/CarBookingManagementPage';
 
 import TripPlanListPage from '../pages/Customer/TripPlanListPage';
 import TripPlanDetailPage from '../pages/Customer/TripPlanDetailPage';
@@ -61,6 +62,7 @@ export default function AppRoutes() {
         <Route path="/car-dashboard" element={<CarSupervisorDashboard />} />
         <Route path="/car-supervisor/categories" element={<CategoryManagementPage />} />
         <Route path="/car-supervisor/cars" element={<CarManagementPage />} />
+        <Route path="/car-supervisor/car-bookings" element={<CarBookingManagementPage />} />
       </Route>
 
       <Route element={<PrivateRoute allowedRoles={['CarSupervisor', 'TripSupervisor', 'Admin']} />}>
