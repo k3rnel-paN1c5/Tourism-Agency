@@ -46,12 +46,12 @@ const DataTable = ({ title, columns, data, onEdit, onDelete, onCreate, createLab
                         Delete
                       </button>
                     )}
-                    {onAccept && item.status==='Pending'  &&  (
+                    {onAccept && item.status===0  &&  (
                       <button onClick={() => onAccept(item.id)} className="action-button edit-button">
                         Accept
                       </button>
                     )}
-                    {onCancel && item.status ==='Pending' && (
+                    {onAccept && item.status===0  &&  (
                       <button onClick={() => onCancel(item.id)} className="action-button delete-button">
                         Cancel
                       </button>

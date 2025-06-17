@@ -45,7 +45,7 @@ const Navbar = () => {
               <Link to="/trip-supervisor/trip-bookings" className="nav-link">Trip Booking Management</Link>
             </li>
              <li className="nav-item">
-              <Link to="/posts" className="nav-link">Posts</Link>
+              <Link to="/posts-management" className="nav-link">Posts</Link>
             </li>
           </>
         )}
@@ -62,7 +62,7 @@ const Navbar = () => {
               <Link to="/car-supervisor/categories" className="nav-link">Car Category Management</Link>
             </li>
             <li className="nav-item">
-              <Link to="/posts" className="nav-link">Posts</Link>
+              <Link to="/posts-management" className="nav-link">Posts</Link>
             </li>
           </>
         )}
@@ -103,7 +103,7 @@ const Navbar = () => {
               <Link to="/car-supervisor/categories" className="nav-link">Car Category Management</Link>
             </li>
              <li className="nav-item">
-              <Link to="/posts" className="nav-link">Posts</Link>
+              <Link to="/posts-management" className="nav-link">Posts</Link>
             </li>
           </>
         )}

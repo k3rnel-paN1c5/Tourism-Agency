@@ -6,12 +6,13 @@ const BookingCard = ({ title, details, status, onClick, bookingId }) => {
   const [paymentInfo, setPaymentInfo] = useState(null);
 
   const getStatusColor = (status) => {
+
     switch (status) {
-      case "Confirmed":
+      case 2:
         return "booking-status-confirmed";
-      case "Pending":
+      case 0:
         return "booking-status-pending";
-      case "Canceled":
+      case 5:
         return "booking-status-canceled";
       default:
         return "booking-status-default";
@@ -37,7 +38,7 @@ const BookingCard = ({ title, details, status, onClick, bookingId }) => {
     <div className="booking-card" onClick={onClick}>
       <div className="booking-card-header">
         <h3 className="booking-card-title">{title}</h3>
-        <span className={`booking-status ${getStatusColor(status)}`}>{status}</span>
+        <span className={`booking-status ${getStatusColor(status)}`}>{status }</span>
       </div>
       <ul className="booking-details">
         {Object.entries(details).map(([key, value]) => (

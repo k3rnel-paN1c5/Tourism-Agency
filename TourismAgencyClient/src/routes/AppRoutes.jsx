@@ -22,6 +22,10 @@ import TripPlanDetailPage from '../pages/Customer/TripPlanDetailPage';
 
 import CarBookingPage from '../pages/Customer/CarBookingPage';
 
+import PostListPage from '../pages/shared/PostListPage';
+import PostDetailPage from '../pages/shared/PostDetailPage';
+import PostManagementPage from '../pages/shared/PostManagementPage';
+
 
 export default function AppRoutes() {
   return (
@@ -31,6 +35,10 @@ export default function AppRoutes() {
       <Route path="/login" element={<AuthPage login={true}/>} />
       <Route path="/register" element={<AuthPage login={false}/>} />
 
+      
+      <Route path="/posts" element={<PostListPage />} />
+      <Route path="/posts/:id" element={<PostDetailPage />} />
+      
       {/* Customer Routes */}
       <Route element={<PrivateRoute allowedRoles={['Customer']} />}>
         <Route path="/dashboard" element={<CustomerDashboard />} />
@@ -46,7 +54,6 @@ export default function AppRoutes() {
         <Route path="/trip-supervisor/trips" element={<TripManagementPage />} />
         <Route path="/trip-supervisor/trip-plans" element={<TripPlanManagementPage />} />
         <Route path="/trip-supervisor/trip-bookings" element={<TripBookingManagementPage />} />
-        <Route path="/posts" element={<div>Posts Management Page</div>} /> {/* Placeholder for Posts */}
       </Route>
 
       {/* Car Supervisor Routes */}
@@ -54,7 +61,10 @@ export default function AppRoutes() {
         <Route path="/car-dashboard" element={<CarSupervisorDashboard />} />
         <Route path="/car-supervisor/categories" element={<CategoryManagementPage />} />
         <Route path="/car-supervisor/cars" element={<CarManagementPage />} />
-        {/* Posts page is common, so it can be handled by either or a common route */}
+      </Route>
+
+      <Route element={<PrivateRoute allowedRoles={['CarSupervisor', 'TripSupervisor', 'Admin']} />}>
+          <Route path="/posts-management" element={<PostManagementPage />} />
       </Route>
 
       {/* Admin specific dashboard - assuming there is one, otherwise admin uses other dashboards */}
@@ -64,7 +74,7 @@ export default function AppRoutes() {
       </Route>
 
 
-      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/" element={<Navigate to="/home" />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
