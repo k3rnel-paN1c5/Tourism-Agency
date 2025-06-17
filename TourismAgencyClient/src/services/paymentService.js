@@ -91,7 +91,6 @@ const paymentService = {
   // Process a payment
   processPayment: async (id, processPaymentData) => {
     try {
-
       const response = await apiClient.post(`/api/Customer/CustomerDashboard/Payments/${id}/Process`, processPaymentData);
       return response.data;
     } catch (error) {

@@ -116,6 +116,8 @@ export default function CustomerDashboard() {
 
   const handleOpenModal = async (booking) => {
     setSelectedBooking(booking);
+    console.log(selectedBooking);
+    
     setIsModalOpen(true);
   };
 

@@ -1,13 +1,27 @@
 import { useState } from 'react';
 import PaymentCard from './PaymentCard';
+import PaymentModal from './PaymentModal';
+import Modal from '../shared/Modal';
 import './PaymentSection.css';
 
-const PaymentSection = ({ payments, onPaymentUpdate }) => {
+const PaymentSection = ({ payments, onPaymentUpdate, onPaymentAction }) => {
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const handlePaymentClick = (payment) => {
     setSelectedPayment(payment);
-    // You can add modal logic here similar to booking modal
+    setIsPaymentModalOpen(true);
+  };
+
+  const handleClosePaymentModal = () => {
+    setIsPaymentModalOpen(false);
+    setSelectedPayment(null);
+  };
+
+  const handlePaymentProcessed = async (updatedPayment) => {
+    // Call the onPaymentUpdate prop to update the payments list in the parent component
+    onPaymentUpdate(updatedPayment);
+    handleClosePaymentModal();
   };
 
   return (
@@ -32,6 +46,15 @@ const PaymentSection = ({ payments, onPaymentUpdate }) => {
           ))
         )}
       </div>
+      {selectedPayment && (
+        <PaymentModal
+          payment={selectedPayment}
+          type="process" // Set the type to 'process' for making a transaction
+          onClose={handleClosePaymentModal}
+          onSuccess={handlePaymentProcessed}
+          onPaymentAction={onPaymentAction} // Pass the onPaymentAction prop from CustomerDashboard
+        />
+      )}
     </div>
   );
 };

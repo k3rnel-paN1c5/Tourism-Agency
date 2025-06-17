@@ -157,7 +157,16 @@ export default function PaymentModal({ payment, type, onClose, onSuccess }) {
             <option value="BankTransfer">Bank Transfer</option>
           </select>
         </div>
-
+        <div className="form-group">
+          <label htmlFor="amount">Amount</label>
+          <input  
+            id="amount"
+            name="amount"
+            value={formData.amount}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
         <div className="form-group">
           <label htmlFor="notes">Notes (Optional):</label>
           <textarea

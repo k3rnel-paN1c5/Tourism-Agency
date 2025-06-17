@@ -106,6 +106,7 @@
 }
 
 .detail-item span {
+  background: #1a202c;
   color: #ffffff;
   font-weight: 400;
   font-size: 1rem;
