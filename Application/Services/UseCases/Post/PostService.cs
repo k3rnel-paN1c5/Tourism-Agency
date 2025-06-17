@@ -556,7 +556,10 @@ public class PostService : IPostService
             var httpContext = _httpContextAccessor.HttpContext
                 ?? throw new InvalidOperationException("HTTP context is unavailable.");
 
-            var currentUserId = httpContext.User.FindFirst("UserId")?.Value;
+            var currentUserId = httpContext.User.Claims
+               .FirstOrDefault(c => c.Type == "UserId" ||
+                                    c.Type == "sub" ||
+                                    c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (currentUserId is null)
             {
                 _logger.LogWarning("Unauthorized attempt to assign tag to post ID {PostId}. No valid user session found.", postId);
