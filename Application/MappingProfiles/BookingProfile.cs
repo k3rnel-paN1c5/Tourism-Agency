@@ -41,7 +41,7 @@ public class BookingProfile : Profile
         // This mapping is used when creating a new booking from client-provided data.s
         CreateMap<CreateBookingDTO, Booking>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ForMember(dest => dest.IsTripBooking, opt => opt.Ignore()) // Or set manually if needed
+            .ForMember(dest => dest.IsTripBooking, opt => opt.MapFrom(src => src.IsTripBooking)) 
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => BookingStatus.Pending)) // Default value
             .ForMember(dest => dest.NumOfPassengers, opt => opt.MapFrom(src => src.NumOfPassengers))
             .ForMember(dest => dest.CustomerId, opt => opt.Ignore()) 

@@ -327,15 +327,16 @@ public class TripPlanService : ITripPlanService
                 throw new KeyNotFoundException($"Trip Plan Car with ID {id} was not found.");
             }
             var tripPlan = await _tripPlanRepository.GetByIdAsync(tripPlanCar.TripPlanId) ?? throw new InvalidOperationException("Trip Plan Car doesn't belong to a valid trip plan");
+            int cnt = tripPlan.PlanCars.Count;
             if (tripPlan.PlanCars is null)
             {
                 _logger.LogError("RemoveCarFromTripPlanAsync: Trip Plan Car with ID {Id} was not found for removal.", id);
                 throw new InvalidOperationException("Deleting a Car from a Trip Plan That does not have cars");
             }
-            if (tripPlan.StartDate > DateTime.UtcNow)
+            if (tripPlan.StartDate <= DateTime.UtcNow)
             {
                 _logger.LogError("RemoveCarFromTripPlanAsync: Can't Remove Car from the trip plan {id}, because it has started.", tripPlan.Id);
-                throw new InvalidOperationException("Deleting a Car from a Trip Plan That does not have cars");
+                throw new InvalidOperationException("Deleting a Car from a Trip Plan That has already started");
             }
             var carEntityToRemove = _mapper.Map<TripPlanCar>(tripPlanCar);
             if (!tripPlan.PlanCars.Remove(carEntityToRemove))

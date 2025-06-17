@@ -72,7 +72,7 @@ public class TripBookingService : ITripBookingService
 
             // Create base booking
             var bookingDto = _mapper.Map<CreateBookingDTO>(createTripBookingDto);
-
+            bookingDto.IsTripBooking = true;
             _logger.LogInformation("Creating base booking for trip booking.");
             var createdBooking = await _bookingService.CreateBookingAsync(bookingDto).ConfigureAwait(false);
 

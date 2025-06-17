@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import carService from '../../services/CarSupervisor/carService';
 import tripPlanCarService from '../../services/TripSupervisor/tripPlanCarService';
 import ErrorMessage from '../shared/ErrorMessage';
 
@@ -17,16 +16,23 @@ const TripPlanCarForm = ({ tripPlan, onClose }) => {
         setIsLoading(true);
         setError(null);
         try {
-            const [available, allTripPlanCars] = await Promise.all([
-                carService.getAvailableCars(),
-                tripPlanCarService.getTripPlanCars()
+            const [available, allTripPlanCars, allCars] = await Promise.all([
+                tripPlanCarService.getAvailableCars(tripPlan.startDate, tripPlan.endDate),
+                tripPlanCarService.getTripPlanCars(),
+                tripPlanCarService.getCars()
             ]);
 
+            const carMap = new Map(allCars.map(car => [car.id, car]));
+            
             const associated = allTripPlanCars.filter(tpc => tpc.tripPlanId === tripPlan.id);
             const associatedCarIds = new Set(associated.map(tpc => tpc.carId));
-
             setAssociatedCars(associated);
+            setAssociatedCars(associated.map(assoc => ({
+                ...assoc,
+                carModel: carMap.get(assoc.carId)?.model || 'Unknown Car'
+            })));
             setAvailableCars(available.filter(car => !associatedCarIds.has(car.id)));
+
         } catch (err) {
             setError('Failed to load cars. Please try again later.');
             console.error(err);
@@ -43,8 +49,8 @@ const TripPlanCarForm = ({ tripPlan, onClose }) => {
                 startDate: tripPlan.startDate,
                 endDate: tripPlan.endDate,
             };
-            await tripPlanCarService.createTripPlanCar(newTripPlanCar);
-            loadCars(); // Refresh lists
+            await tripPlanCarService.AddTripPlanCartoPlan(newTripPlanCar);
+            loadCars();
         } catch (err) {
             setError('Failed to add car to the trip plan.');
             console.error(err);
@@ -54,8 +60,8 @@ const TripPlanCarForm = ({ tripPlan, onClose }) => {
     const handleRemoveCar = async (tripPlanCarId) => {
         setError(null);
         try {
-            await tripPlanCarService.deleteTripPlanCar(tripPlanCarId);
-            loadCars(); // Refresh lists
+            await tripPlanCarService.RemoveTripPlanCarFromPlan(tripPlanCarId);
+            loadCars();
         } catch (err) {
             setError('Failed to remove car from the trip plan.');
             console.error(err);
@@ -64,33 +70,37 @@ const TripPlanCarForm = ({ tripPlan, onClose }) => {
 
     return (
         <div className="trip-plan-car-form">
-            <h4>Manage Cars for Trip Plan: {tripPlan.id}</h4>
+            <h4>Manage Cars for Trip Plan: {tripPlan.tripName}</h4>
             <ErrorMessage message={error} onClear={() => setError(null)} />
             {isLoading ? (
                 <p>Loading cars...</p>
             ) : (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '2rem' }}>
+                    <div style={{ flex: 1 }}>
                         <h5>Associated Cars</h5>
-                        <ul>
-                            {associatedCars.map(car => (
-                                <li key={car.id}>
-                                    Car ID: {car.carId}
-                                    <button onClick={() => handleRemoveCar(car.id)} style={{ marginLeft: '10px' }}>Remove</button>
-                                </li>
-                            ))}
-                        </ul>
+                        {associatedCars.length > 0 ? (
+                            <ul>
+                                {associatedCars.map(assoc => (
+                                    <li key={assoc.id} style={{ marginBottom: '10px' }}>
+                                        {assoc.carModel}
+                                        <button onClick={() => handleRemoveCar(assoc.id)} style={{ marginLeft: '10px' }}>Remove</button>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : <p>No cars associated yet.</p>}
                     </div>
-                    <div>
+                    <div style={{ flex: 1 }}>
                         <h5>Available Cars</h5>
-                        <ul>
-                            {availableCars.map(car => (
-                                <li key={car.id}>
-                                    {car.brand} {car.model} ({car.year})
-                                    <button onClick={() => handleAddCar(car.id)} style={{ marginLeft: '10px' }}>Add</button>
-                                </li>
-                            ))}
-                        </ul>
+                        {availableCars.length > 0 ? (
+                            <ul>
+                                {availableCars.map(car => (
+                                    <li key={car.id} style={{ marginBottom: '10px' }}>
+                                        {car.model}
+                                        <button onClick={() => handleAddCar(car.id)} style={{ marginLeft: '10px' }}>Add</button>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : <p>No available cars for this period.</p>}
                     </div>
                 </div>
             )}

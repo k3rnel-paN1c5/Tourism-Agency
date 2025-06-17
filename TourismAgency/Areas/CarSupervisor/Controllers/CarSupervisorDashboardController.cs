@@ -179,6 +179,7 @@ namespace TourismAgency.Areas.CarSupervisor.Controllers
         //* Cars *//
 
         [HttpGet("Cars")]
+        
         public async Task<IActionResult> GetCars()
         {
             try
