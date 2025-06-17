@@ -24,7 +24,11 @@ const CarSupervisorDashboard = () => {
             description="View, add, edit, and delete cars."
             linkTo="/car-supervisor/cars"
           />
-
+          <DashboardBlock
+            title="Manage Car Bookings"
+            description="View, Accept, Reject Car bookings"
+            linkTo="/car-supervisor/car-bookings"
+          />
           <DashboardBlock
             title="Future Use"
             description="This block is reserved for future features."

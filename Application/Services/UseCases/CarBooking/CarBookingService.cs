@@ -1,14 +1,11 @@
 ﻿using Application.DTOs.Booking;
 using Application.DTOs.CarBooking;
-using Application.DTOs.TripBooking;
 using Application.IServices.UseCases;
 using AutoMapper;
 using Domain.Entities;
 using Domain.IRepositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace Application.Services.UseCases
@@ -20,14 +17,16 @@ namespace Application.Services.UseCases
         private readonly ICarService _carService;
         readonly IBookingService _bookingService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<CarBookingService> _logger;
 
-        public CarBookingService(IRepository<CarBooking, int> repo, IMapper mapper, ICarService carService, IBookingService bookingService, IHttpContextAccessor httpContextAccessor)
+        public CarBookingService(IRepository<CarBooking, int> repo, IMapper mapper, ICarService carService, IBookingService bookingService, IHttpContextAccessor httpContextAccessor, ILogger<CarBookingService> logger)
         {
             _repo = repo;
             _mapper = mapper;
             _carService = carService;
             _bookingService = bookingService;
              _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public async Task<GetCarBookingDTO> CreateCarBookingAsync(CreateCarBookingDTO dto)
@@ -138,5 +137,42 @@ namespace Application.Services.UseCases
             }
             return _mapper.Map<IEnumerable<GetCarBookingDTO>>(carBookings);
         }
+        /// <inheritdoc />
+        public async Task ConfirmCarBookingAsync(int id)
+        {
+            //_logger.LogInformation("Attempting to Confirm a car booking with ID: {id}.", id);
+            try
+            {
+                var carBooking = await GetCarBookingByIdAsync(id);
+                if (carBooking is null)
+                {
+                    _logger.LogWarning("Car booking with ID {Id} was not found for update.", id);
+                    throw new KeyNotFoundException($"Car booking with ID {id} was not found.");
+                }
+                await _bookingService.ConfirmBookingAsync(id).ConfigureAwait(false);
+                _logger.LogInformation("Car booking '{Id}' confirmed successfully.", id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while Confirming car booking with ID {Id}.", id);
+                throw;
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task CancelCarBookingAsync(int id)
+        {
+            try
+            {
+                await _bookingService.CancelBookingAsync(id).ConfigureAwait(false);
+                _logger.LogInformation("Car booking '{Id}' confirmed successfully.", id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while Confirming car booking with ID {Id}.", id);
+                throw;
+            }
+        }
+
     }
 }
