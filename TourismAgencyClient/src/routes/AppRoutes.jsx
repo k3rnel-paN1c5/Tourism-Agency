@@ -17,7 +17,6 @@ import TripBookingManagementPage from '../pages/TripSupervisor/TripBookingManage
 import CategoryManagementPage from '../pages/CarSupervisor/CategoryManagementPage';
 import CarManagementPage from '../pages/CarSupervisor/CarManagementPage';
 import CarBookingManagementPage from '../pages/CarSupervisor/CarBookingManagementPage';
-import CarBookingManagementPage from '../pages/CarSupervisor/CarBookingManagementPage';
 
 import TripPlanListPage from '../pages/Customer/TripPlanListPage';
 import TripPlanDetailPage from '../pages/Customer/TripPlanDetailPage';
