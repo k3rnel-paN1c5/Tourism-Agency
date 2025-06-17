@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import tripPlanCarService from '../../services/TripSupervisor/tripPlanCarService';
-import carService from '../../services/CarSupervisor/carService';
 import ErrorMessage from '../shared/ErrorMessage';
 
 const TripPlanCarForm = ({ tripPlan, onClose }) => {
@@ -20,7 +19,7 @@ const TripPlanCarForm = ({ tripPlan, onClose }) => {
             const [available, allTripPlanCars, allCars] = await Promise.all([
                 tripPlanCarService.getAvailableCars(tripPlan.startDate, tripPlan.endDate),
                 tripPlanCarService.getTripPlanCars(),
-                carService.getCars()
+                tripPlanCarService.getCars()
             ]);
 
             const carMap = new Map(allCars.map(car => [car.id, car]));

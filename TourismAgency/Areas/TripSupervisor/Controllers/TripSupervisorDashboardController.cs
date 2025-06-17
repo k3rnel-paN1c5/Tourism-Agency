@@ -509,6 +509,25 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
                 });
             }
         }
+        [HttpGet("Cars")]
+        
+        public async Task<IActionResult> GetCars()
+        {
+            try
+            {
+                var result = await _carService.GetAllCarsAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while retrieving cars",
+                    Details = ex.Message
+                });
+            }
+
+        }
         
         [HttpPost("AddTripPlanCar")]
         public async Task<IActionResult> AddTripPlanCar([FromBody] CreateTripPlanCarFromTripPlanDTO dto){
@@ -526,7 +545,7 @@ namespace TourismAgency.Areas.TripSupervisor.Controllers
             }
         }
         [HttpPost("RemoveTripPlanCar/{id}")]
-        public async Task<IActionResult> AddTripPlanCar(int id){
+        public async Task<IActionResult> RemoveTripPlanCar(int id){
             try{
                 await _tripPlanServ.RemoveCarFromTripPlanAsync(id);
                 return Ok();
