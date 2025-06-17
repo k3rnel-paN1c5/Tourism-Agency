@@ -48,17 +48,34 @@ export default function CustomerDashboard() {
 
   const fetchPayments = async () => {
     try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setError('No authentication token found. Please login again.');
+        return;
+      }
+
       const paymentData = await paymentService.getAllPayments();
       setPayments(paymentData);
+      setError(null);
     } catch (error) {
       console.error('Error fetching payments:', error);
-      // Don't set error here as payments might not exist yet
+      // Check if it's an authorization error
+      if (error.response?.status === 403 || error.response?.status === 401) {
+        setError('You are not authorized to access payments. Please login again.');
+      } else {
+        setError('Failed to load payments. Please try again later.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
-    if (activeTab === 'payments') {
+    if (activeTab === 'bookings') {
+      fetchData();
+    } else if (activeTab === 'payments') {
       fetchPayments();
     }
   }, [activeTab]);
@@ -69,6 +86,32 @@ export default function CustomerDashboard() {
         payment.id === updatedPayment.id ? updatedPayment : payment
       )
     );
+  };
+
+  const handlePaymentAction = async (paymentId, action, data = null) => {
+    try {
+      let result;
+      switch (action) {
+        case 'process':
+          result = await paymentService.processPayment(paymentId, data);
+          break;
+        case 'cancel':
+          result = await paymentService.cancelPayment(paymentId);
+          break;
+        case 'refund':
+          result = await paymentService.processRefund(paymentId, data);
+          break;
+        default:
+          throw new Error('Unknown payment action');
+      }
+      
+      // Refresh payments after action
+      await fetchPayments();
+      return result;
+    } catch (error) {
+      console.error(`Error performing payment action ${action}:`, error);
+      throw error;
+    }
   };
 
   const handleOpenModal = async (booking) => {
@@ -94,9 +137,7 @@ export default function CustomerDashboard() {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    if (tab === 'payments') {
-      fetchPayments();
-    }
+    setError(null); // Clear any previous errors when switching tabs
   };
 
   if (loading) {
@@ -104,7 +145,12 @@ export default function CustomerDashboard() {
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return (
+      <div className="error">
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Retry</button>
+      </div>
+    );
   }
 
   return (
@@ -148,6 +194,7 @@ export default function CustomerDashboard() {
             <PaymentSection 
               payments={payments} 
               onPaymentUpdate={handlePaymentUpdate}
+              onPaymentAction={handlePaymentAction}
             />
           )}
         </div>

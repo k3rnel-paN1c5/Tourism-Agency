@@ -1,5 +1,6 @@
 using Application.DTOs.TripBooking;
 using Application.DTOs.CarBooking;
+using Application.DTOs.Payment;
 using Application.IServices.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Infrastructure.Authentication;
 using Application.Services.UseCases;
+using Domain.Enums;
 
 namespace TourismAgency.Areas.Customer.Controllers
 {
@@ -21,13 +23,15 @@ namespace TourismAgency.Areas.Customer.Controllers
         private readonly ITripPlanService _tripPlanService;
         private readonly ICarService _carService;
         private readonly ICategoryService _categoryService;
+        private readonly IPaymentService _paymentService;
 
         public CustomerDashboardController(
             ITripBookingService tripBookingService,
             ICarBookingService carBookingService,
             ITripPlanService tripPlanService,
             ICarService carService,
-            ICategoryService categoryService
+            ICategoryService categoryService,
+            IPaymentService paymentService
             )
         {
             _tripBookingService = tripBookingService;
@@ -35,6 +39,7 @@ namespace TourismAgency.Areas.Customer.Controllers
             _tripPlanService = tripPlanService;
             _carService = carService;
             _categoryService = categoryService;
+            _paymentService = paymentService;
         }
 
         [HttpGet]
@@ -348,5 +353,176 @@ namespace TourismAgency.Areas.Customer.Controllers
             }
         }
 
+        // * Payments * //
+
+        /// <summary>
+        /// Get all payments for the current customer
+        /// </summary>
+        [HttpGet("Payments")]
+        public async Task<IActionResult> GetPayments([FromQuery] PaymentStatus? status = null)
+        {
+            try
+            {
+                var payments = status.HasValue
+                    ? await _paymentService.GetPaymentsByStatusAsync(status.Value)
+                    : await _paymentService.GetAllPaymentsAsync();
+                
+                return Ok(payments);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while retrieving payments",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        /// <summary>
+        /// Get payment details by ID
+        /// </summary>
+        [HttpGet("Payments/{id}")]
+        public async Task<IActionResult> GetPaymentById(int id)
+        {
+            try
+            {
+                var payment = await _paymentService.GetPaymentByIdAsync(id);
+                return Ok(payment);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Error = $"Payment with ID {id} not found" });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(403, new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while retrieving payment with ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
+
+
+        /// <summary>
+        /// Get detailed payment information including transactions
+        /// </summary>
+        [HttpGet("Payments/{id}/Details")]
+        public async Task<IActionResult> GetPaymentDetails(int id)
+        {
+            try
+            {
+                var details = await _paymentService.GetPaymentDetailsAsync(id);
+                return Ok(details);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Error = $"Payment with ID {id} not found" });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(403, new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = $"An error occurred while retrieving payment details for ID {id}",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        /// <summary>
+        /// Process a payment
+        /// </summary>
+        [HttpPost("Payments/{id}/Process")]
+        public async Task<IActionResult> ProcessPayment(int id, [FromBody] ProcessPaymentDTO processPaymentDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Error = "Validation failed",
+                    Details = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            // Ensure the payment ID in the URL matches the DTO
+            if (id != processPaymentDto.PaymentId)
+            {
+                return BadRequest(new { Error = "Payment ID in URL does not match payment ID in request body" });
+            }
+
+            try
+            {
+                var result = await _paymentService.ProcessPaymentAsync(processPaymentDto);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Error = $"Payment with ID {id} not found" });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(403, new { Error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while processing the payment",
+                    Details = ex.Message
+                });
+            }
+        }
+
+        /// <summary>
+        /// Cancel a payment (only for pending payments)
+        /// </summary>
+        [HttpPut("Payments/{id}/Cancel")]
+        public async Task<IActionResult> CancelPayment(int id)
+        {
+            try
+            {
+                var result = await _paymentService.CancelPaymentAsync(id);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Error = $"Payment with ID {id} not found" });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(403, new { Error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Error = "An error occurred while cancelling the payment",
+                    Details = ex.Message
+                });
+            }
+        }
     }
 }
