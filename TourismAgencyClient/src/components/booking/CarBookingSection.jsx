@@ -12,7 +12,7 @@ const CarBookingsSection = ({ bookings }) => {
           <BookingCard
             key={booking.id}
             title={`Car #${cnt++}`}
-            status= {booking.status == 0 ? 'Pending' : booking.status == 1 ? 'Confirmed': 'Canceled'}
+            status= {booking.status}
             details={{
               "Start Date": new Date(booking.startDate).toLocaleDateString(),
               "End Date": new Date(booking.endDate).toLocaleDateString(),
