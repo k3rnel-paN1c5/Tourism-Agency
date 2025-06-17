@@ -334,6 +334,21 @@ namespace TourismAgency.Areas.Customer.Controllers
                 });
             }
         }
+
+        [HttpPut("CancelCarBooking/{id}")]
+        public async Task<IActionResult> CancelCarBooking(int id)
+        {
+            try
+            {
+                await _carBookingService.CancelCarBookingAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         // * Categories* //
         [HttpGet("Categories")]
         public async Task<IActionResult> GetCategories()
