@@ -2,7 +2,7 @@ import Section from "../shared/Section";
 import BookingCard from "./BookingCard";
 import  './Booking.css' ;
 
-const CarBookingsSection = ({ bookings }) => {
+const CarBookingsSection = ({ bookings , onBookingClick }) => {
   let cnt = 1, noBooking = false;
   return (
     <>
@@ -21,6 +21,7 @@ const CarBookingsSection = ({ bookings }) => {
               "Dropoff Location": booking.dropOffLocation,
               "With Driver": booking.withDriver ? "Yes" : "No"
             }}
+             onClick={() => onBookingClick(booking, 'car')} 
           />
         ))
       ) : (
