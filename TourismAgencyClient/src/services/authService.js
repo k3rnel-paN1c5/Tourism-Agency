@@ -6,11 +6,11 @@ const login = async (email, password, rememberMe) => {
     password,
     rememberMe,
   },
-  {
-    headers : {
-    'Content-Type': 'application/json',
-  }
-  });
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
   if (response.data.token) {
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('role', JSON.stringify(response.data.role)); //
@@ -37,11 +37,12 @@ const register = async (
     phoneNumber,
     whatsapp,
     country,
-  }, 
-  {
-    headers : {
-    'Content-Type': 'application/json',
-  }});
+  },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
   return response.data;
 };
 
@@ -61,12 +62,21 @@ const logout = async () => {
     window.location.href = '/login';
   }
 };
+const registerEmployee = async (userData) => {
+  try {
+    const response = await apiClient.post('/api/admin/admindashboard/register', userData);
+    return response.data;
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.response?.data?.message || 'Employee registration failed');
+  }
+}
 
 const getCurrentRole = () => {
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
   if (token && role) {
-    return {'token': token, 'roles': JSON.parse(role)}
+    return { 'token': token, 'roles': JSON.parse(role) }
   }
 };
 
@@ -80,4 +90,5 @@ export default {
   logout,
   getCurrentRole,
   isAuthenticated,
+  registerEmployee,
 };

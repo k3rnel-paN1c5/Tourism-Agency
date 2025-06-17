@@ -3,6 +3,8 @@ import AuthPage from '../pages/Customer/AuthPage';
 import CustomerDashboard from '../pages/Customer/CustomerDashboard';
 import TripSupervisorDashboard from '../pages/TripSupervisor/TripSupervisorDashboard';
 import CarSupervisorDashboard from '../pages/CarSupervisor/CarSupervisorDashboard';
+import AdminDashboard from '../pages/Admin/AdminDashboard';
+import EmployeeRegistrationPage from '../pages/Admin/EmployeeRegistrationPage';
 import NotFound from '../pages/NotFound';
 import PrivateRoute from './PrivateRoutes';
 import Home from '../pages/Home';
@@ -57,7 +59,8 @@ export default function AppRoutes() {
 
       {/* Admin specific dashboard - assuming there is one, otherwise admin uses other dashboards */}
       <Route element={<PrivateRoute allowedRoles={['Admin']} />}>
-        <Route path="/admin-dashboard" element={<div>Admin Specific Dashboard</div>} /> {/* Placeholder for Admin Dashboard */}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} /> 
+        <Route path="/employee-register" element={<EmployeeRegistrationPage />} /> 
       </Route>
 
 

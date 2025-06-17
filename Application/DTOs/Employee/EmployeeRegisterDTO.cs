@@ -56,6 +56,6 @@ public class EmployeeRegisterDTO
     /// This field is required.
     /// </summary>
     [Required(ErrorMessage = "Role is required")]
-    public TRoles EmpRole { get; set; }
+    public string EmpRole { get; set; }
 
 }

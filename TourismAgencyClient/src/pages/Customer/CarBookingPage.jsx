@@ -4,7 +4,7 @@ import Modal from '../../components/shared/Modal';
 import ErrorMessage from '../../components/shared/ErrorMessage';
 import CarFilters from '../../components/shared/CarFilters';
 import CarBookingForm from '../../components/customer/CarBookingForm'; // Import the new form
-import carService from '../../services/customer/carService';
+import carService from '../../services/Customer/carService';
 import bookingService from '../../services/bookingService';
 import './CarBookingPage.css';
 
