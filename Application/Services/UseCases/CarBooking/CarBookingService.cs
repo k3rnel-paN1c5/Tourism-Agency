@@ -1,6 +1,8 @@
 ﻿using Application.DTOs.Booking;
 using Application.DTOs.CarBooking;
 using Application.IServices.UseCases;
+using Application.DTOs.Payment;
+using Application.Utilities;
 using AutoMapper;
 using Domain.Entities;
 using Domain.IRepositories;
@@ -15,16 +17,18 @@ namespace Application.Services.UseCases
         private readonly IRepository<CarBooking, int> _repo;
         private readonly IMapper _mapper;
         private readonly ICarService _carService;
-        readonly IBookingService _bookingService;
+        private readonly IBookingService _bookingService;
+        private readonly IPaymentService _paymentService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<CarBookingService> _logger;
 
-        public CarBookingService(IRepository<CarBooking, int> repo, IMapper mapper, ICarService carService, IBookingService bookingService, IHttpContextAccessor httpContextAccessor, ILogger<CarBookingService> logger)
+        public CarBookingService(IRepository<CarBooking, int> repo, IMapper mapper, ICarService carService, IBookingService bookingService, IPaymentService paymentService, IHttpContextAccessor httpContextAccessor, ILogger<CarBookingService> logger)
         {
             _repo = repo;
             _mapper = mapper;
             _carService = carService;
             _bookingService = bookingService;
+             _paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService   ));
              _httpContextAccessor = httpContextAccessor;
             _logger = logger;
         }
@@ -57,6 +61,12 @@ namespace Application.Services.UseCases
             carBooking.BookingId = createdBooking.Id;
 
             await _repo.AddAsync(carBooking);
+            CreatePaymentDTO newPayment = new()
+            {
+                BookingId = carBooking.BookingId,
+                AmountDue = CarBookingAmountDueCalculator.CalculateAmountDue(dto.StartDate, dto.EndDate, carBooking!.Car!.Ppd, carBooking.Car.Ppd)
+            };
+            await _paymentService.CreatePaymentAsync(newPayment);
             await _repo.SaveAsync();
             return _mapper.Map<GetCarBookingDTO>(carBooking);
 

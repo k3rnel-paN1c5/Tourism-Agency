@@ -4,7 +4,7 @@ using System.Security.Claims;
 using Application.DTOs.Booking;
 using Application.DTOs.Payment;
 using Application.IServices.UseCases;
-using Application.Utilities;
+
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
@@ -75,10 +75,6 @@ public class BookingService : IBookingService
             await _bookingRepository.AddAsync(bookingEntity).ConfigureAwait(false);
             await _bookingRepository.SaveAsync().ConfigureAwait(false);
 
-            // The mapper calculates the amount that should be paid
-            var newPayment = _mapper.Map<CreatePaymentDTO>(bookingEntity);
-
-            await _paymentService.CreatePaymentAsync(newPayment);
             _logger.LogInformation("Booking '{Id}' created successfully.", bookingEntity.Id);
             return _mapper.Map<GetBookingDTO>(bookingEntity);
         }
@@ -249,7 +245,7 @@ public class BookingService : IBookingService
 
             // Get the payment for this booking
             var payment = await _paymentService.GetPaymentByBookingIdAsync(bookingId);
-            
+
             // Process the payment
             processPaymentDto.PaymentId = payment.Id;
             var result = await _paymentService.ProcessPaymentAsync(processPaymentDto);
@@ -282,7 +278,7 @@ public class BookingService : IBookingService
                 throw new KeyNotFoundException($"Booking with ID {bookingId} not found");
 
             var payment = await _paymentService.GetPaymentByBookingIdAsync(bookingId);
-            
+
             refundDto.PaymentId = payment.Id;
             var result = await _paymentService.ProcessRefundAsync(refundDto);
 

@@ -4,7 +4,9 @@ using System.Data;
 using System.Security.Claims;
 using Application.DTOs.Booking;
 using Application.DTOs.TripBooking;
+using Application.DTOs.Payment;
 using Application.IServices.UseCases;
+using Application.Utilities;
 using AutoMapper;
 using Domain.Entities;
 using Domain.IRepositories;
@@ -21,6 +23,7 @@ public class TripBookingService : ITripBookingService
     private readonly IRepository<TripBooking, int> _tripBookingRepository;
     private readonly IBookingService _bookingService;
     private readonly ITripPlanService _tripPlanService;
+    private readonly IPaymentService _paymentService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
     private readonly ILogger<TripBookingService> _logger;
@@ -39,6 +42,7 @@ public class TripBookingService : ITripBookingService
         IRepository<TripBooking, int> repository,
         IBookingService bookingService,
         ITripPlanService tripPlanService,
+        IPaymentService paymentService,
         IHttpContextAccessor httpContextAccessor,
         IMapper mapper,
         ILogger<TripBookingService> logger
@@ -47,6 +51,7 @@ public class TripBookingService : ITripBookingService
         _tripBookingRepository = repository ?? throw new ArgumentNullException(nameof(repository));
         _bookingService = bookingService ?? throw new ArgumentNullException(nameof(bookingService));
         _tripPlanService = tripPlanService ?? throw new ArgumentNullException(nameof(tripPlanService));
+        _paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService   ));
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _mapper = mapper;
         _logger = logger;
@@ -81,6 +86,12 @@ public class TripBookingService : ITripBookingService
             tripBookingEntity.BookingId = createdBooking.Id; // Link to booking
 
             await _tripBookingRepository.AddAsync(tripBookingEntity).ConfigureAwait(false);
+            CreatePaymentDTO newPayment = new()
+            {
+                BookingId = tripBookingEntity.BookingId,
+                AmountDue = TripBookingAmountDueCalculator.CalculateAmountDue(tripBookingEntity.TripPlan!.Price, createTripBookingDto.NumOfPassengers)
+            };
+            await _paymentService.CreatePaymentAsync(newPayment);
             await _tripBookingRepository.SaveAsync().ConfigureAwait(false);
 
              _logger.LogInformation("Trip booking '{BookingId}' created successfully for TripPlanId: {TripPlanId}.", tripBookingEntity.BookingId, createTripBookingDto.TripPlanId);
